@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode.driver;
 import static org.firstinspires.ftc.teamcode.hardware.kachow.angleDifference;
 import static java.lang.Math.pow;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -24,18 +25,20 @@ import org.firstinspires.ftc.teamcode.hardware.Vector2d;
 import org.firstinspires.ftc.teamcode.hardware.button;
 import org.firstinspires.ftc.teamcode.hardware.kaze;
 
-//@Config
+@Configurable
 @TeleOp(name="Test", group="4848")
 //@Disabled
 public class Test1 extends LinearOpMode {
 
-    double distance;
-    double shooterVelocity = 0;
-    double intakeVelocity = 0;
-    double multiplier = .00005;
-    double I = 0;
-    double D = 10;
-    double F = 20;
+    public static double distance;
+    public static double shooterVelocity = 0;
+    public static double intakeVelocity = 0;
+    public static double difference = 0;
+    public static double P = 0;//300;
+
+    public static double I = 0;
+    public static double D = 0;//10;
+    public static double F = 0;//20;
 
 
 
@@ -55,6 +58,7 @@ public class Test1 extends LinearOpMode {
         telemetry.update();
         robot.pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
         waitForStart();
+        robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
         runtime.reset();
         Vector2d target = new Vector2d(0,144);
         robot.aimer.setPosition(.75);
@@ -165,40 +169,56 @@ public class Test1 extends LinearOpMode {
 
                 case aimbot:
                     //robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .13);
-                    robot.spinner.setVelocity(shooterVelocity);
                     if (gamePad2.triangle.wasJustPressed()){
                         shooterVelocity = shooterVelocity+100;
+                        robot.spinner.setVelocity(shooterVelocity);
                     }
                     if (gamePad2.x.wasJustPressed()){
                         shooterVelocity = shooterVelocity-100;
+                        robot.spinner.setVelocity(shooterVelocity);
                     }
+                    robot.spinner.setVelocity(shooterVelocity);
+/*
+
                     if(shooterVelocity<0){
                         shooterVelocity = 0;
                     }
 
-                    if(robot.spinner.getVelocity()<shooterVelocity+21)
+                    difference = Math.abs(robot.spinner.getVelocity()-shooterVelocity);
+
+                    if(robot.spinner.getVelocity()<shooterVelocity-21)
                     {
-                        robot.spinner.setPower(robot.spinner.getPower()+((shooterVelocity-robot.spinner.getVelocity())*multiplier));
-                    }
-                    if(robot.spinner.getVelocity()>shooterVelocity-21)
+                        if (robot.spinner.getPower() >= 1){
+                            robot.spinner.setPower(1);
+                        } else {
+                            robot.spinner.setPower(robot.spinner.getPower()+(difference*.000001));
+                        }
+                    }/*
+                    if(robot.spinner.getVelocity()>shooterVelocity+21)
                     {
-                        robot.spinner.setPower(robot.spinner.getPower()-((robot.spinner.getVelocity()-shooterVelocity)*multiplier));
+                        //robot.spinner.setPower(0);
+                        if(difference>=200){
+                            robot.spinner.setPower(robot.spinner.getPower()-(difference*.00001));
+                        }else{
+                            robot.spinner.setPower(robot.spinner.getPower()-(difference*.000005));
+                        }
                     }
+                    if(robot.spinner.getPower() < 0){
+                        robot.spinner.setPower(0);
+                    }*/
                     if(shooterVelocity == 0){
                         robot.spinner.setPower(0);
                     }
 
 
 
-                    if (gamePad1.Right_Bumper.wasJustPressed()){
-                        robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(0,I, D, F));
-                    }
+                        robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
 
 
                     telemetry.addData("spinner: ", robot.spinner.getVelocity());
                     telemetry.addData("spinnerPower: ", robot.spinner.getPower());
                     telemetry.addData("TargetVelocity: ", shooterVelocity);
-                    telemetry.addData("Multiplier: ", multiplier);
+                    telemetry.addData("P: ", P);
                     telemetry.addData("I: ", I);
                     telemetry.addData("D: ", D);
                     telemetry.addData("F: ", F);

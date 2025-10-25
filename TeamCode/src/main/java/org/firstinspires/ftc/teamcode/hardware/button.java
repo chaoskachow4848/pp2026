@@ -12,6 +12,10 @@ public class button {
     public void update(boolean incomingState){
         this.lastState = this.currentState;
         this.currentState = incomingState;
+        if (this.wasJustPressed()) {
+            this.currToggleState = !this.currToggleState;
+        }
+
     }
 
     public boolean isDown() {
@@ -30,10 +34,6 @@ public class button {
         return this.lastState != this.currentState;
     }
     public boolean getToggleState() {
-        if (this.wasJustReleased()) {
-            this.currToggleState = !this.currToggleState;
-        }
-
         return this.currToggleState;
     }
 
