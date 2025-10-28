@@ -34,11 +34,35 @@ public class Test1 extends LinearOpMode {
     public static double shooterVelocity = 0;
     public static double intakeVelocity = 0;
     public static double difference = 0;
-    public static double P = 0;//300;
+    public static double P = 300;//300;
 
     public static double I = 0;
-    public static double D = 0;//10;
-    public static double F = 0;//20;
+    public static double D = 10;//10;
+    public static double F = 20;//20;
+
+    public static double deflectorLeftIn;
+    public static double deflectorRightIn;
+    public static double deflectorMiddle;
+    public static double aimerClose;
+    public static double aimerMid;
+    public static double aimerFar;
+    public static double aimerMin = .25;
+    public static double aimerMax = .75;
+    public static double shooterFar;
+    public static double shooterClose;
+    public static double shooterMid;
+    public static double intakeFast;
+    public static double intakeSlow;
+    public static double leftFeederDown;
+    public static double leftFeederMid;
+    public static double leftFeederUp;
+    public static double rightFeederDown;
+    public static double rightFeederMid;
+    public static double rightFeederUp;
+    public static double aimerPose;
+
+
+
 
 
 
@@ -148,15 +172,41 @@ public class Test1 extends LinearOpMode {
             robot.kachow.roadRunner.updatePose();
             telemetry.addLine("x: " + robot.kachow.roadRunner.getPose().getX());
             telemetry.addLine("y: " + robot.kachow.roadRunner.getPose().getY());
+            telemetry.addLine("aimer: " + aimerPose);
+            Vector2d botPoint = new Vector2d(robot.kachow.roadRunner.getPose().getX(), robot.kachow.roadRunner.getPose().getY());
+            robot.kachow.bot_to_target = Math.sqrt(Math.abs((botPoint.x-target.x)*(botPoint.x-target.x) + (botPoint.y-target.y)*(botPoint.y-target.y)));
+            aimerPose = ((robot.kachow.bot_to_target)/110);
+            if (aimerPose>aimerMax){
+                aimerPose = aimerMax;
+            }else if (aimerPose<aimerMin){
+                aimerPose = aimerMin;
+            }
 
             switch (State){
                 case driving:
                     robot.kachow.robotCentric(opModeIsActive(), gamepad1, gamepad2, robot);
-                    robot.intake.setVelocity(intakeVelocity);
-                    intakeVelocity = intakeVelocity+(-gamepad2.right_stick_y*5);
-                    if(intakeVelocity<0){
-                        intakeVelocity = 0;
+                    robot.aimer.setPosition(aimerPose);
+
+                    if(gamePad1.Right_Trigger.wasJustPressed()){
+                        changeStateTo(state.aimbot);
                     }
+                    break;
+
+                case intaking:
+                    robot.kachow.robotCentric(opModeIsActive(), gamepad1, gamepad2, robot);
+                    robot.aimer.setPosition(aimerPose);
+                    if (gamePad2.Left_Trigger.isDown()){
+                        robot.intake.setVelocity(-intakeVelocity);
+                    } else {
+                        robot.intake.setVelocity(intakeVelocity);
+                    }
+
+                    if(gamePad2.Right_Trigger.getToggleState()){
+                        robot.deflector.setPosition(deflectorRightIn);
+                    }else{
+                        robot.deflector.setPosition(deflectorLeftIn);
+                    }
+
 
 
                     telemetry.addData("Intake: ", robot.intake.getVelocity());
@@ -212,7 +262,7 @@ public class Test1 extends LinearOpMode {
 
 
 
-                        robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
+                    robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
 
 
                     telemetry.addData("spinner: ", robot.spinner.getVelocity());
@@ -223,7 +273,7 @@ public class Test1 extends LinearOpMode {
                     telemetry.addData("D: ", D);
                     telemetry.addData("F: ", F);
 
-                    if(gamePad1.TouchPad.wasJustPressed()){
+                    if(gamePad1.Right_Trigger.wasJustReleased()){
                         changeStateTo(state.driving);
                     }
                     break;

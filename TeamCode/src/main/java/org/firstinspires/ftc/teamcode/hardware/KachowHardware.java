@@ -98,6 +98,9 @@ public class KachowHardware {
     public DcMotorEx intake;
 
     public Servo aimer;
+    public Servo leftFeeder;
+    public Servo rightFeeder;
+    public Servo deflector;
 
     public boolean isinit = false;
 
@@ -124,7 +127,13 @@ public class KachowHardware {
         backright = hardwareMap.dcMotor.get("Backright");
         frontleft = hardwareMap.dcMotor.get("Frontleft");
         frontright = hardwareMap.dcMotor.get("Frontright");
+
         aimer = hardwareMap.get(Servo.class, "Aimer");
+        rightFeeder = hardwareMap.get(Servo.class, "Rightfeeder");
+        leftFeeder = hardwareMap.get(Servo.class, "Leftfeeder");
+        deflector = hardwareMap.get(Servo.class, "Deflector");
+
+
         frontleft.setDirection(DcMotor.Direction.REVERSE);
         backleft.setDirection(DcMotor.Direction.REVERSE);
 //        spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
@@ -294,7 +303,7 @@ public class KachowHardware {
         }
     }
         public enum state {
-            driving, drivingFirstSample, drivingSecondSample, drivingThirdSample, intaking, rotating, scoring, humanPlayer, drivingHumanPlayer, Transfer, Transfer1, Transfer2, Transfer3, Transfer4, pathFollowing, retract, extend, turnto, aimbot, detecting, outTaking, firstClip, firstSample, secondSample, secondClip, thirdSample, thirdClip, fourthClip, allClips1, allClips2, allClips3, allClips, driving2, park, firstIntake, homeMechanisms; //lineSearch, detectBeacon, distanceSensor, homeMechanisms,
+            driving, drivingFirstSample, drivingSecondSample, drivingThirdSample, intaking, intkingGreen, intakingPurple, rotating, scoring, humanPlayer, drivingHumanPlayer, Transfer, Transfer1, Transfer2, Transfer3, Transfer4, pathFollowing, retract, extend, turnto, aimbot, detecting, outTaking, firstClip, firstSample, secondSample, secondClip, thirdSample, thirdClip, fourthClip, allClips1, allClips2, allClips3, allClips, driving2, park, firstIntake, homeMechanisms; //lineSearch, detectBeacon, distanceSensor, homeMechanisms,
         }
 
 }
