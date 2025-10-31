@@ -33,14 +33,11 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -136,6 +133,7 @@ public class KachowHardware {
 
         frontleft.setDirection(DcMotor.Direction.REVERSE);
         backleft.setDirection(DcMotor.Direction.REVERSE);
+        rightFeeder.setDirection(Servo.Direction.REVERSE);
 //        spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
         //spinner.setDirection(DcMotorSimple.Direction.REVERSE);
         //intake.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -303,7 +301,7 @@ public class KachowHardware {
         }
     }
         public enum state {
-            driving, drivingFirstSample, drivingSecondSample, drivingThirdSample, intaking, intkingGreen, intakingPurple, rotating, scoring, humanPlayer, drivingHumanPlayer, Transfer, Transfer1, Transfer2, Transfer3, Transfer4, pathFollowing, retract, extend, turnto, aimbot, detecting, outTaking, firstClip, firstSample, secondSample, secondClip, thirdSample, thirdClip, fourthClip, allClips1, allClips2, allClips3, allClips, driving2, park, firstIntake, homeMechanisms; //lineSearch, detectBeacon, distanceSensor, homeMechanisms,
+                driving, drivetoPPG, drivetoPGP, drivetoGPP, intaking, intkingGreen, intakingPurple, rotating, launching, humanPlayer, drivingHumanPlayer, Transfer, Transfer1, Transfer2, Transfer3, Transfer4, pathFollowing, retract, extend, turnto, aimbot, detecting, outTaking, firstClip, launch1, launch2, launchPreload, launch3, park, firstIntake; //lineSearch, detectBeacon, distanceSensor, homeMechanisms,
         }
 
 }

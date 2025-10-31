@@ -48,6 +48,9 @@ public class Test1 extends LinearOpMode {
     public static double aimerFar;
     public static double aimerMin = .25;
     public static double aimerMax = .75;
+    public static double shooterMin = 1350;
+    public static double shooterMax = 2000;
+
     public static double shooterFar;
     public static double shooterClose;
     public static double shooterMid;
@@ -60,7 +63,10 @@ public class Test1 extends LinearOpMode {
     public static double rightFeederMid;
     public static double rightFeederUp;
     public static double aimerPose;
+    public static double launchTime;
+    public boolean manual = false;
 
+    public int testNumber = 1;
 
 
 
@@ -92,87 +98,105 @@ public class Test1 extends LinearOpMode {
 
 
 
-
         while (opModeIsActive()) {
+            if (gamePad2.Right_Bumper.wasJustPressed()){
+                testNumber = testNumber+1;
+            }
+            if (gamePad2.Left_Bumper.wasJustPressed()){
+                testNumber = testNumber-1;
+            }
+            if (testNumber < 1){
+                testNumber = 1;
+            }
+            if (testNumber > 6){
+                testNumber = 6;
+            }
             update();
+            switch (testNumber){
+                case 1:
+                    if (gamePad2.Right_Trigger.wasJustPressed()){
+                        robot.intake.setPower(robot.intake.getPower()+.01);
+                    }
+                    if (gamePad2.Left_Trigger.wasJustPressed()){
+                        robot.intake.setPower(robot.intake.getPower()-.01);
+                    }
+                    telemetry.addData("Intake: ", robot.intake.getPower());
+                    telemetry.update();
+                    break;
+
+                case 2:
+
+                    if (gamePad2.triangle.wasJustPressed()){
+                        robot.spinner.setVelocity(1900);
+                    }
+                    if (gamePad2.Right_Trigger.wasJustPressed()){
+                        robot.spinner.setVelocity(robot.spinner.getVelocity()+20);
+                    }
+                    if (gamePad2.Left_Trigger.wasJustPressed()){
+                        robot.spinner.setVelocity(robot.spinner.getVelocity()-20);
+                    }
+                    telemetry.addData("Spinner: ", robot.spinner.getVelocity());
+                    telemetry.addLine("shooter Velocity: " + shooterVelocity);
+                    telemetry.update();
+                    break;
+
+                case 3:
+
+                    if (gamePad2.Dpad_Up.wasJustPressed()){
+                        robot.aimer.setPosition(robot.aimer.getPosition()+.01);
+                    }
+                    if (gamePad2.Dpad_Down.wasJustPressed()){
+                        robot.aimer.setPosition(robot.aimer.getPosition()-.01);
+                    }
+                    telemetry.addData("Aimer: ", robot.aimer.getPosition());
+                    telemetry.addLine("aimer pose: " + aimerPose);
+                    telemetry.update();
+                    break;
+
+                case 4:
+
+                    if (gamePad2.Dpad_Up.wasJustPressed()){
+                        robot.deflector.setPosition(robot.deflector.getPosition()+.01);
+                    }
+                    if (gamePad2.Dpad_Down.wasJustPressed()){
+                        robot.deflector.setPosition(robot.deflector.getPosition()-.01);
+                    }
+                    telemetry.addData("Deflector: ", robot.deflector.getPosition());
+                    telemetry.update();
+                    break;
 
 
- /*           double error;
-            double errorPower;
-            double x;
-            double y;
-            double turn;
-            double heading;
+                case 5:
 
-            Vector2d botPoint = new Vector2d(kaze.robotPose.getPose().getX(), kaze.robotPose.getPose().getY());
-            Vector2d wallReference = new Vector2d(144, botPoint.y);
-            bot_to_target = Math.abs(Math.sqrt((botPoint.x-target.x)*(botPoint.x-target.x) + (botPoint.y-target.y)*(botPoint.y-target.y)));
-            bot_to_wall = Math.abs(Math.sqrt(pow(botPoint.x-wallReference.x, 2) + pow(botPoint.y-wallReference.y, 2)));
-            wall_to_target = Math.abs(Math.sqrt(pow(wallReference.x-target.x, 2) + pow(wallReference.y-target.y, 2)));
+                    if (gamePad2.Dpad_Up.wasJustPressed()){
+                        robot.leftFeeder.setPosition(robot.leftFeeder.getPosition()+.01);
+                    }
+                    if (gamePad2.Dpad_Down.wasJustPressed()){
+                        robot.leftFeeder.setPosition(robot.leftFeeder.getPosition()-.01);
+                    }
+                    telemetry.addData("Left feeder: ", robot.leftFeeder.getPosition());
+                    telemetry.update();
+                    break;
 
-            bot_angle = Math.abs(Math.acos((pow(bot_to_wall,2) + pow(bot_to_target,2) - pow(wall_to_target,2))/
-                    (2 * bot_to_wall * bot_to_target)));
-            target_angle = Math.abs(Math.asin((bot_to_wall * Math.sin(bot_angle))/wall_to_target));
-            wall_angle = Math.abs(Math.toRadians(180) - bot_angle - target_angle);
 
-            if(botPoint.y > target.y){
-                bot_angle = -bot_angle;
-                target_angle = -target_angle;
-                wall_angle = -wall_angle;
+                case 6:
+
+                    if (gamePad2.Dpad_Up.wasJustPressed()){
+                        robot.rightFeeder.setPosition(robot.rightFeeder.getPosition()+.01);
+                    }
+                    if (gamePad2.Dpad_Down.wasJustPressed()){
+                        robot.rightFeeder.setPosition(robot.rightFeeder.getPosition()-.01);
+                    }
+                    telemetry.addData("Right feeder: ", robot.rightFeeder.getPosition());
+                    telemetry.update();
+                    break;
+
+
             }
-
-            if (robot.runtime.seconds() > 84.8 && robot.runtime.seconds() < 85) {
-                gamepad1.rumble(5000);
-                gamepad2.rumble(5000);
-            }
-            if (robot.runtime.seconds() > 109 && robot.runtime.seconds() < 110) {
-                gamepad1.rumble(10000);
-                gamepad2.rumble(10000);
-            }
-            heading = robot.kachow.roadRunner.getHeading()+Math.toRadians(kaze.headingOffset);
-
-            x = gamepad1.left_stick_x;
-            y = -gamepad1.left_stick_y;
-
-            error = angleDifference(heading, bot_angle);
-
-            errorPower = error / 90;
-            if(Math.abs(errorPower)>1){
-                errorPower = Math.abs(errorPower)/errorPower;
-            }
-            if(Math.abs(errorPower)<.1){
-                errorPower = (Math.abs(errorPower)/errorPower)*.1;
-            }
-            if (Math.abs(error) < 1) {
-                errorPower = 0;
-            }
-            turn = -errorPower;
-
-
-            double botHeading = heading;
-            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(turn), 1);
-            double frontLeftPower = (rotY + rotX + turn) / denominator;
-            double backLeftPower = (rotY - rotX + turn) / denominator;
-            double frontRightPower = (rotY - rotX - turn) / denominator;
-            double backRightPower = (rotY + rotX - turn) / denominator;
-
-
-            robot.frontright.setPower(frontRightPower);
-            robot.frontleft.setPower(frontLeftPower);
-            robot.backleft.setPower(backLeftPower);
-            robot.backright.setPower(backRightPower);
-            //roadRunner.setPose(new Pose(roadRunner.getPose().getX(), roadRunner.getPose().getY(), Math.toRadians(robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)+kaze.headingOffset)));
-            kaze.update(robot.kachow.roadRunner);
-*/
-
 
             robot.kachow.roadRunner.updatePose();
             telemetry.addLine("x: " + robot.kachow.roadRunner.getPose().getX());
             telemetry.addLine("y: " + robot.kachow.roadRunner.getPose().getY());
-            telemetry.addLine("aimer: " + aimerPose);
             Vector2d botPoint = new Vector2d(robot.kachow.roadRunner.getPose().getX(), robot.kachow.roadRunner.getPose().getY());
             robot.kachow.bot_to_target = Math.sqrt(Math.abs((botPoint.x-target.x)*(botPoint.x-target.x) + (botPoint.y-target.y)*(botPoint.y-target.y)));
             aimerPose = ((robot.kachow.bot_to_target)/110);
@@ -181,113 +205,21 @@ public class Test1 extends LinearOpMode {
             }else if (aimerPose<aimerMin){
                 aimerPose = aimerMin;
             }
-
-            switch (State){
-                case driving:
-                    robot.kachow.robotCentric(opModeIsActive(), gamepad1, gamepad2, robot);
-                    robot.aimer.setPosition(aimerPose);
-
-                    if(gamePad1.Right_Trigger.wasJustPressed()){
-                        changeStateTo(state.aimbot);
-                    }
-                    break;
-
-                case intaking:
-                    robot.kachow.robotCentric(opModeIsActive(), gamepad1, gamepad2, robot);
-                    robot.aimer.setPosition(aimerPose);
-                    if (gamePad2.Left_Trigger.isDown()){
-                        robot.intake.setVelocity(-intakeVelocity);
-                    } else {
-                        robot.intake.setVelocity(intakeVelocity);
-                    }
-
-                    if(gamePad2.Right_Trigger.getToggleState()){
-                        robot.deflector.setPosition(deflectorRightIn);
-                    }else{
-                        robot.deflector.setPosition(deflectorLeftIn);
-                    }
-
-
-
-                    telemetry.addData("Intake: ", robot.intake.getVelocity());
-                    telemetry.addData("IntakePower: ", robot.intake.getPower());
-
-                    if(gamePad1.Guide.wasJustPressed()){
-                        changeStateTo(state.aimbot);
-                    }
-                    break;
-
-                case aimbot:
-                    //robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .13);
-                    if (gamePad2.triangle.wasJustPressed()){
-                        shooterVelocity = shooterVelocity+100;
-                        robot.spinner.setVelocity(shooterVelocity);
-                    }
-                    if (gamePad2.x.wasJustPressed()){
-                        shooterVelocity = shooterVelocity-100;
-                        robot.spinner.setVelocity(shooterVelocity);
-                    }
-                    robot.spinner.setVelocity(shooterVelocity);
-/*
-
-                    if(shooterVelocity<0){
-                        shooterVelocity = 0;
-                    }
-
-                    difference = Math.abs(robot.spinner.getVelocity()-shooterVelocity);
-
-                    if(robot.spinner.getVelocity()<shooterVelocity-21)
-                    {
-                        if (robot.spinner.getPower() >= 1){
-                            robot.spinner.setPower(1);
-                        } else {
-                            robot.spinner.setPower(robot.spinner.getPower()+(difference*.000001));
-                        }
-                    }/*
-                    if(robot.spinner.getVelocity()>shooterVelocity+21)
-                    {
-                        //robot.spinner.setPower(0);
-                        if(difference>=200){
-                            robot.spinner.setPower(robot.spinner.getPower()-(difference*.00001));
-                        }else{
-                            robot.spinner.setPower(robot.spinner.getPower()-(difference*.000005));
-                        }
-                    }
-                    if(robot.spinner.getPower() < 0){
-                        robot.spinner.setPower(0);
-                    }*/
-                    if(shooterVelocity == 0){
-                        robot.spinner.setPower(0);
-                    }
-
-
-
-                    robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
-
-
-                    telemetry.addData("spinner: ", robot.spinner.getVelocity());
-                    telemetry.addData("spinnerPower: ", robot.spinner.getPower());
-                    telemetry.addData("TargetVelocity: ", shooterVelocity);
-                    telemetry.addData("P: ", P);
-                    telemetry.addData("I: ", I);
-                    telemetry.addData("D: ", D);
-                    telemetry.addData("F: ", F);
-
-                    if(gamePad1.Right_Trigger.wasJustReleased()){
-                        changeStateTo(state.driving);
-                    }
-                    break;
-
+            shooterVelocity = 1900*((robot.kachow.bot_to_target)/110);
+            if (shooterVelocity>shooterMax){
+                shooterVelocity = shooterMax;
+            }else if (shooterVelocity<shooterMin){
+                shooterVelocity = shooterMin;
             }
 
-            if (gamePad2.Dpad_Up.wasJustPressed()){
-                //robot.aimer.scaleRange(0, 100);
-                robot.aimer.setPosition(robot.aimer.getPosition()+.01);
-            }
-            if (gamePad2.Dpad_Down.wasJustPressed()){
-                robot.aimer.setPosition(robot.aimer.getPosition()-.01);
-            }
-            telemetry.addData("Aimer: ", robot.aimer.getPosition());
+
+
+
+
+
+
+
+
 
 
 
@@ -345,14 +277,16 @@ public class Test1 extends LinearOpMode {
         }
 
     }
+    Vector2d target = new Vector2d(0,144);
+
     public void update(){ //place once on start of loop
+        //robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .13);
         gamePad2.update(gamepad2, robot);
         gamePad1.update(gamepad1, robot);
         if(gamepad1.share && gamepad1.options){
             robot.kachow.roadRunner.setPose(new Pose(60, 60, Math.toRadians(robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)+ kaze.headingOffset)));
         }
 //        kaze.update(robot.kachow.roadRunner);
-        telemetry.update();
         kaze.drawCurrentAndHistory(robot.kachow.roadRunner);
     }
     public void changeStateTo(state tostate){

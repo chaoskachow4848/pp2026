@@ -42,13 +42,9 @@ public class kachow extends SampleHardware {
         double y;
         this.DriveSpeed = DriveSpeed;
         //double length = distance.getDistance(DistanceUnit.INCH);
-        if (runtime.seconds() > 84.8 && runtime.seconds() < 85.2) {
-            gamepad1.rumble(5000);
-            gamepad2.rumble(5000);
-        }
-        if (runtime.seconds() > 109 && runtime.seconds() < 110) {
-            gamepad1.rumble(10000);
-            gamepad2.rumble(10000);
+
+        if (drive.runtime.seconds() > 100 && drive.runtime.seconds() < 115) {
+            gamepad1.rumble(100);
             gamepad2.runLedEffect(cool);
             gamepad1.runLedEffect(cool);
         }
@@ -825,15 +821,10 @@ public class kachow extends SampleHardware {
             wall_angle = -wall_angle;
         }
 
-        if (drive.runtime.seconds() > 84.8 && drive.runtime.seconds() < 85) {
-            gamepad1.rumble(5000);
-            gamepad2.rumble(5000);
-        }
-        if (drive.runtime.seconds() > 109 && drive.runtime.seconds() < 110) {
-            gamepad1.rumble(10000);
-            gamepad2.rumble(10000);
-            gamepad1.runLedEffect(cool);
+        if (drive.runtime.seconds() > 100 && drive.runtime.seconds() < 115) {
+            gamepad1.rumble(100);
             gamepad2.runLedEffect(cool);
+            gamepad1.runLedEffect(cool);
         }
         heading = drive.kachow.roadRunner.getHeading()+Math.toRadians(kaze.headingOffset);
 
@@ -847,7 +838,7 @@ public class kachow extends SampleHardware {
             errorPower = Math.abs(errorPower)/errorPower;
         }
         if(Math.abs(errorPower)<minSpeed){
-            errorPower = (Math.abs(errorPower)/errorPower)*.1;
+            errorPower = (Math.abs(errorPower)/errorPower)*minSpeed;
         }
         if (Math.abs(error) < 1) {
             errorPower = 0;

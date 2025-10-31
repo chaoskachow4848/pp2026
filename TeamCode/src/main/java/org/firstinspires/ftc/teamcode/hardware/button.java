@@ -6,7 +6,7 @@ public class button {
     boolean incomingState;
     boolean currentState;
     boolean lastState;
-    boolean currToggleState = false;
+    public boolean currToggleState = false;
 
 
     public void update(boolean incomingState){
