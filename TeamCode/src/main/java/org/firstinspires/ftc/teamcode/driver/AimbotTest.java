@@ -31,17 +31,10 @@ package org.firstinspires.ftc.teamcode.driver;
 
 //import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 
-import static org.firstinspires.ftc.teamcode.driver.RobotCentricDriverSample.hangInit;
-import static org.firstinspires.ftc.teamcode.driver.RobotCentricDriverSample.hangStandby;
-import static org.firstinspires.ftc.teamcode.hardware.kachow.angleDifference;
-import static java.lang.Math.pow;
-
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -156,18 +149,18 @@ public class AimbotTest extends LinearOpMode {
 */
 
 
-            robot.kachow.roadRunner.updatePose();
+            robot.kachow.drive.updatePose();
             robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .13);
 
 
 
-            telemetry.addData("heading: ", Math.toDegrees(robot.kachow.roadRunner.getHeading()));
+            telemetry.addData("heading: ", Math.toDegrees(robot.kachow.drive.getHeading()));
             telemetry.addData("BotAngle: ", Math.toDegrees(robot.kachow.bot_angle));
             telemetry.addData("TargetAngle: ", Math.toDegrees(robot.kachow.target_angle));
             telemetry.addData("Bot to wall: ", robot.kachow.bot_to_wall);
             telemetry.addData("Bot to Target: ", robot.kachow.bot_to_target);
             telemetry.addData("Wall to Target: ", robot.kachow.wall_to_target);
-            telemetry.addLine("BotPoint: " + "x:"+robot.kachow.roadRunner.getPose().getX() + "y:"+robot.kachow.roadRunner.getPose().getY());
+            telemetry.addLine("BotPoint: " + "x:"+robot.kachow.drive.getPose().getX() + "y:"+robot.kachow.drive.getPose().getY());
 
 
 
@@ -226,11 +219,11 @@ public class AimbotTest extends LinearOpMode {
         gamePad2.update(gamepad2, robot);
         gamePad1.update(gamepad1, robot);
         if(gamepad1.share && gamepad1.options){
-            robot.kachow.roadRunner.setPose(new Pose(60, 60, Math.toRadians(robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)+ kaze.headingOffset)));
+            robot.kachow.drive.setPose(new Pose(60, 60, Math.toRadians(robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES))));
         }
 //        kaze.update(robot.kachow.roadRunner);
         telemetry.update();
-        kaze.drawCurrentAndHistory(robot.kachow.roadRunner);
+        kaze.drawCurrentAndHistory(robot.kachow.drive);
     }
 
 }

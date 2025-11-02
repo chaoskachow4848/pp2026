@@ -4,7 +4,6 @@ import static java.lang.Math.pow;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
@@ -22,15 +21,15 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class kachow extends SampleHardware {
     public Pose startTeleop;
     public Boolean isTurned = false;
-    public Follower roadRunner;
+    public Follower drive;
     public double DriveSpeed = .8;
 
     public void init(HardwareMap hardwareMap){
         if(kaze.robotPose == null){
-            this.roadRunner = Constants.createFollower(hardwareMap);
+            this.drive = Constants.createFollower(hardwareMap);
         } else if (kaze.robotPose != null){
-            this.roadRunner = Constants.createFollower(hardwareMap);
-            roadRunner.setPose(kaze.robotPose);
+            this.drive = Constants.createFollower(hardwareMap);
+            drive.setPose(kaze.robotPose);
         }
     }
     public void robotCentric(double DriveSpeed, boolean opmodeIsActive, Gamepad gamepad1, Gamepad gamepad2, SampleHardware drive) {
@@ -117,7 +116,7 @@ public class kachow extends SampleHardware {
             drive.backright.setPower(Range.clip(BackRight, -this.DriveSpeed, this.DriveSpeed));
             drive.frontleft.setPower(Range.clip(FrontLeft, -this.DriveSpeed, this.DriveSpeed));
             drive.frontright.setPower(Range.clip(FrontRight, -this.DriveSpeed, this.DriveSpeed));
-            kaze.update(roadRunner);
+            kaze.update(this.drive);
         }
 
     }
@@ -211,7 +210,7 @@ public class kachow extends SampleHardware {
             drive.backright.setPower(Range.clip(BackRight, -DriveSpeed, DriveSpeed));
             drive.frontleft.setPower(Range.clip(FrontLeft, -DriveSpeed, DriveSpeed));
             drive.frontright.setPower(Range.clip(FrontRight, -DriveSpeed, DriveSpeed));
-            kaze.update(roadRunner);
+            kaze.update(this.drive);
         }
 
     }
@@ -256,7 +255,7 @@ public class kachow extends SampleHardware {
             drive.frontleft.setPower(frontLeftPower);
             drive.backleft.setPower(backLeftPower);
             drive.backright.setPower(backRightPower);
-            kaze.update(roadRunner);
+            kaze.update(this.drive);
         }
     }
 
@@ -387,7 +386,7 @@ public class kachow extends SampleHardware {
             drive.frontleft.setPower(frontLeftPower);
             drive.backleft.setPower(backLeftPower);
             drive.backright.setPower(backRightPower);
-            kaze.update(roadRunner);
+            kaze.update(this.drive);
         }
     }
 
@@ -411,7 +410,7 @@ public class kachow extends SampleHardware {
                 gamepad2.runLedEffect(cool);
                 gamepad1.runLedEffect(cool);
             }
-            heading = drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)+Math.toRadians(kaze.headingOffset);
+            heading = drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
             x = 0;
             y = 0;
@@ -445,7 +444,7 @@ public class kachow extends SampleHardware {
             drive.frontleft.setPower(frontLeftPower);
             drive.backleft.setPower(backLeftPower);
             drive.backright.setPower(backRightPower);
-            kaze.update(roadRunner);
+            kaze.update(this.drive);
         }
     }
 
@@ -454,7 +453,7 @@ public class kachow extends SampleHardware {
         robot.backright.setPower(0);
         robot.frontright.setPower(0);
         robot.frontleft.setPower(0);
-        kaze.update(roadRunner);
+        kaze.update(drive);
     }
 
     public static class cameraPipeline extends OpenCvPipeline
@@ -782,9 +781,9 @@ public class kachow extends SampleHardware {
                 x= -x;
                 y= -y;
             }
-            roadRunner.setTeleOpDrive(x,y,turn,true);
+            drive.setTeleOpDrive(x,y,turn,true);
             //roadRunner.pose = new Pose2d(roadRunner.pose.position.x, roadRunner.pose.position.y, Math.toRadians(robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)+kaze.headingOffset));
-            kaze.update(roadRunner);
+            kaze.update(drive);
         }
     }
 
@@ -804,7 +803,7 @@ public class kachow extends SampleHardware {
         double heading;
 
 
-        Vector2d botPoint = new Vector2d(drive.kachow.roadRunner.getPose().getX(), drive.kachow.roadRunner.getPose().getY());
+        Vector2d botPoint = new Vector2d(drive.kachow.drive.getPose().getX(), drive.kachow.drive.getPose().getY());
         Vector2d wallReference = new Vector2d(144, botPoint.y);
         bot_to_target = Math.sqrt(Math.abs((botPoint.x-target.x)*(botPoint.x-target.x) + (botPoint.y-target.y)*(botPoint.y-target.y)));
         bot_to_wall = Math.sqrt(Math.abs(pow(botPoint.x-wallReference.x, 2) + pow(botPoint.y-wallReference.y, 2)));
@@ -826,7 +825,7 @@ public class kachow extends SampleHardware {
             gamepad2.runLedEffect(cool);
             gamepad1.runLedEffect(cool);
         }
-        heading = drive.kachow.roadRunner.getHeading()+Math.toRadians(kaze.headingOffset);
+        heading = drive.kachow.drive.getHeading() ;
 
         x = -gamepad1.left_stick_x;
         y = gamepad1.left_stick_y;
@@ -861,7 +860,7 @@ public class kachow extends SampleHardware {
         drive.frontleft.setPower(frontLeftPower);
         drive.backleft.setPower(backLeftPower);
         drive.backright.setPower(backRightPower);
-        kaze.update(drive.kachow.roadRunner);
+        kaze.update(drive.kachow.drive);
 
     }
         }

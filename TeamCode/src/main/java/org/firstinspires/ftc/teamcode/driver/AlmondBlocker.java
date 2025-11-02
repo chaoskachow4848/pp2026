@@ -742,7 +742,7 @@ public class AlmondBlocker extends LinearOpMode {
         //gamePad2.update(gamepad2, robot);
         //gamePad1.update(gamepad1, robot);
         if(gamepad1.share && gamepad1.options){
-            robot.kachow.roadRunner.setPose(new Pose(60, 60, Math.toRadians(robot.kachow.roadRunner.getPose().getHeading())));
+            robot.kachow.drive.setPose(new Pose(60, 60, Math.toRadians(robot.kachow.drive.getPose().getHeading())));
         }
         isClipping = gamePad2.Guide.getToggleState();
         Precise = gamePad2.TouchPad.getToggleState();

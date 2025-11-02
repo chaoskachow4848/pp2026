@@ -180,11 +180,12 @@ public class PPDrive extends LinearOpMode {
 */
 
 
-            robot.kachow.roadRunner.updatePose();
-            telemetry.addLine("x: " + robot.kachow.roadRunner.getPose().getX());
-            telemetry.addLine("y: " + robot.kachow.roadRunner.getPose().getY());
+            robot.kachow.drive.updatePose();
+            telemetry.addLine("x: " + robot.kachow.drive.getPose().getX());
+            telemetry.addLine("y: " + robot.kachow.drive.getPose().getY());
+            telemetry.addLine("heading: " + Math.toDegrees(robot.kachow.drive.getPose().getHeading()));
             telemetry.addLine("aimer: " + aimerPose);
-            Vector2d botPoint = new Vector2d(robot.kachow.roadRunner.getPose().getX(), robot.kachow.roadRunner.getPose().getY());
+            Vector2d botPoint = new Vector2d(robot.kachow.drive.getPose().getX(), robot.kachow.drive.getPose().getY());
             robot.kachow.bot_to_target = Math.sqrt(Math.abs((botPoint.x-target.x)*(botPoint.x-target.x) + (botPoint.y-target.y)*(botPoint.y-target.y)));
             aimerPose = ((robot.kachow.bot_to_target)/160);
             if (aimerPose>aimerMax){
@@ -439,11 +440,11 @@ public class PPDrive extends LinearOpMode {
         robot.stateUpdate(State);
         gamePad1.update(gamepad1, robot);
         if(gamepad1.share && gamepad1.options){
-            robot.kachow.roadRunner.setPose(new Pose(60, 60, Math.toRadians(robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)+ kaze.headingOffset)));
+            robot.kachow.drive.setPose(new Pose(60, 60, Math.toRadians(robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES))));
         }
-        kaze.update(robot.kachow.roadRunner);
+        kaze.update(robot.kachow.drive);
         telemetry.update();
-        kaze.drawCurrentAndHistory(robot.kachow.roadRunner);
+        kaze.drawCurrentAndHistory(robot.kachow.drive);
     }
     public void changeStateTo(state tostate){
         State = tostate;

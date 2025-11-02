@@ -7,12 +7,12 @@ import com.pedropathing.geometry.Pose;
 
 public class kaze {
     public volatile static Pose robotPose;
-    public volatile static double headingOffset;
+    //public volatile static double headingOffset;
     public volatile static boolean isActionDone = false;
 
     public static void init(Pose startPose){
         robotPose = startPose;
-        headingOffset = Math.toDegrees(startPose.getHeading());
+        //headingOffset = Math.toDegrees(startPose.getHeading());
     }
 
     public static void update(Follower drive){

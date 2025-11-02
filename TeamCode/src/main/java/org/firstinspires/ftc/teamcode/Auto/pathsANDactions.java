@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
 
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
@@ -24,7 +23,7 @@ public class pathsANDactions {
     public pathsANDactions (KachowHardware robot){
         this.robot = robot;
     }
-    public void buildPaths() throws IllegalAccessException, InstantiationException {
+    public void buildPaths() {
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
         scorePreload = new Path(new BezierLine(startPose, scorePose));
         scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
@@ -34,12 +33,15 @@ public class pathsANDactions {
 
         /* This is our grabPickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
 
-        drivetoPreload = follower.pathBuilder()
+
+
+        drivetoPreload = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(64.000, 8.500), new Pose(57.500, 17.700)))
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(118))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(114))
                 .build();
 
-        toIntake = follower.pathBuilder()
+
+        toIntake = robot.drive.pathBuilder()
                 .addPath(
                         new BezierCurve(
                                 new Pose(57.500, 17.700),
@@ -47,22 +49,22 @@ public class pathsANDactions {
                                 new Pose(37.500, 35.000)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(118), Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(114), Math.toRadians(180))
                 .build();
 
-        PathChain Intake1 = follower.pathBuilder()
+        PathChain Intake1 = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(37.500, 35.000), new Pose(24.200, 35.200)))
                 .setTangentHeadingInterpolation()
                 .build();
 
-        PathChain ShootPickup1 = follower.pathBuilder()
+        PathChain ShootPickup1 = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(24.200, 35.200), new Pose(57.500, 17.700)))
-                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(118))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(114))
                 .build();
 
-        drivetoPPG = follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(64.000, 8.500), new Pose(57.500, 17.700)))
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(118))
+        drivetoPPG = robot.drive.pathBuilder()
+                .addPath(new BezierLine(new Pose(57.500, 17.700), new Pose(64.000, 8.500)))
+                .setLinearHeadingInterpolation(Math.toRadians(114), Math.toRadians(90))
                 .addCallback(new Intaking(robot))
                 .addPath(
                         new BezierCurve(
@@ -71,35 +73,35 @@ public class pathsANDactions {
                                 new Pose(37.500, 35.000)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(118), Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(114), Math.toRadians(180))
                 .build();
 
         /* This is our scorePickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
-        scorePickup1 = follower.pathBuilder()
+        scorePickup1 = robot.drive.pathBuilder()
                 .addPath(new BezierLine(pickup1Pose, scorePose))
                 .setLinearHeadingInterpolation(pickup1Pose.getHeading(), scorePose.getHeading())
                 .build();
 
         /* This is our grabPickup2 PathChain. We are using a single path with a BezierLine, which is a straight line. */
-        grabPickup2 = follower.pathBuilder()
+        grabPickup2 = robot.drive.pathBuilder()
                 .addPath(new BezierLine(scorePose, pickup2Pose))
                 .setLinearHeadingInterpolation(scorePose.getHeading(), pickup2Pose.getHeading())
                 .build();
 
         /* This is our scorePickup2 PathChain. We are using a single path with a BezierLine, which is a straight line. */
-        scorePickup2 = follower.pathBuilder()
+        scorePickup2 = robot.drive.pathBuilder()
                 .addPath(new BezierLine(pickup2Pose, scorePose))
                 .setLinearHeadingInterpolation(pickup2Pose.getHeading(), scorePose.getHeading())
                 .build();
 
         /* This is our grabPickup3 PathChain. We are using a single path with a BezierLine, which is a straight line. */
-        grabPickup3 = follower.pathBuilder()
+        grabPickup3 = robot.drive.pathBuilder()
                 .addPath(new BezierLine(scorePose, pickup3Pose))
                 .setLinearHeadingInterpolation(scorePose.getHeading(), pickup3Pose.getHeading())
                 .build();
 
         /* This is our scorePickup3 PathChain. We are using a single path with a BezierLine, which is a straight line. */
-        scorePickup3 = follower.pathBuilder()
+        scorePickup3 = robot.drive.pathBuilder()
                 .addPath(new BezierLine(pickup3Pose, scorePose))
                 .setLinearHeadingInterpolation(pickup3Pose.getHeading(), scorePose.getHeading())
                 .build();

@@ -3,12 +3,8 @@ package org.firstinspires.ftc.teamcode.driver;
 
 //import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 
-import static org.firstinspires.ftc.teamcode.hardware.kachow.angleDifference;
-import static java.lang.Math.pow;
-
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,7 +16,6 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
-import org.firstinspires.ftc.teamcode.hardware.SampleHardware;
 import org.firstinspires.ftc.teamcode.hardware.Vector2d;
 import org.firstinspires.ftc.teamcode.hardware.button;
 import org.firstinspires.ftc.teamcode.hardware.kaze;
@@ -194,10 +189,10 @@ public class Test1 extends LinearOpMode {
 
             }
 
-            robot.kachow.roadRunner.updatePose();
-            telemetry.addLine("x: " + robot.kachow.roadRunner.getPose().getX());
-            telemetry.addLine("y: " + robot.kachow.roadRunner.getPose().getY());
-            Vector2d botPoint = new Vector2d(robot.kachow.roadRunner.getPose().getX(), robot.kachow.roadRunner.getPose().getY());
+            robot.kachow.drive.updatePose();
+            telemetry.addLine("x: " + robot.kachow.drive.getPose().getX());
+            telemetry.addLine("y: " + robot.kachow.drive.getPose().getY());
+            Vector2d botPoint = new Vector2d(robot.kachow.drive.getPose().getX(), robot.kachow.drive.getPose().getY());
             robot.kachow.bot_to_target = Math.sqrt(Math.abs((botPoint.x-target.x)*(botPoint.x-target.x) + (botPoint.y-target.y)*(botPoint.y-target.y)));
             aimerPose = ((robot.kachow.bot_to_target)/110);
             if (aimerPose>aimerMax){
@@ -284,10 +279,10 @@ public class Test1 extends LinearOpMode {
         gamePad2.update(gamepad2, robot);
         gamePad1.update(gamepad1, robot);
         if(gamepad1.share && gamepad1.options){
-            robot.kachow.roadRunner.setPose(new Pose(60, 60, Math.toRadians(robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)+ kaze.headingOffset)));
+            robot.kachow.drive.setPose(new Pose(60, 60, Math.toRadians(robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES))));
         }
 //        kaze.update(robot.kachow.roadRunner);
-        kaze.drawCurrentAndHistory(robot.kachow.roadRunner);
+        kaze.drawCurrentAndHistory(robot.kachow.drive);
     }
     public void changeStateTo(state tostate){
         State = tostate;

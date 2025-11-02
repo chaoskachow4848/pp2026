@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 
+import com.bylazar.configurables.PanelsConfigurables;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -44,6 +45,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -106,6 +108,8 @@ public class KachowHardware {
     public kachow kachow;
 
     public HardwareMap hardwareMap =  null;
+    public Follower drive;
+
 
     /* Constructor */
     public void init(HardwareMap hwMap) {
@@ -115,7 +119,16 @@ public class KachowHardware {
         kachow = new kachow();
         kachow.init(hwMap);
 
-        //leftFlap = hardwareMap.get(Servo.class, "LeftFlap");
+
+        if (drive == null) {
+            drive = kachow.drive;
+            PanelsConfigurables.INSTANCE.refreshClass(this);
+        } else {
+            drive = kachow.drive;
+        }
+        drive.activateAllPIDFs();
+
+         //leftFlap = hardwareMap.get(Servo.class, "LeftFlap");
         //rightFlap = hardwareMap.get(Servo.class, "RightFlap");
         spinner = hardwareMap.get(DcMotorEx.class, "Spinner");
         intake = hardwareMap.get(DcMotorEx.class, "Intake");
@@ -303,5 +316,19 @@ public class KachowHardware {
         public enum state {
                 driving, drivetoPPG, drivetoPGP, drivetoGPP, intaking, intkingGreen, intakingPurple, rotating, launching, humanPlayer, drivingHumanPlayer, Transfer, Transfer1, Transfer2, Transfer3, Transfer4, pathFollowing, retract, extend, turnto, aimbot, detecting, outTaking, firstClip, launch1, launch2, launchPreload, launch3, park, firstIntake; //lineSearch, detectBeacon, distanceSensor, homeMechanisms,
         }
+
+    public void drawCurrent(Follower drive) {
+        try {
+            Drawing.drawRobot(drive.getPose());
+            Drawing.sendPacket();
+        } catch (Exception e) {
+            throw new RuntimeException("Drawing failed " + e);
+        }
+    }
+
+    public void drawCurrentAndHistory(Follower drive) {
+        Drawing.drawPoseHistory(drive.getPoseHistory());
+        drawCurrent(drive);
+    }
 
 }
