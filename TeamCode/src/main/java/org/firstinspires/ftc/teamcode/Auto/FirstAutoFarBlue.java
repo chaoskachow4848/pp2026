@@ -4,10 +4,19 @@ import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPPG;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPreload;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.scorePickup1;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.scorePreload;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerFar;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorRightIn;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.launchTime;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederDown;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederUp;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederDown;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederUp;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.shooterVelocity;
 
+import android.widget.Switch;
+
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -29,6 +38,9 @@ public final class FirstAutoFarBlue extends LinearOpMode {
     boolean firstScored = false;
     boolean secondScored = false;
     boolean thirdScored = false;
+    boolean purple1 = false;
+    boolean purple2 = false;
+    boolean green = false;
     state State = state.driving;
     KachowHardware robot = new KachowHardware();
     double angle = 0;
@@ -44,8 +56,6 @@ public final class FirstAutoFarBlue extends LinearOpMode {
         //limelight.pipelineSwitch(0);
         double x;
         double y;
-        boolean grabbing = false;
-        boolean clawVert = false;
         final Pose startPose = new Pose(64.000, 8.500, Math.toRadians(90)); // Start Pose of our robot.
 
         kaze.init(startPose);
@@ -94,11 +104,12 @@ public final class FirstAutoFarBlue extends LinearOpMode {
         while (opModeIsActive()) {
             update();
             switch (State){
-                case driving:
+                case idle:
                     if(robot.stateChanged){
                         //bucketScore = actions.scoreSampleBlue(drive, robot.drive.pose);
                     }
                     robot.spinner.setVelocity(1600);
+                    robot.aimer.setPosition(aimerFar);
 
                     if(!robot.drive.isBusy()) {
                         robot.drive.followPath(drivetoPreload, true);
@@ -110,18 +121,16 @@ public final class FirstAutoFarBlue extends LinearOpMode {
                         //firstSample = new MecanumDrive.FailoverAction(actions.intakeFirst(drive, robot.drive.pose, 45.5, 54, -90), actions.isDone());
                         telemetry.addLine("in here");
                         telemetry.update();
-                        robot.spinner.setVelocity(0);
+                        robot.spinner.setVelocity(1600);
                     }
                     telemetry.addData("statetime: ", robot.stateTime);
 
-                    //robot.drive.followPath(scorePreload);
-                    //check for sensor intake
 
-                    if(!robot.drive.isBusy()){
 
-                        firstScored = true;
-                        changeStateTo(state.drivetoPPG);
+                    if(!robot.drive.isBusy() || firstScored){
+
                         robot.drive.followPath(drivetoPPG);
+                        changeStateTo(state.drivetoPPG);
                     }
                     break;
 
@@ -129,6 +138,8 @@ public final class FirstAutoFarBlue extends LinearOpMode {
                     if(robot.stateChanged){
                         //firstScore = actions.scoreSampleBlueIntake(drive, robot.drive.pose);
                     }
+
+
                     if(!robot.drive.isBusy()) {
                         if (firstScored) {
                             if (secondScored) {
@@ -185,6 +196,49 @@ public void update(){
     public void changeStateTo(state tostate){
         State = tostate;
         //robot.stateUpdate(State);
+    }
+
+    public void launch(String pattern, boolean scored) {
+        //left is green
+        //right is purples
+        if (!scored) {
+            switch (pattern){
+                case "PPG":
+                    if((robot.spinner.getVelocity() >= (shooterVelocity-20)) && (robot.spinner.getVelocity() <= (shooterVelocity+40))){
+                        //ready to shoot
+                        if (!purple1 && !purple2){
+                            robot.rightFeeder.setPosition(rightFeederUp);
+                            //robot.deflector.setPosition(deflectorLeftIn);
+                            launchTime = robot.stateTime.seconds();
+                        }
+
+                        if (true){
+                            robot.leftFeeder.setPosition(leftFeederUp);
+                            robot.deflector.setPosition(deflectorMiddle);
+                            //robot.deflector.setPosition(deflectorRightIn);
+                            launchTime = robot.stateTime.seconds();
+                        }
+                    }
+
+                    if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= 1))){
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        robot.rightFeeder.setPosition(rightFeederDown);
+                        //robot.deflector.setPosition(deflectorMiddle);
+                        robot.intake.setPower(-.5);
+                    } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
+                        robot.intake.setPower(1);
+                        robot.deflector.setPosition(deflectorRightIn);
+                    }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
+                        robot.intake.setPower(0);
+                    }
+                    break;
+                case "PGP":
+                    break;
+                case "GPP":
+                    break;
+            }
+
+        }
     }
 
 }

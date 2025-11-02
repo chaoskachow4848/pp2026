@@ -44,7 +44,7 @@ public class PPDrive extends LinearOpMode {
     public static double deflectorMiddle = .5;
     public static double aimerClose;
     public static double aimerMid = .6;
-    public static double aimerFar;
+    public static double aimerFar = .63;
     public static double aimerMin = .25;
     public static double aimerMax = .63;
     public static double shooterMin = 1200;

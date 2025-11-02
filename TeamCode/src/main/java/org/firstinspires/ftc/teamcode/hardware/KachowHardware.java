@@ -314,7 +314,7 @@ public class KachowHardware {
         }
     }
         public enum state {
-                driving, drivetoPPG, drivetoPGP, drivetoGPP, intaking, intkingGreen, intakingPurple, rotating, launching, humanPlayer, drivingHumanPlayer, Transfer, Transfer1, Transfer2, Transfer3, Transfer4, pathFollowing, retract, extend, turnto, aimbot, detecting, outTaking, firstClip, launch1, launch2, launchPreload, launch3, park, firstIntake; //lineSearch, detectBeacon, distanceSensor, homeMechanisms,
+                idle, driving, drivetoPPG, drivetoPGP, drivetoGPP, intaking, intkingGreen, intakingPurple, rotating, launching, humanPlayer, drivingHumanPlayer, Transfer, Transfer1, Transfer2, Transfer3, Transfer4, pathFollowing, retract, extend, turnto, aimbot, detecting, outTaking, firstClip, launch1, launch2, launchPreload, launch3, park, firstIntake; //lineSearch, detectBeacon, distanceSensor, homeMechanisms,
         }
 
     public void drawCurrent(Follower drive) {
