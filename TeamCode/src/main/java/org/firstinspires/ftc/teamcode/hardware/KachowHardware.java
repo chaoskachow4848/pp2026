@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -147,7 +148,7 @@ public class KachowHardware {
         frontleft.setDirection(DcMotor.Direction.REVERSE);
         backleft.setDirection(DcMotor.Direction.REVERSE);
         rightFeeder.setDirection(Servo.Direction.REVERSE);
-//        spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
+        spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
         //spinner.setDirection(DcMotorSimple.Direction.REVERSE);
         //intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -314,7 +315,7 @@ public class KachowHardware {
         }
     }
         public enum state {
-                idle, driving, drivetoPPG, drivetoPGP, drivetoGPP, intaking, intkingGreen, intakingPurple, rotating, launching, humanPlayer, drivingHumanPlayer, Transfer, Transfer1, Transfer2, Transfer3, Transfer4, pathFollowing, retract, extend, turnto, aimbot, detecting, outTaking, firstClip, launch1, launch2, launchPreload, launch3, park, firstIntake; //lineSearch, detectBeacon, distanceSensor, homeMechanisms,
+                idle, driving, drivetoPPG, drivetoPGP, drivetoGPP, intaking, intakingGreen, intakingPurple, rotating, launching, humanPlayer, drivingHumanPlayer, Transfer, Transfer1, Transfer2, Transfer3, Transfer4, pathFollowing, retract, extend, turnto, aimbot, detecting, outTaking, firstClip, launch1, launch2, launchPreload, launch3, park, firstIntakeGreen, firstIntakePurples, secondIntakePurple1, secondIntakeGreen, secondIntakeLastPurple; //lineSearch, detectBeacon, distanceSensor, homeMechanisms,
         }
 
     public void drawCurrent(Follower drive) {
