@@ -7,11 +7,22 @@ import com.pedropathing.geometry.Pose;
 
 public class kaze {
     public volatile static Pose robotPose;
+    public volatile static Vector2d target;
     //public volatile static double headingOffset;
-    public volatile static boolean isActionDone = false;
+    public volatile static boolean IsBlue = false;
 
     public static void init(Pose startPose){
         robotPose = startPose;
+        //headingOffset = Math.toDegrees(startPose.getHeading());
+    }
+    public static void init(Pose startPose, boolean isblue){
+        robotPose = startPose;
+        IsBlue = isblue;
+        if(IsBlue){
+            target = new Vector2d(0,144);
+        } else {
+            target = new Vector2d(144,144);
+        }
         //headingOffset = Math.toDegrees(startPose.getHeading());
     }
 

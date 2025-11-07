@@ -131,18 +131,19 @@ public class KachowHardware {
 
          //leftFlap = hardwareMap.get(Servo.class, "LeftFlap");
         //rightFlap = hardwareMap.get(Servo.class, "RightFlap");
-        spinner = hardwareMap.get(DcMotorEx.class, "Spinner");
-        intake = hardwareMap.get(DcMotorEx.class, "Intake");
+        spinner = hardwareMap.get(DcMotorEx.class, "Spinner");// Expansion Hub 3
+        intake = hardwareMap.get(DcMotorEx.class, "Intake");// Expansion Hub 2
+        imu = hardwareMap.get(IMU.class, "imu");//Control hub I2C BUS 0
+        //Control hub I2C BUS 3: "Pinpoint"
         backleft = hardwareMap.dcMotor.get("Backleft");
-        imu = hardwareMap.get(IMU.class, "imu");
         backright = hardwareMap.dcMotor.get("Backright");
         frontleft = hardwareMap.dcMotor.get("Frontleft");
         frontright = hardwareMap.dcMotor.get("Frontright");
 
-        aimer = hardwareMap.get(Servo.class, "Aimer");
-        rightFeeder = hardwareMap.get(Servo.class, "Rightfeeder");
-        leftFeeder = hardwareMap.get(Servo.class, "Leftfeeder");
-        deflector = hardwareMap.get(Servo.class, "Deflector");
+        aimer = hardwareMap.get(Servo.class, "Aimer");// servo hub 0
+        deflector = hardwareMap.get(Servo.class, "Deflector");// servo hub 1
+        leftFeeder = hardwareMap.get(Servo.class, "Leftfeeder");// servo hub 4
+        rightFeeder = hardwareMap.get(Servo.class, "Rightfeeder");// servo hub 5
 
 
         frontleft.setDirection(DcMotor.Direction.REVERSE);

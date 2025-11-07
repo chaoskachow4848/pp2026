@@ -4,7 +4,9 @@ package org.firstinspires.ftc.teamcode.driver;
 //import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -26,6 +28,7 @@ import org.firstinspires.ftc.teamcode.hardware.kaze;
 public class PPDrive extends LinearOpMode {
 
     public static double distance;
+    public static Vector2d target;
     public static double shooterVelocity;
     public static double intakeVelocity = 1;
     public static double difference = 0;
@@ -44,9 +47,9 @@ public class PPDrive extends LinearOpMode {
     public static double deflectorMiddle = .5;
     public static double aimerClose;
     public static double aimerMid = .57;
-    public static double aimerFar = .63;
+    public static double aimerFar = .65;
     public static double aimerMin = .25;
-    public static double aimerMax = .63;
+    public static double aimerMax = .65;
     public static double shooterMin = 1200;
     public static double shooterMax = 1600;
 
@@ -65,6 +68,7 @@ public class PPDrive extends LinearOpMode {
     public static double launchTime;
     public boolean manual = false;
     public boolean powerMode = false;
+    public PathChain park;
 
 
 
@@ -97,7 +101,11 @@ public class PPDrive extends LinearOpMode {
         robot.runtime.reset();
         robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
         runtime.reset();
-        Vector2d target = new Vector2d(0,144);
+        if(kaze.target != null){
+            target = kaze.target;
+        } else {
+            target = new Vector2d(0,144);
+        }
         robot.aimer.setPosition(.63);
 
 
@@ -228,6 +236,15 @@ public class PPDrive extends LinearOpMode {
                         changeStateTo(state.intaking);
                         break;
                     }
+                    if(gamepad1.options && gamepad1.share){
+                        robot.drive.activateAllPIDFs();
+                        park = robot.drive.pathBuilder()
+                                .addPath(new BezierLine(robot.drive.getPose(), new Pose(38.7, 31.8)))
+                                .setLinearHeadingInterpolation(robot.drive.getHeading(), Math.toRadians(180))
+                                .build();
+                        changeStateTo(state.park);
+                        robot.drive.followPath(park, true);
+                    }
                     break;
 
                 case intaking:
@@ -271,6 +288,15 @@ public class PPDrive extends LinearOpMode {
                         robot.deflector.setPosition(deflectorRightIn);
                         changeStateTo(state.aimbot);
                         break;
+                    }
+                    if(gamepad1.options && gamepad1.share){
+                        robot.drive.activateAllPIDFs();
+                        park = robot.drive.pathBuilder()
+                                .addPath(new BezierLine(robot.drive.getPose(), new Pose(38.7, 31.8)))
+                                .setLinearHeadingInterpolation(robot.drive.getHeading(), Math.toRadians(180))
+                                .build();
+                        changeStateTo(state.park);
+                        robot.drive.followPath(park, true);
                     }
                     break;
 
@@ -322,7 +348,7 @@ public class PPDrive extends LinearOpMode {
                         robot.spinner.setPower(0);
                     }*/
                     if((robot.spinner.getVelocity() >= (shooterVelocity-40)) && (robot.spinner.getVelocity() <= (shooterVelocity+40))){
-                        gamepad2.rumble(10);
+                        gamepad2.rumble(50);
 
                         if(robot.stateTime.seconds() - launchTime >= 1){
 
@@ -391,7 +417,27 @@ public class PPDrive extends LinearOpMode {
                         launchTime = 0;
                     }
                     break;
+                case park:
+                    if(robot.stateChanged){
+                        robot.rightFeeder.setPosition(rightFeederDown);
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        robot.spinner.setPower(0);
+                        robot.intake.setPower(0);
+                    }else {
+                        robot.rightFeeder.setPosition(rightFeederDown);
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        robot.spinner.setPower(0);
+                        robot.intake.setPower(0);
+                    }
 
+
+
+                    if(gamepad1.touchpad || gamepad2.touchpad){
+                        changeStateTo(state.driving);
+                        manual = false;
+                        powerMode = false;
+                        launchTime = 0;
+                    }
             }
 
             telemetry.addData("Aimer: ", robot.aimer.getPosition());
@@ -453,6 +499,7 @@ public class PPDrive extends LinearOpMode {
 
     }
     public void update(){ //place once on start of loop
+        robot.drive.update();
         gamePad2.update(gamepad2, robot);
         robot.stateUpdate(State);
         gamePad1.update(gamepad1, robot);
@@ -460,6 +507,7 @@ public class PPDrive extends LinearOpMode {
             robot.kachow.drive.setPose(new Pose(72, 72, 0));
         }
         kaze.update(robot.kachow.drive);
+        telemetry.addData("state: ", State);
         telemetry.update();
         kaze.drawCurrentAndHistory(robot.kachow.drive);
     }
