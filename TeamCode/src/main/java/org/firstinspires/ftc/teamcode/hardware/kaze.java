@@ -10,6 +10,7 @@ public class kaze {
     public volatile static Vector2d target;
     //public volatile static double headingOffset;
     public volatile static boolean IsBlue = false;
+    public volatile static String pattern;
 
     public static void init(Pose startPose){
         robotPose = startPose;
@@ -26,6 +27,17 @@ public class kaze {
         //headingOffset = Math.toDegrees(startPose.getHeading());
     }
 
+    public static void update(Follower drive, String Pattern){
+        if(robotPose == null){
+            robotPose = new Pose(60,60,180);
+        }
+        drive.updatePose();
+        robotPose = drive.getPose();
+
+        drawCurrentAndHistory(drive);
+        pattern = Pattern;
+    }
+
     public static void update(Follower drive){
         if(robotPose == null){
             robotPose = new Pose(60,60,180);
@@ -34,7 +46,6 @@ public class kaze {
         robotPose = drive.getPose();
 
         drawCurrentAndHistory(drive);
-
     }
 
     public static void drawCurrent(Follower drive) {

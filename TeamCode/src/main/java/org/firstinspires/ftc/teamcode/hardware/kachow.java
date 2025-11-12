@@ -121,6 +121,96 @@ public class kachow extends SampleHardware {
 
     }
 
+    public void robotCentric(double DriveSpeed, boolean opmodeIsActive, Gamepad gamepad1, Gamepad gamepad2, KachowHardware drive, boolean slowmode) {
+        double FrontLeft;
+        double FrontRight;
+        double BackLeft;
+        double BackRight;
+        double x;
+        double y;
+        this.DriveSpeed = DriveSpeed;
+        //double length = distance.getDistance(DistanceUnit.INCH);
+
+        if (drive.runtime.seconds() > 100 && drive.runtime.seconds() < 115) {
+            gamepad1.rumble(100);
+            gamepad2.runLedEffect(cool);
+            gamepad1.runLedEffect(cool);
+        }
+        if (opmodeIsActive) {
+            if(slowmode){
+                boolean SlowModeIsOn = false;
+                boolean MediumModeIsOn = false;
+                if (gamepad1.right_trigger > 0) {
+
+                    SlowModeIsOn = true;
+                }
+
+                if (gamepad1.left_trigger > 0) {
+                    MediumModeIsOn = true;
+                }
+
+                if (MediumModeIsOn) {
+                    this.DriveSpeed = .24;
+                }
+
+                if (SlowModeIsOn && gamepad1.right_trigger == 0) {
+                    SlowModeIsOn = false;
+                }
+
+                if (SlowModeIsOn) {
+                    this.DriveSpeed = .15;
+                }
+            } else {
+                this.DriveSpeed = DriveSpeed;
+            }
+
+
+           /* if (gamepad1.touchpad_finger_1) {
+                x = gamepad1.touchpad_finger_1_x / 2;
+                y = gamepad1.touchpad_finger_1_y / 2;
+            } else {
+                x = gamepad1.left_stick_x;
+                y = -gamepad1.left_stick_y;
+            }*/
+            x = gamepad1.left_stick_x;
+            y = -gamepad1.left_stick_y;
+            if(isTurned){
+                x= -x;
+                y= -y;
+            }
+            double turn = gamepad1.right_stick_x;
+            double theta = Math.atan2(y, x);
+            double power = Math.hypot(x, y);
+
+            double sin = Math.sin(theta - Math.PI / 4);
+            double cos = Math.cos(theta - Math.PI / 4);
+            double max = Math.max(Math.abs(sin), Math.abs(cos));
+            double maxPower;
+
+            FrontLeft = power * cos / max + turn;
+            FrontRight = power * sin / max - turn;
+            BackLeft = power * sin / max + turn;
+            BackRight = power * cos / max - turn;
+
+            maxPower = Math.max(Math.abs(FrontLeft), Math.abs(FrontRight));
+            maxPower = Math.max(maxPower, Math.abs(BackLeft));
+            maxPower = Math.max(maxPower, Math.abs(BackRight));
+
+            if (maxPower > 1.0) {
+                FrontLeft /= max;
+                FrontRight /= max;
+                BackLeft /= max;
+                BackRight /= max;
+            }
+            drive.backleft.setPower(Range.clip(BackLeft, -this.DriveSpeed, this.DriveSpeed));
+            drive.backright.setPower(Range.clip(BackRight, -this.DriveSpeed, this.DriveSpeed));
+            drive.frontleft.setPower(Range.clip(FrontLeft, -this.DriveSpeed, this.DriveSpeed));
+            drive.frontright.setPower(Range.clip(FrontRight, -this.DriveSpeed, this.DriveSpeed));
+            kaze.update(this.drive);
+        }
+
+    }
+
     public void robotCentric(boolean opmodeIsActive, Gamepad gamepad1, Gamepad gamepad2, KachowHardware drive) {
         double FrontLeft;
         double FrontRight;

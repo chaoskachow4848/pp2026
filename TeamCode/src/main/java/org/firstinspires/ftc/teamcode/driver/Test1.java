@@ -3,6 +3,17 @@ package org.firstinspires.ftc.teamcode.driver;
 
 //import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.D;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.F;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.I;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.P;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerMax;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerMin;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerPose;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.shooterMax;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.shooterMin;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.shooterVelocity;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -26,39 +37,6 @@ import org.firstinspires.ftc.teamcode.hardware.kaze;
 public class Test1 extends LinearOpMode {
 
     public static double distance;
-    public static double shooterVelocity = 0;
-    public static double intakeVelocity = 0;
-    public static double difference = 0;
-    public static double P = 300;//300;
-
-    public static double I = 0;
-    public static double D = 10;//10;
-    public static double F = 20;//20;
-
-    public static double deflectorLeftIn;
-    public static double deflectorRightIn;
-    public static double deflectorMiddle;
-    public static double aimerClose;
-    public static double aimerMid;
-    public static double aimerFar;
-    public static double aimerMin = .25;
-    public static double aimerMax = .75;
-    public static double shooterMin = 1350;
-    public static double shooterMax = 2000;
-
-    public static double shooterFar;
-    public static double shooterClose;
-    public static double shooterMid;
-    public static double intakeFast;
-    public static double intakeSlow;
-    public static double leftFeederDown;
-    public static double leftFeederMid;
-    public static double leftFeederUp;
-    public static double rightFeederDown;
-    public static double rightFeederMid;
-    public static double rightFeederUp;
-    public static double aimerPose;
-    public static double launchTime;
     public boolean manual = false;
 
     public int testNumber = 1;

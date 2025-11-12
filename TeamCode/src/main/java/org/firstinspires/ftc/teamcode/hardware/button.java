@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class button {
     boolean incomingState;
-    boolean currentState;
-    boolean lastState;
+    public boolean currentState;
+    public boolean lastState;
     public boolean currToggleState = false;
 
 

@@ -3,6 +3,26 @@ package org.firstinspires.ftc.teamcode.driver;
 
 //import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.D;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.F;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.I;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.P;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerMax;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerMid;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerMin;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorLeftIn;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorRightIn;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.intakeFast;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.launchTime;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederDown;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederUp;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederDown;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederUp;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.shooterMax;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.shooterMid;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.shooterMin;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -23,52 +43,23 @@ import org.firstinspires.ftc.teamcode.hardware.button;
 import org.firstinspires.ftc.teamcode.hardware.kaze;
 
 @Configurable
-@TeleOp(name="PPDrive", group="4848")
+@TeleOp(name="DiegoPP", group="4848")
 //@Disabled
-public class PPDrive extends LinearOpMode {
+public class DiegoPP extends LinearOpMode {
 
     public static double distance;
     public static Vector2d target;
     public static double shooterVelocity;
-    public static double intakeVelocity = 1;
-    public static double difference = 0;
-    public static double P = 300;//300;
-
-    public static double I = 0;
-    public static double D = 0;//10;
-    public static double F = 10;//20;
-
-    public static double deflectorLeftIn = .3583-.04;
-    public static double deflectorRightIn = .6683-.04;
-    /*
-    public static double deflectorLeftIn = .4572;
-    public static double deflectorRightIn = .5672;
-     */
-    public static double deflectorMiddle = .5-.04;
-    public static double aimerClose;
-    public static double aimerMid = .57;
-    public static double aimerFar = .65;
-    public static double aimerMin = .25;
-    public static double aimerMax = .65;
-    public static double shooterMin = 1200;
-    public static double shooterMax = 1600;
-
     public static double shooterFar = shooterMax;
     public static double shooterClose;
-    public static double shooterMid = 1500;
-    public static double intakeFast = .75;
-    public static double intakeSlow = .25;
-    public static double leftFeederDown = .2183;
-    public static double leftFeederMid = .3183;
-    public static double leftFeederUp = .36;
-    public static double rightFeederDown = 0;
-    public static double rightFeederMid = .1;
-    public static double rightFeederUp = .15;
     public static double aimerPose;
     public static double launchTime;
     public boolean manual = false;
     public boolean doubleLaunch = false;
     public boolean powerMode = false;
+    boolean green = false;
+    boolean purple1 = false;
+    boolean purple2 = false;
     public PathChain park;
 
 
@@ -100,7 +91,7 @@ public class PPDrive extends LinearOpMode {
         }
         waitForStart();
         robot.runtime.reset();
-        robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
+        robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300,0, 0, 10));
         runtime.reset();
         if(kaze.target != null){
             target = kaze.target;
@@ -119,76 +110,6 @@ public class PPDrive extends LinearOpMode {
             update();
 
 
- /*           double error;
-            double errorPower;
-            double x;
-            double y;
-            double turn;
-            double heading;
-
-            Vector2d botPoint = new Vector2d(kaze.robotPose.getPose().getX(), kaze.robotPose.getPose().getY());
-            Vector2d wallReference = new Vector2d(144, botPoint.y);
-            bot_to_target = Math.abs(Math.sqrt((botPoint.x-target.x)*(botPoint.x-target.x) + (botPoint.y-target.y)*(botPoint.y-target.y)));
-            bot_to_wall = Math.abs(Math.sqrt(pow(botPoint.x-wallReference.x, 2) + pow(botPoint.y-wallReference.y, 2)));
-            wall_to_target = Math.abs(Math.sqrt(pow(wallReference.x-target.x, 2) + pow(wallReference.y-target.y, 2)));
-
-            bot_angle = Math.abs(Math.acos((pow(bot_to_wall,2) + pow(bot_to_target,2) - pow(wall_to_target,2))/
-                    (2 * bot_to_wall * bot_to_target)));
-            target_angle = Math.abs(Math.asin((bot_to_wall * Math.sin(bot_angle))/wall_to_target));
-            wall_angle = Math.abs(Math.toRadians(180) - bot_angle - target_angle);
-
-            if(botPoint.y > target.y){
-                bot_angle = -bot_angle;
-                target_angle = -target_angle;
-                wall_angle = -wall_angle;
-            }
-
-            if (robot.runtime.seconds() > 84.8 && robot.runtime.seconds() < 85) {
-                gamepad1.rumble(5000);
-                gamepad2.rumble(5000);
-            }
-            if (robot.runtime.seconds() > 109 && robot.runtime.seconds() < 110) {
-                gamepad1.rumble(10000);
-                gamepad2.rumble(10000);
-            }
-            heading = robot.kachow.roadRunner.getHeading()+Math.toRadians(kaze.headingOffset);
-
-            x = gamepad1.left_stick_x;
-            y = -gamepad1.left_stick_y;
-
-            error = angleDifference(heading, bot_angle);
-
-            errorPower = error / 90;
-            if(Math.abs(errorPower)>1){
-                errorPower = Math.abs(errorPower)/errorPower;
-            }
-            if(Math.abs(errorPower)<.1){
-                errorPower = (Math.abs(errorPower)/errorPower)*.1;
-            }
-            if (Math.abs(error) < 1) {
-                errorPower = 0;
-            }
-            turn = -errorPower;
-
-
-            double botHeading = heading;
-            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(turn), 1);
-            double frontLeftPower = (rotY + rotX + turn) / denominator;
-            double backLeftPower = (rotY - rotX + turn) / denominator;
-            double frontRightPower = (rotY - rotX - turn) / denominator;
-            double backRightPower = (rotY + rotX - turn) / denominator;
-
-
-            robot.frontright.setPower(frontRightPower);
-            robot.frontleft.setPower(frontLeftPower);
-            robot.backleft.setPower(backLeftPower);
-            robot.backright.setPower(backRightPower);
-            //roadRunner.setPose(new Pose(roadRunner.getPose().getX(), roadRunner.getPose().getY(), Math.toRadians(robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)+kaze.headingOffset)));
-            kaze.update(robot.kachow.roadRunner);
-*/
 
 
             robot.kachow.drive.updatePose();
@@ -198,7 +119,7 @@ public class PPDrive extends LinearOpMode {
             telemetry.addLine("aimer: " + aimerPose);
             Vector2d botPoint = new Vector2d(robot.kachow.drive.getPose().getX(), robot.kachow.drive.getPose().getY());
             robot.kachow.bot_to_target = Math.sqrt(Math.abs((botPoint.x-target.x)*(botPoint.x-target.x) + (botPoint.y-target.y)*(botPoint.y-target.y)));
-            aimerPose = .57;//((robot.kachow.bot_to_target)/210);
+            aimerPose = ((robot.kachow.bot_to_target)/210);
             if (aimerPose>aimerMax){
                 aimerPose = aimerMid;
             }else if (aimerPose<aimerMin){
@@ -212,6 +133,8 @@ public class PPDrive extends LinearOpMode {
             }
             if(botPoint.y <= 60){
                 aimerPose = aimerMax;
+            } else {
+                aimerPose = .5;
             }
             if(botPoint.y <= 60){
                 shooterVelocity = shooterMax;
@@ -227,12 +150,12 @@ public class PPDrive extends LinearOpMode {
                     robot.kachow.robotCentric(opModeIsActive(), gamepad1, gamepad2, robot);
                     robot.aimer.setPosition(aimerPose);
 
-                    if(gamePad1.Right_Trigger.wasJustPressed()){
+                    if(gamePad1.Right_Bumper.wasJustPressed()){
                         robot.deflector.setPosition(deflectorRightIn);
                         changeStateTo(state.aimbot);
                         break;
                     }
-                    if(gamePad2.Right_Trigger.wasJustPressed()){
+                    if(gamePad1.Right_Trigger.wasJustPressed()){
                         robot.deflector.setPosition(deflectorLeftIn);
                         changeStateTo(state.intaking);
                         break;
@@ -258,55 +181,34 @@ public class PPDrive extends LinearOpMode {
 
                 case intaking:
                     if(robot.stateChanged){
-                        /*if(gamePad2.Right_Bumper.getToggleState()){
-                            gamePad2.Right_Bumper.currentState = true;
-                        }
-                        gamePad2.Right_Bumper.currToggleState = false;
-                        gamePad2.Left_Bumper.currToggleState = false;
 
-                         */
                         robot.deflector.setPosition(deflectorRightIn);
-                        robot.spinner.setVelocity(0);
+                        robot.spinner.setPower(.5);
                     }
-                    robot.kachow.robotCentric(opModeIsActive(), gamepad1, gamepad2, robot);
+                    robot.kachow.robotCentric(1 ,opModeIsActive(), gamepad1, gamepad2, robot, false);
                     robot.aimer.setPosition(aimerPose);
-                    if (gamePad2.Right_Trigger.isDown()){
+                    if (gamePad1.Right_Trigger.isDown()){
                         robot.intake.setPower(intakeFast);
                     } else {
                         robot.intake.setPower(0);
                     }
 
-                    if (gamePad2.Left_Trigger.isDown()){
+                    if (gamePad1.Left_Trigger.isDown()){
                         robot.intake.setPower(-intakeFast);
                     }
 
 
-                    if((robot.deflector.getPosition()<deflectorMiddle) && gamePad2.Right_Bumper.wasJustPressed()){
-                        robot.deflector.setPosition(deflectorRightIn);
-
-                    } else if ((robot.deflector.getPosition()> deflectorMiddle) && gamePad2.Right_Bumper.wasJustPressed()) {
-                        robot.deflector.setPosition(deflectorLeftIn);
-
-                    }
-                   /* if(gamePad2.Right_Bumper.getToggleState()){
-                        robot.deflector.setPosition(deflectorRightIn);
-                    }else{
-                        robot.deflector.setPosition(deflectorLeftIn);
-                    }
-
-                    */
-
-                    if(gamePad2.Left_Bumper.isDown()){
+                    if(gamePad1.Left_Bumper.isDown()){
                         robot.spinner.setVelocity(shooterVelocity);
                     } else {
-                        robot.spinner.setVelocity(0);
+                        robot.spinner.setPower(.5);
                     }
 
 
                     telemetry.addData("Intake: ", robot.intake.getVelocity());
                     telemetry.addData("IntakePower: ", robot.intake.getPower());
-                    robot.deflector.setPosition(1);
-                    if(gamePad1.Right_Trigger.wasJustPressed()){
+                    robot.deflector.setPosition(deflectorRightIn);
+                    if(gamePad1.Right_Bumper.wasJustPressed()){
                         robot.intake.setPower(0);
                         //robot.deflector.setPosition(deflectorRightIn);
                         robot.deflector.setPosition(deflectorRightIn);
@@ -346,7 +248,7 @@ public class PPDrive extends LinearOpMode {
                     if(!doubleLaunch) {
                         //robot.spinner.setPower(robot.spinner.getPower() + (shooterVelocity-robot.spinner.getVelocity()) * .00001);
                         //powerMode = true;
-                        robot.deflector.setPosition(1);
+                        robot.deflector.setPosition(deflectorRightIn);
                         robot.spinner.setVelocity(shooterVelocity);//+140
                     } else {
                         robot.spinner.setVelocity(shooterVelocity);
@@ -355,6 +257,7 @@ public class PPDrive extends LinearOpMode {
                             //robot.deflector.setPosition(deflectorMiddle);
                         }
                     }
+                    robot.spinner.setVelocity(shooterVelocity);//+140
 /*
 
                     if(shooterVelocity<0){
@@ -384,31 +287,27 @@ public class PPDrive extends LinearOpMode {
                         robot.spinner.setPower(0);
                     }*/
                     if((robot.spinner.getVelocity() >= (shooterVelocity-40)) && (robot.spinner.getVelocity() <= (shooterVelocity+40))){
-                        gamepad2.rumble(50);
+                        gamepad1.rumble(50);
 
-                        if(robot.stateTime.seconds() - launchTime >= 1){
-                            if(gamePad2.triangle.isDown()){
-                                doubleLaunch = true;
-                            }
 
-                            if (gamePad2.Right_Trigger.isDown() || gamePad2.triangle.isDown()){
+                            if (gamePad1.Dpad_Right.isDown()){
                                 robot.rightFeeder.setPosition(rightFeederUp);
                                 //robot.deflector.setPosition(deflectorLeftIn);
                                 launchTime = robot.stateTime.seconds();
                             }
 
-                            if (gamePad2.Left_Trigger.isDown() || gamePad2.triangle.isDown()){
+                            if (gamePad1.Dpad_Left.isDown()){
                                 //robot.deflector.setPosition(deflectorMiddle);
                                 robot.leftFeeder.setPosition(leftFeederUp);
                                 //robot.deflector.setPosition(deflectorRightIn);
                                 launchTime = robot.stateTime.seconds();
                             }
 
-                        }
+
                     }
 
-                    /*if(!doubleLaunch){
-                        if((robot.spinner.getVelocity() >= (shooterVelocity+140)) && (robot.spinner.getVelocity() <= (shooterVelocity+180))){
+                /*    if(!doubleLaunch){
+                        if((robot.spinner.getVelocity() >= (shooterVelocity+100)) && (robot.spinner.getVelocity() <= (shooterVelocity+180))){
                             gamepad2.rumble(50);
 
                             if(robot.stateTime.seconds() - launchTime >= 1){
@@ -416,13 +315,13 @@ public class PPDrive extends LinearOpMode {
                                     doubleLaunch = true;
                                 }
 
-                                if (gamePad2.Right_Trigger.isDown() || gamePad2.triangle.isDown()){
+                                if (gamePad2.Dpad_Right.isDown() || (gamePad2.Right_Trigger.isDown() || gamePad2.Left_Trigger.isDown())){
                                     robot.rightFeeder.setPosition(rightFeederUp);
                                     //robot.deflector.setPosition(deflectorLeftIn);
                                     launchTime = robot.stateTime.seconds();
                                 }
 
-                                if (gamePad2.Left_Trigger.isDown() || gamePad2.triangle.isDown()){
+                                if (gamePad2.Dpad_Left.isDown() || (gamePad2.Right_Trigger.isDown() || gamePad2.Left_Trigger.isDown())){
                                     //robot.deflector.setPosition(deflectorMiddle);
                                     robot.leftFeeder.setPosition(leftFeederUp);
                                     //robot.deflector.setPosition(deflectorRightIn);
@@ -434,7 +333,9 @@ public class PPDrive extends LinearOpMode {
 
                     }
 
-                     */
+                 */
+
+
 
 
 
@@ -453,21 +354,21 @@ public class PPDrive extends LinearOpMode {
                         robot.intake.setPower(1);
                         robot.leftFeeder.setPosition(leftFeederDown);
                         robot.rightFeeder.setPosition(rightFeederDown);
-                       // robot.deflector.setPosition(deflectorRightIn);
+                        // robot.deflector.setPosition(deflectorRightIn);
                     }else if (((robot.stateTime.seconds()-launchTime) >= .8) && ((robot.stateTime.seconds()-launchTime) <= 1)){
                         robot.intake.setPower(0);
                     }
 
-                    if(gamePad2.Dpad_Up.wasJustPressed()){
+                    if(gamePad1.Dpad_Up.wasJustPressed()){
                         robot.aimer.setPosition(robot.aimer.getPosition()+.01);
                         manual = true;
                     }
-                    if(gamePad2.Dpad_Down.wasJustPressed()){
+                    if(gamePad1.Dpad_Down.wasJustPressed()){
                         robot.aimer.setPosition(robot.aimer.getPosition()-.01);
                         manual = true;
                     } if (!manual){
-                        robot.aimer.setPosition(aimerPose);
-                    }
+                    robot.aimer.setPosition(aimerPose);
+                }
 
 
 
@@ -481,7 +382,7 @@ public class PPDrive extends LinearOpMode {
                     telemetry.addData("I: ", I);
                     telemetry.addData("D: ", D);
                     telemetry.addData("F: ", F);
-                    if(gamePad1.Right_Trigger.wasJustReleased()){
+                    if(gamePad1.Right_Bumper.wasJustReleased()){
                         robot.rightFeeder.setPosition(rightFeederDown);
                         robot.leftFeeder.setPosition(leftFeederDown);
                         changeStateTo(state.driving);
@@ -490,7 +391,67 @@ public class PPDrive extends LinearOpMode {
                         doubleLaunch = false;
                         launchTime = 0;
                     }
+                    if(gamePad1.triangle.isDown()){
+                        robot.rightFeeder.setPosition(rightFeederDown);
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        changeStateTo(state.launching);
+                        manual = false;
+                        powerMode = false;
+                        doubleLaunch = false;
+                        launchTime = 0;
+                    }
                     break;
+
+                case launching:
+                    robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .2);
+                  if(launch(kaze.pattern, (int) shooterVelocity)){
+                      changeStateTo(state.driving);
+                      green = false;
+                      purple1 = false;
+                      purple2 = false;
+                  } else {
+
+                      if (!doubleLaunch) {
+                          //robot.spinner.setPower(robot.spinner.getPower() + (shooterVelocity-robot.spinner.getVelocity()) * .00001);
+                          //powerMode = true;
+                          robot.deflector.setPosition(deflectorRightIn);
+                          robot.spinner.setVelocity(shooterVelocity);//+140
+                      } else {
+                          robot.spinner.setVelocity(shooterVelocity);
+                          //robot.intake.setPower(.5);
+                          if (((robot.stateTime.seconds() - launchTime) >= .8) && ((robot.stateTime.seconds() - launchTime) <= 1)) {
+                              //robot.deflector.setPosition(deflectorMiddle);
+                          }
+                      }
+
+                      if (gamePad1.Dpad_Up.wasJustPressed()) {
+                          robot.aimer.setPosition(robot.aimer.getPosition() + .01);
+                          manual = true;
+                      }
+                      if (gamePad1.Dpad_Down.wasJustPressed()) {
+                          robot.aimer.setPosition(robot.aimer.getPosition() - .01);
+                          manual = true;
+                      }
+                      if (!manual) {
+                          robot.aimer.setPosition(aimerPose);
+                      }
+
+
+                      robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
+
+
+                      telemetry.addData("spinner: ", robot.spinner.getVelocity());
+                      telemetry.addData("spinnerPower: ", robot.spinner.getPower());
+                      telemetry.addData("TargetVelocity: ", shooterVelocity);
+                      telemetry.addData("P: ", P);
+                      telemetry.addData("I: ", I);
+                      telemetry.addData("D: ", D);
+                      telemetry.addData("F: ", F);
+
+                  }
+                    break;
+
+
                 case park:
                     if(robot.stateChanged){
                         robot.rightFeeder.setPosition(rightFeederDown);
@@ -593,6 +554,169 @@ public class PPDrive extends LinearOpMode {
         State = tostate;
         robot.stateUpdate(State);
     }
+    public boolean launch(String pattern, int velocity) {
+        //left is green
+        //right is purples
+
+        telemetry.addData("launchtime", launchTime);
+        if(purple1){
+            telemetry.addLine("purple1");
+        }
+        if(purple2){
+            telemetry.addLine("purple2");
+        }
+        if(green){
+            telemetry.addLine("green");
+        }
+        robot.spinner.setVelocity(velocity);
+        robot.spinner2.setVelocity(velocity);
+        switch (pattern) {
+            case "PPG":
+                if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
+                    //if ready to shoot
+                    if (robot.stateTime.seconds() - launchTime >= 1.4) {
+                        //if not shooting
+                        if (purple1 && purple2 && !green) {
+                            //shoot third
+                            robot.leftFeeder.setPosition(leftFeederUp);
+                            robot.deflector.setPosition(deflectorMiddle);
+                            launchTime = robot.stateTime.seconds();
+                            green = true;
+                        } else if (purple1 && !purple2 && !green) {
+                            //shoot second
+                            robot.rightFeeder.setPosition(rightFeederUp);
+                            robot.deflector.setPosition(deflectorRightIn);
+                            launchTime = robot.stateTime.seconds();
+                            purple2 = true;
+                        } else if (!purple1 && !purple2 && !green) {
+                            //shoot first
+                            robot.rightFeeder.setPosition(rightFeederUp);
+                            robot.deflector.setPosition(deflectorRightIn);
+                            launchTime = robot.stateTime.seconds();
+                            purple1 = true;
+                        }
+                    }
+                }
+
+                if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
+                    robot.leftFeeder.setPosition(leftFeederDown);
+                    robot.rightFeeder.setPosition(rightFeederDown);
+                    //robot.deflector.setPosition(deflectorMiddle);
+                    robot.intake.setPower(-.45);
+                } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
+                    robot.intake.setPower(1);
+                    robot.deflector.setPosition(deflectorRightIn);
+                }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
+                    robot.intake.setPower(0);
+                    return (purple1 && purple2 && green);
+                }
+
+                break;
+            case "PGP":
+                if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
+                    //if ready to shoot
+                    if (robot.stateTime.seconds() - launchTime >= 1.4) {
+                        //if not shooting
+                        if (purple1 && green && !purple2) {
+                            //shoot third
+                            robot.rightFeeder.setPosition(rightFeederUp);
+                            robot.deflector.setPosition(deflectorRightIn);
+                            launchTime = robot.stateTime.seconds();
+                            purple2 = true;
+                        } else if (purple1 && !green && !purple2) {
+                            //shoot second
+                            robot.leftFeeder.setPosition(leftFeederUp);
+                            robot.deflector.setPosition(deflectorMiddle);
+                            launchTime = robot.stateTime.seconds();
+                            green = true;
+                        } else if (!purple1 && !green && !purple2) {
+                            //shoot first
+                            robot.rightFeeder.setPosition(rightFeederUp);
+                            robot.deflector.setPosition(deflectorMiddle);
+                            launchTime = robot.stateTime.seconds();
+                            purple1 = true;
+                        }
+                    }
+                }
+
+                if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
+                    robot.leftFeeder.setPosition(leftFeederDown);
+                    robot.rightFeeder.setPosition(rightFeederDown);
+                    //robot.deflector.setPosition(deflectorMiddle);
+                    if(purple1){
+                        robot.intake.setPower(-.2);
+                    } else {
+                        robot.intake.setPower(-.4);
+                    }
+                } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
+                    if(green && purple1){
+                        robot.intake.setPower(1);
+                    } else{
+                        robot.intake.setPower(0);
+                    }
+                    robot.deflector.setPosition(deflectorRightIn);
+                }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
+                    robot.intake.setPower(0);
+                    return (purple1 && purple2 && green);
+                }
+
+                break;
+            case "GPP":
+                if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
+                    //if ready to shoot
+                    if (robot.stateTime.seconds() - launchTime >= 1.4) {
+                        //if not shooting
+                        if (green && purple1 && !purple2) {
+                            //shoot third
+                            robot.rightFeeder.setPosition(rightFeederUp);
+                            robot.deflector.setPosition(deflectorMiddle);
+                            launchTime = robot.stateTime.seconds();
+                            purple2 = true;
+                        } else if (green && !purple1 && !purple2) {
+                            //shoot second
+                            robot.rightFeeder.setPosition(rightFeederUp);
+                            robot.deflector.setPosition(deflectorRightIn);
+                            launchTime = robot.stateTime.seconds();
+                            purple1 = true;
+                        } else if (!green && !purple1 && !purple2) {
+                            //shoot first
+                            robot.leftFeeder.setPosition(leftFeederUp);
+                            robot.deflector.setPosition(deflectorMiddle);
+                            launchTime = robot.stateTime.seconds();
+                            green = true;
+                        }
+                    }
+                }
+
+                if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
+                    robot.leftFeeder.setPosition(leftFeederDown);
+                    robot.rightFeeder.setPosition(rightFeederDown);
+                    //robot.deflector.setPosition(deflectorMiddle);
+                    if(green){
+                        robot.intake.setPower(0);
+                    } else {
+                        robot.intake.setPower(-.4);
+                    }
+                } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
+                    if(green && purple1){
+                        robot.intake.setPower(1);
+                    } else{
+                        robot.intake.setPower(0);
+                    }
+                    robot.deflector.setPosition(deflectorRightIn);
+                }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
+                    robot.intake.setPower(0);
+                    return (purple1 && purple2 && green);
+                }
+
+                break;
+        }
+
+
+
+        return false;
+    }
+
 
 
 }

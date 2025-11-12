@@ -37,7 +37,7 @@ public class pathsANDactions {
 
         toPGP = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(57.500, 17.500), new Pose(40, 59)))
-                .setLinearHeadingInterpolation(Math.toRadians(114), Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(113), Math.toRadians(180))
                 .build();
         intakePGPFirst = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(40, 59), new Pose(38, 59)))
@@ -53,7 +53,7 @@ public class pathsANDactions {
                 .build();
         shootPGP = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(25.600, 59), new Pose(57.500, 17.500)))
-                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(114))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(113))
                 .build();
 
         drivetoPreload = robot.drive.pathBuilder()
@@ -76,7 +76,7 @@ public class pathsANDactions {
                 //.addCallback(new DeflectorLeftInGreen(robot))
                 .addPath(new BezierLine(new Pose(37.500, 33), new Pose(24.200, 32)))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addCallback(new DeflectorRightInPurple(robot))
+                //.addCallback(new DeflectorRightInPurple(robot))
                 //.addPath(new BezierLine(new Pose(25.7, 35.000), new Pose()))
                 //.setTangentHeadingInterpolation()
                 .build();
@@ -95,7 +95,7 @@ public class pathsANDactions {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(113), Math.toRadians(180))
-                .addCallback(new Intaking(robot))
+                //.addCallback(new Intaking(robot))
                 .build();
 
         /* This is our scorePickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
@@ -159,11 +159,11 @@ public class pathsANDactions {
 
         /// RED
         REDtoPGP = robot.drive.pathBuilder()
-                .addPath(new BezierLine(new Pose(144-57.500, 17.500), new Pose(144-37, 60)))
+                .addPath(new BezierLine(new Pose(144-57.500, 17.500), new Pose(144-37.5, 60)))
                 .setLinearHeadingInterpolation(Math.toRadians(67), Math.toRadians(0))
                 .build();
         REDintakePGPFirst = robot.drive.pathBuilder()
-                .addPath(new BezierLine(new Pose(144-37, 60), new Pose(144-35, 60)))
+                .addPath(new BezierLine(new Pose(144-37.5, 60), new Pose(144-35, 60)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         REDintakePGPGreen = robot.drive.pathBuilder()

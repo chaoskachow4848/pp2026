@@ -36,6 +36,7 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -95,6 +96,7 @@ public class KachowHardware {
     public DcMotor frontleft;
 
     public DcMotorEx spinner;
+    public DcMotorEx spinner2;
     public DcMotorEx intake;
 
     public Servo aimer;
@@ -132,6 +134,7 @@ public class KachowHardware {
          //leftFlap = hardwareMap.get(Servo.class, "LeftFlap");
         //rightFlap = hardwareMap.get(Servo.class, "RightFlap");
         spinner = hardwareMap.get(DcMotorEx.class, "Spinner");// Expansion Hub 3
+        spinner2 = hardwareMap.get(DcMotorEx.class, "Spinner2");// Expansion Hub 1
         intake = hardwareMap.get(DcMotorEx.class, "Intake");// Expansion Hub 2
         imu = hardwareMap.get(IMU.class, "imu");//Control hub I2C BUS 0
         //Control hub I2C BUS 3: "Pinpoint"
@@ -150,14 +153,15 @@ public class KachowHardware {
         backleft.setDirection(DcMotor.Direction.REVERSE);
         rightFeeder.setDirection(Servo.Direction.REVERSE);
         spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
-        //spinner.setDirection(DcMotorSimple.Direction.REVERSE);
+        spinner2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
+        spinner2.setDirection(DcMotorSimple.Direction.REVERSE);
         //intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        spinner.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        //spinner.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.);
         intake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         backleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -165,6 +169,7 @@ public class KachowHardware {
         backright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         spinner.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        spinner2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         intake.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         //aimer.scaleRange(0, 100);
