@@ -915,10 +915,15 @@ public class kachow extends SampleHardware {
             gamepad2.runLedEffect(cool);
             gamepad1.runLedEffect(cool);
         }
-        heading = drive.kachow.drive.getHeading() ;
+        heading = drive.kachow.drive.getHeading();
+                if(kaze.IsBlue){
+            x = -gamepad1.left_stick_x;
+            y = gamepad1.left_stick_y;
+        } else {
+            x = gamepad1.left_stick_x;
+            y = -gamepad1.left_stick_y;
+        }
 
-        x = -gamepad1.left_stick_x;
-        y = gamepad1.left_stick_y;
 
         error = angleDifference(heading, bot_angle);
 

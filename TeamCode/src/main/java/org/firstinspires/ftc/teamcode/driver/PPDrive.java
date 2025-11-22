@@ -15,7 +15,6 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
 import org.firstinspires.ftc.teamcode.hardware.Vector2d;
@@ -36,7 +35,7 @@ public class PPDrive extends LinearOpMode {
 
     public static double I = 0;
     public static double D = 0;//10;
-    public static double F = 10;//20;
+    public static double F = 15;//20;
 
     public static double deflectorLeftIn = .3583-.04;
     public static double deflectorRightIn = .6683-.04;
@@ -46,17 +45,17 @@ public class PPDrive extends LinearOpMode {
      */
     public static double deflectorMiddle = .5-.04;
     public static double aimerClose;
-    public static double aimerMid = .57;
+    public static double aimerMid = .55;
     public static double aimerFar = .65;
     public static double aimerMin = .25;
-    public static double aimerMax = .65;
+    public static double aimerMax = .55;
     public static double shooterMin = 1200;
-    public static double shooterMax = 1600;
+    public static double shooterMax = 1660;
 
     public static double shooterFar = shooterMax;
     public static double shooterClose;
     public static double shooterMid = 1500;
-    public static double intakeFast = .75;
+    public static double intakeFast = .5;
     public static double intakeSlow = .25;
     public static double leftFeederDown = .2183;
     public static double leftFeederMid = .3183;
@@ -100,7 +99,8 @@ public class PPDrive extends LinearOpMode {
         }
         waitForStart();
         robot.runtime.reset();
-        robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
+        robot.spinnerLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
+        robot.spinnerRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
         runtime.reset();
         if(kaze.target != null){
             target = kaze.target;
@@ -198,13 +198,13 @@ public class PPDrive extends LinearOpMode {
             telemetry.addLine("aimer: " + aimerPose);
             Vector2d botPoint = new Vector2d(robot.kachow.drive.getPose().getX(), robot.kachow.drive.getPose().getY());
             robot.kachow.bot_to_target = Math.sqrt(Math.abs((botPoint.x-target.x)*(botPoint.x-target.x) + (botPoint.y-target.y)*(botPoint.y-target.y)));
-            aimerPose = .57;//((robot.kachow.bot_to_target)/210);
+            //aimerPose = .5;//((robot.kachow.bot_to_target)/210);
             if (aimerPose>aimerMax){
                 aimerPose = aimerMid;
             }else if (aimerPose<aimerMin){
                 aimerPose = aimerMin;
             }
-            shooterVelocity = 1600*((robot.kachow.bot_to_target)/120);
+            shooterVelocity = 1380;//1600*((robot.kachow.bot_to_target)/120);//1300
             if (shooterVelocity>shooterMid){
                 shooterVelocity = shooterMid;
             }else if (shooterVelocity<shooterMin){
@@ -212,6 +212,8 @@ public class PPDrive extends LinearOpMode {
             }
             if(botPoint.y <= 60){
                 aimerPose = aimerMax;
+            } else {
+                aimerPose = .46;
             }
             if(botPoint.y <= 60){
                 shooterVelocity = shooterMax;
@@ -221,15 +223,21 @@ public class PPDrive extends LinearOpMode {
 
             switch (State){
                 case driving:
-                    robot.spinner.setVelocity(0);
+                    robot.spinnerLeft.setVelocity(0);
+                    robot.spinnerRight.setVelocity(0);
                     robot.intake.setPower(0);
 
                     robot.kachow.robotCentric(opModeIsActive(), gamepad1, gamepad2, robot);
                     robot.aimer.setPosition(aimerPose);
 
                     if(gamePad1.Right_Trigger.wasJustPressed()){
-                        robot.deflector.setPosition(deflectorRightIn);
+                        //robot.deflector.setPosition(deflectorRightIn);
                         changeStateTo(state.aimbot);
+                        if(botPoint.y <= 60){
+                            doubleLaunch = false;
+                        } else {
+                            doubleLaunch = true;
+                        }
                         break;
                     }
                     if(gamePad2.Right_Trigger.wasJustPressed()){
@@ -265,8 +273,9 @@ public class PPDrive extends LinearOpMode {
                         gamePad2.Left_Bumper.currToggleState = false;
 
                          */
-                        robot.deflector.setPosition(deflectorRightIn);
-                        robot.spinner.setVelocity(0);
+                        //robot.deflector.setPosition(deflectorRightIn);
+                        robot.spinnerLeft.setVelocity(0);
+                        robot.spinnerRight.setVelocity(0);
                     }
                     robot.kachow.robotCentric(opModeIsActive(), gamepad1, gamepad2, robot);
                     robot.aimer.setPosition(aimerPose);
@@ -282,7 +291,7 @@ public class PPDrive extends LinearOpMode {
 
 
                     if((robot.deflector.getPosition()<deflectorMiddle) && gamePad2.Right_Bumper.wasJustPressed()){
-                        robot.deflector.setPosition(deflectorRightIn);
+                        //robot.deflector.setPosition(deflectorRightIn);
 
                     } else if ((robot.deflector.getPosition()> deflectorMiddle) && gamePad2.Right_Bumper.wasJustPressed()) {
                         robot.deflector.setPosition(deflectorLeftIn);
@@ -297,9 +306,12 @@ public class PPDrive extends LinearOpMode {
                     */
 
                     if(gamePad2.Left_Bumper.isDown()){
-                        robot.spinner.setVelocity(shooterVelocity);
+                        robot.spinnerLeft.setVelocity(shooterVelocity);
+                        robot.spinnerRight.setVelocity(shooterVelocity);
+
                     } else {
-                        robot.spinner.setVelocity(0);
+                        robot.spinnerLeft.setVelocity(0);
+                        robot.spinnerRight.setVelocity(0);
                     }
 
 
@@ -309,8 +321,12 @@ public class PPDrive extends LinearOpMode {
                     if(gamePad1.Right_Trigger.wasJustPressed()){
                         robot.intake.setPower(0);
                         //robot.deflector.setPosition(deflectorRightIn);
-                        robot.deflector.setPosition(deflectorRightIn);
                         changeStateTo(state.aimbot);
+                        if(botPoint.y <= 60){
+                            doubleLaunch = false;
+                        } else {
+                            doubleLaunch = true;
+                        }
                         break;
                     }
                     if(gamepad1.options && gamepad1.share){
@@ -332,7 +348,21 @@ public class PPDrive extends LinearOpMode {
                     break;
 
                 case aimbot:
+                    if(robot.stateChanged){
+                        if(botPoint.y <= 60){
+                            doubleLaunch = false;
+                        } else {
+                            doubleLaunch = true;
+                        }
+                        launchTime = -5;
+                    }
                     robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .18);
+                    if(gamepad1.right_stick_x != 0){
+                        target = new Vector2d(target.x+gamepad1.right_stick_x, target.y);
+                    }
+
+
+
                    /* if (gamePad2.triangle.wasJustPressed()){
                         shooterVelocity = shooterVelocity+100;
                         robot.spinner.setVelocity(shooterVelocity);
@@ -343,13 +373,15 @@ public class PPDrive extends LinearOpMode {
                     }
                     */
 
-                    if(!doubleLaunch) {
+                    if(doubleLaunch) {
                         //robot.spinner.setPower(robot.spinner.getPower() + (shooterVelocity-robot.spinner.getVelocity()) * .00001);
                         //powerMode = true;
                         robot.deflector.setPosition(1);
-                        robot.spinner.setVelocity(shooterVelocity);//+140
+                        robot.spinnerLeft.setVelocity(shooterVelocity);//+120//+140
+                        robot.spinnerRight.setVelocity(shooterVelocity);//+120//+140
                     } else {
-                        robot.spinner.setVelocity(shooterVelocity);
+                        robot.spinnerLeft.setVelocity(shooterVelocity);
+                        robot.spinnerRight.setVelocity(shooterVelocity);
                         //robot.intake.setPower(.5);
                         if (((robot.stateTime.seconds()-launchTime) >= .8) && ((robot.stateTime.seconds()-launchTime) <= 1)){
                             //robot.deflector.setPosition(deflectorMiddle);
@@ -383,79 +415,95 @@ public class PPDrive extends LinearOpMode {
                     if(robot.spinner.getPower() < 0){
                         robot.spinner.setPower(0);
                     }*/
-                    if((robot.spinner.getVelocity() >= (shooterVelocity-40)) && (robot.spinner.getVelocity() <= (shooterVelocity+40))){
-                        gamepad2.rumble(50);
-
-                        if(robot.stateTime.seconds() - launchTime >= 1){
-                            if(gamePad2.triangle.isDown()){
-                                doubleLaunch = true;
-                            }
-
-                            if (gamePad2.Right_Trigger.isDown() || gamePad2.triangle.isDown()){
-                                robot.rightFeeder.setPosition(rightFeederUp);
-                                //robot.deflector.setPosition(deflectorLeftIn);
-                                launchTime = robot.stateTime.seconds();
-                            }
-
-                            if (gamePad2.Left_Trigger.isDown() || gamePad2.triangle.isDown()){
-                                //robot.deflector.setPosition(deflectorMiddle);
-                                robot.leftFeeder.setPosition(leftFeederUp);
-                                //robot.deflector.setPosition(deflectorRightIn);
-                                launchTime = robot.stateTime.seconds();
-                            }
-
-                        }
-                    }
-
-                    /*if(!doubleLaunch){
-                        if((robot.spinner.getVelocity() >= (shooterVelocity+140)) && (robot.spinner.getVelocity() <= (shooterVelocity+180))){
+                    /*if(doubleLaunch){
+                        if((robot.spinner.getVelocity() >= (shooterVelocity+100)) && (robot.spinner.getVelocity() <= (shooterVelocity+140))){
                             gamepad2.rumble(50);
+
+                            if(robot.stateTime.seconds() - launchTime >= 1){
+
+                                if (gamePad2.Right_Trigger.isDown() || gamePad2.triangle.isDown()){
+                                    robot.rightFeeder.setPosition(rightFeederUp);
+                                    robot.leftFeeder.setPosition(leftFeederUp);
+                                    //robot.deflector.setPosition(deflectorLeftIn);
+                                    launchTime = robot.stateTime.seconds();
+                                    doubleLaunch = false;
+                                }
+
+                                if (gamePad2.Left_Trigger.isDown() || gamePad2.triangle.isDown()){
+                                    //robot.deflector.setPosition(deflectorMiddle);
+                                    robot.rightFeeder.setPosition(rightFeederUp);
+                                    robot.leftFeeder.setPosition(leftFeederUp);
+                                    //robot.deflector.setPosition(deflectorRightIn);
+                                    launchTime = robot.stateTime.seconds();
+                                    doubleLaunch = false;
+                                }
+
+                            }
+                        }
+
+                    } else {*/
+
 
                             if(robot.stateTime.seconds() - launchTime >= 1){
                                 if(gamePad2.triangle.isDown()){
                                     doubleLaunch = true;
                                 }
 
-                                if (gamePad2.Right_Trigger.isDown() || gamePad2.triangle.isDown()){
-                                    robot.rightFeeder.setPosition(rightFeederUp);
-                                    //robot.deflector.setPosition(deflectorLeftIn);
-                                    launchTime = robot.stateTime.seconds();
+                                if((robot.spinnerRight.getVelocity() >= (shooterVelocity-20)) && (robot.spinnerRight.getVelocity() <= (shooterVelocity+20))) {
+                                    gamepad2.rumble(50);
+                                    if (gamePad2.Right_Trigger.isDown() || gamePad2.triangle.isDown()) {
+                                        robot.rightFeeder.setPosition(rightFeederUp);
+                                        //robot.deflector.setPosition(deflectorLeftIn);
+                                        launchTime = robot.stateTime.seconds();
+                                    }
                                 }
 
-                                if (gamePad2.Left_Trigger.isDown() || gamePad2.triangle.isDown()){
-                                    //robot.deflector.setPosition(deflectorMiddle);
-                                    robot.leftFeeder.setPosition(leftFeederUp);
-                                    //robot.deflector.setPosition(deflectorRightIn);
-                                    launchTime = robot.stateTime.seconds();
+                                if((robot.spinnerLeft.getVelocity() >= (shooterVelocity-20)) && (robot.spinnerLeft.getVelocity() <= (shooterVelocity+20))) {
+                                    gamepad2.rumble(50);
+                                    if (gamePad2.Left_Trigger.isDown() || gamePad2.triangle.isDown()) {
+                                        //robot.deflector.setPosition(deflectorMiddle);
+                                        robot.leftFeeder.setPosition(leftFeederUp);
+                                        //robot.deflector.setPosition(deflectorRightIn);
+                                        launchTime = robot.stateTime.seconds();
+                                    }
                                 }
 
                             }
-                        }
-
-                    }
-
-                     */
 
 
 
-                    if(((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .5)) {
+
+
+                    if(!robot.stateChanged){
+                        if(((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .5)) {
                         if (robot.deflector.getPosition() < deflectorMiddle+.1) {
                             robot.leftFeeder.setPosition(leftFeederUp);
                         }
                     }
 
-                    if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
+                        if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
                         robot.rightFeeder.setPosition(rightFeederDown);
                         //robot.deflector.setPosition(deflectorMiddle);
                         robot.leftFeeder.setPosition(leftFeederDown);
                         robot.intake.setPower(-.3);
                     } else if (((robot.stateTime.seconds()-launchTime) > .4) && (robot.stateTime.seconds()-launchTime) < .8){
-                        robot.intake.setPower(1);
-                        robot.leftFeeder.setPosition(leftFeederDown);
-                        robot.rightFeeder.setPosition(rightFeederDown);
-                       // robot.deflector.setPosition(deflectorRightIn);
-                    }else if (((robot.stateTime.seconds()-launchTime) >= .8) && ((robot.stateTime.seconds()-launchTime) <= 1)){
+                            robot.intake.setPower(1);
+                            robot.leftFeeder.setPosition(leftFeederDown);
+                            robot.rightFeeder.setPosition(rightFeederDown);
+                        // robot.deflector.setPosition(deflectorRightIn);
+                        }else if (((robot.stateTime.seconds()-launchTime) >= .8) && ((robot.stateTime.seconds()-launchTime) <= 1)){
                         robot.intake.setPower(0);
+                    } else {
+                            if (gamePad2.Right_Trigger.isDown()) {
+                            robot.intake.setPower(intakeFast);
+                        } else {
+                                robot.intake.setPower(0);
+                            }
+
+                            if (gamePad2.Left_Trigger.isDown()) {
+                                robot.intake.setPower(-intakeFast);
+                            }
+                        }
                     }
 
                     if(gamePad2.Dpad_Up.wasJustPressed()){
@@ -471,11 +519,11 @@ public class PPDrive extends LinearOpMode {
 
 
 
-                    robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
+                    robot.spinnerLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
+                    robot.spinnerRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
 
-
-                    telemetry.addData("spinner: ", robot.spinner.getVelocity());
-                    telemetry.addData("spinnerPower: ", robot.spinner.getPower());
+                    telemetry.addData("spinner: ", robot.spinnerLeft.getVelocity());
+                    telemetry.addData("spinnerPower: ", robot.spinnerLeft.getPower());
                     telemetry.addData("TargetVelocity: ", shooterVelocity);
                     telemetry.addData("P: ", P);
                     telemetry.addData("I: ", I);
@@ -495,12 +543,14 @@ public class PPDrive extends LinearOpMode {
                     if(robot.stateChanged){
                         robot.rightFeeder.setPosition(rightFeederDown);
                         robot.leftFeeder.setPosition(leftFeederDown);
-                        robot.spinner.setPower(0);
+                        robot.spinnerLeft.setPower(0);
+                        robot.spinnerRight.setPower(0);
                         robot.intake.setPower(0);
                     }else {
                         robot.rightFeeder.setPosition(rightFeederDown);
                         robot.leftFeeder.setPosition(leftFeederDown);
-                        robot.spinner.setPower(0);
+                        robot.spinnerLeft.setPower(0);
+                        robot.spinnerRight.setPower(0);
                         robot.intake.setPower(0);
                     }
 
@@ -538,11 +588,11 @@ public class PPDrive extends LinearOpMode {
         telemetry.update();
         if(runtime.seconds() > 84.8 && runtime.seconds() < 85.2){
             gamepad1.rumble(5000);
-            gamepad2.rumble(5000);
+            //gamepad2.rumble(5000);
         }
         if(runtime.seconds() > 109 && runtime.seconds() < 110){
             gamepad1.rumble(10000);
-            gamepad2.rumble(10000);
+            //gamepad2.rumble(10000);
         }
         //StrafeRight
         if (opModeIsActive()) {
@@ -577,7 +627,6 @@ public class PPDrive extends LinearOpMode {
     }
     public void update(){ //place once on start of loop
         robot.drive.update();
-        robot.spinner2.setPower(robot.spinner.getPower());
         gamePad2.update(gamepad2, robot);
         robot.stateUpdate(State);
         gamePad1.update(gamepad1, robot);

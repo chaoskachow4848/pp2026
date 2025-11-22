@@ -47,7 +47,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -95,8 +94,8 @@ public class KachowHardware {
     public DcMotor frontright;
     public DcMotor frontleft;
 
-    public DcMotorEx spinner;
-    public DcMotorEx spinner2;
+    public DcMotorEx spinnerLeft;
+    public DcMotorEx spinnerRight;
     public DcMotorEx intake;
 
     public Servo aimer;
@@ -133,8 +132,8 @@ public class KachowHardware {
 
          //leftFlap = hardwareMap.get(Servo.class, "LeftFlap");
         //rightFlap = hardwareMap.get(Servo.class, "RightFlap");
-        spinner = hardwareMap.get(DcMotorEx.class, "Spinner");// Expansion Hub 3
-        spinner2 = hardwareMap.get(DcMotorEx.class, "Spinner2");// Expansion Hub 1
+        spinnerLeft = hardwareMap.get(DcMotorEx.class, "Spinner");// Expansion Hub 3
+        spinnerRight = hardwareMap.get(DcMotorEx.class, "Spinner2");// Expansion Hub 1
         intake = hardwareMap.get(DcMotorEx.class, "Intake");// Expansion Hub 2
         imu = hardwareMap.get(IMU.class, "imu");//Control hub I2C BUS 0
         //Control hub I2C BUS 3: "Pinpoint"
@@ -152,9 +151,9 @@ public class KachowHardware {
         frontleft.setDirection(DcMotor.Direction.REVERSE);
         backleft.setDirection(DcMotor.Direction.REVERSE);
         rightFeeder.setDirection(Servo.Direction.REVERSE);
-        spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
-        spinner2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
-        spinner2.setDirection(DcMotorSimple.Direction.REVERSE);
+        spinnerLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
+        spinnerRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
+        spinnerRight.setDirection(DcMotorSimple.Direction.REVERSE);
         //intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -168,8 +167,8 @@ public class KachowHardware {
         frontleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        spinner.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        spinner2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        spinnerLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        spinnerRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         intake.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         //aimer.scaleRange(0, 100);

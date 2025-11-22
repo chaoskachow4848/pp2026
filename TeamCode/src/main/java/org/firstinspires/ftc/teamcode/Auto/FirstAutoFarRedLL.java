@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.Intake1;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.REDIntake1;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.REDShootPickup1;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.REDdrivetoPPG;
@@ -10,21 +9,11 @@ import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.REDintakePGPGr
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.REDintakePGPLast;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.REDshootPGP;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.REDtoPGP;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.ShootPickup1;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPPG;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPreload;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPFirst;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPGreen;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPLast;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.shootPGP;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.toPGP;
-import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerFar;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorLeftIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorRightIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.launchTime;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederDown;
-import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederMid;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederUp;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederDown;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederUp;
@@ -148,8 +137,9 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                     if(robot.stateChanged){
                         //bucketScore = actions.scoreSampleBlue(drive, robot.drive.pose);
                     }
-                    robot.spinner.setVelocity(1620);
-                    robot.aimer.setPosition(aimerFar);
+                    robot.spinnerLeft.setVelocity(1540);//1540
+                    robot.spinnerRight.setVelocity(1540);//1540
+                    robot.aimer.setPosition(.57);//.64
 
                     if(!robot.drive.isBusy()) {
                         robot.drive.followPath(REDdrivetoPreload, true);
@@ -167,10 +157,12 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
 
 
                     if(!robot.drive.isBusy()){
-                        if(launch(pattern, 1620)){
+                        if(launch(pattern, 1540)){
+                            robot.deflector.setPosition(deflectorMiddle);
                             robot.drive.followPath(REDdrivetoPPG);
                             changeStateTo(state.drivetoPPG);
-                            robot.spinner.setVelocity(1620);
+                            robot.spinnerLeft.setVelocity(1540);
+                            robot.spinnerRight.setVelocity(1540);
                             firstScored = true;
                             purple1 = false;
                             purple2 = false;
@@ -185,8 +177,10 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                     if(robot.stateChanged){
                         //firstScore = actions.scoreSampleBlueIntake(drive, robot.drive.pose);
                         robot.deflector.setPosition(deflectorLeftIn);
-                        robot.spinner.setVelocity(1620);
+                        robot.spinnerLeft.setVelocity(1540);
+                        robot.spinnerRight.setVelocity(1540);
                     }
+                    robot.intake.setPower(.5);
 
                     telemetry.addData("percentage: ", robot.drive.getPathCompletion());
                     if(!robot.drive.isBusy()) {
@@ -201,7 +195,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                                 }
                             } else {
                                 robot.drive.followPath(REDIntake1);
-                                robot.deflector.setPosition(deflectorLeftIn);
+                                robot.deflector.setPosition(deflectorRightIn);
                                 changeStateTo(state.firstIntakeGreen);
                             }} else {
                             changeStateTo(state.launchPreload);
@@ -210,13 +204,14 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                     break;
 
                 case firstIntakeGreen:
-                    robot.intake.setPower(.4);
+                    robot.intake.setPower(.3);
 
                     if(!robot.drive.isBusy()) {
                         robot.rightFeeder.setPosition(rightFeederDown);
                         robot.drive.followPath(REDShootPickup1, true);
                         changeStateTo(state.launch1);
-                        robot.spinner.setVelocity(1620);
+                        robot.spinnerLeft.setVelocity(1540);
+                        robot.spinnerRight.setVelocity(1540);
                         robot.intake.setPower(0);
                     }
                     break;
@@ -231,14 +226,14 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                     }
                     //robot.drive.followPath(REDscorePickup1);
                     //check for sensor intake
-                    if((robot.stateTime.seconds() > 1.5) && (robot.stateTime.seconds() < 1.75)){
+                    if((robot.stateTime.seconds() > 1) && (robot.stateTime.seconds() < 1.2)){
                         robot.deflector.setPosition(deflectorRightIn);
-                        robot.intake.setPower(-.35);
-                    } else if ((robot.stateTime.seconds() > 1.75)){
+                        robot.intake.setPower(-.25);
+                    } else if ((robot.stateTime.seconds() > 1.25)){
                         robot.intake.setPower(0);
                     }
                     if(!robot.drive.isBusy()){
-                        if(launch(pattern, 1620)){
+                        if(launch(pattern, 1540)){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
                             secondScored = true;
                             changeStateTo(state.drivetoPGP);
@@ -312,7 +307,8 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                     break;
                 case secondIntakeLastPurple:
                     if(robot.stateChanged){
-                        robot.spinner.setVelocity(1620);
+                        robot.spinnerLeft.setVelocity(1540);
+                        robot.spinnerRight.setVelocity(1540);
                         robot.deflector.setPosition(deflectorRightIn);
                     }
                     robot.intake.setPower(.4);
@@ -333,20 +329,21 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                 case launch2:
                     if(robot.stateChanged){
                         telemetry.addLine("in here");
-                        //robot.deflector.setPosition(deflectorMiddle);
-                        robot.spinner.setVelocity(1620);
+                        robot.deflector.setPosition(deflectorRightIn);
+                        robot.spinnerLeft.setVelocity(1540);
+                        robot.spinnerRight.setVelocity(1540);
                         launchTime = 0;
                     }
                     //robot.drive.followPath(REDscorePickup1);
                     //check for sensor intake
-                    if((robot.stateTime.seconds() > 1) && (robot.stateTime.seconds() < 1.25)){
+                    if((robot.stateTime.seconds() > 1) && (robot.stateTime.seconds() < 1.2)){
                         robot.deflector.setPosition(deflectorRightIn);
-                        robot.intake.setPower(-.35);
+                        robot.intake.setPower(-.25);
                     } else if ((robot.stateTime.seconds() > 1.25)){
                         robot.intake.setPower(0);
                     }
                     if(!robot.drive.isBusy()){
-                        if(launch(pattern, 1620)){
+                        if(launch(pattern, 1540)){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
                             //robot.leftFeeder.setPosition(leftFeederMid);
                             thirdScored = true;
@@ -355,7 +352,8 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                             purple1 = false;
                             purple2 = false;
                             green = false;
-                            robot.spinner.setPower(0);
+                            robot.spinnerLeft.setPower(0);
+                            robot.spinnerRight.setPower(0);
 
                         }
 
@@ -373,7 +371,6 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
     }
 public void update(){
     kaze.drawCurrentAndHistory(robot.kachow.drive);
-    robot.spinner2.setPower(robot.spinner.getPower());
     robot.drive.update();
     robot.stateUpdate(State);
     kaze.update(robot.kachow.drive);
@@ -385,7 +382,7 @@ public void update(){
     telemetry.addData("State: ", State);
     telemetry.addData("isDon: ", !robot.drive.isBusy());
     telemetry.addData("statechange: ", robot.stateChanged);
-    telemetry.addData("velocity", robot.spinner.getVelocity());
+    telemetry.addData("velocity", robot.spinnerLeft.getVelocity());
     telemetry.update();
 
 }
@@ -408,12 +405,13 @@ public void update(){
         if(green){
             telemetry.addLine("green");
         }
-        robot.spinner.setVelocity(velocity);
-            switch (pattern) {
+        robot.spinnerLeft.setVelocity(velocity);
+        robot.spinnerRight.setVelocity(velocity);
+        switch (pattern) {
                 case "PPG":
-                    if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
+                    if ((robot.spinnerLeft.getVelocity() >= (velocity - 20)) && (robot.spinnerLeft.getVelocity() <= (velocity + 20))) {
                         //if ready to shoot
-                        if (robot.stateTime.seconds() - launchTime >= 1) {
+                        if (robot.stateTime.seconds() - launchTime >= 1.4) {
                             //if not shooting
                             if (purple1 && purple2 && !green) {
                                 //shoot third
@@ -436,11 +434,25 @@ public void update(){
                             }
                         }
                     }
+
+                    if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        robot.rightFeeder.setPosition(rightFeederDown);
+                        //robot.deflector.setPosition(deflectorMiddle);
+                        robot.intake.setPower(-.45);
+                    } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
+                        robot.intake.setPower(1);
+                        robot.deflector.setPosition(deflectorRightIn);
+                    }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
+                        robot.intake.setPower(0);
+                        return (purple1 && purple2 && green);
+                    }
+
                     break;
                 case "PGP":
-                    if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
+                    if ((robot.spinnerLeft.getVelocity() >= (velocity - 20)) && (robot.spinnerLeft.getVelocity() <= (velocity + 20))) {
                         //if ready to shoot
-                        if (robot.stateTime.seconds() - launchTime >= 1) {
+                        if (robot.stateTime.seconds() - launchTime >= 1.4) {
                             //if not shooting
                             if (purple1 && green && !purple2) {
                                 //shoot third
@@ -457,22 +469,44 @@ public void update(){
                             } else if (!purple1 && !green && !purple2) {
                                 //shoot first
                                 robot.rightFeeder.setPosition(rightFeederUp);
-                                robot.deflector.setPosition(deflectorRightIn);
+                                //robot.deflector.setPosition(deflectorMiddle);
                                 launchTime = robot.stateTime.seconds();
                                 purple1 = true;
                             }
                         }
                     }
+
+                    if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        robot.rightFeeder.setPosition(rightFeederDown);
+                        //robot.deflector.setPosition(deflectorMiddle);
+                        if(purple1){
+                            robot.intake.setPower(-.2);
+                        } else {
+                            robot.intake.setPower(-.4);
+                        }
+                    } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
+                        if(green && purple1){
+                            robot.intake.setPower(1);
+                        } else{
+                            robot.intake.setPower(0);
+                        }
+                        robot.deflector.setPosition(deflectorRightIn);
+                    }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
+                        robot.intake.setPower(0);
+                        return (purple1 && purple2 && green);
+                    }
+
                     break;
                 case "GPP":
-                    if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
+                    if ((robot.spinnerLeft.getVelocity() >= (velocity - 20)) && (robot.spinnerLeft.getVelocity() <= (velocity + 20))) {
                         //if ready to shoot
-                        if (robot.stateTime.seconds() - launchTime >= 1) {
+                        if (robot.stateTime.seconds() - launchTime >= 1.4) {
                             //if not shooting
                             if (green && purple1 && !purple2) {
                                 //shoot third
                                 robot.rightFeeder.setPosition(rightFeederUp);
-                                robot.deflector.setPosition(deflectorRightIn);
+                                robot.deflector.setPosition(deflectorMiddle);
                                 launchTime = robot.stateTime.seconds();
                                 purple2 = true;
                             } else if (green && !purple1 && !purple2) {
@@ -490,21 +524,32 @@ public void update(){
                             }
                         }
                     }
+
+                    if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        robot.rightFeeder.setPosition(rightFeederDown);
+                        //robot.deflector.setPosition(deflectorMiddle);
+                        if(green){
+                            robot.intake.setPower(0);
+                        } else {
+                            robot.intake.setPower(-.4);
+                        }
+                    } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
+                        if(green && purple1){
+                            robot.intake.setPower(1);
+                        } else{
+                            robot.intake.setPower(0);
+                        }
+                        robot.deflector.setPosition(deflectorRightIn);
+                    }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
+                        robot.intake.setPower(0);
+                        return (purple1 && purple2 && green);
+                    }
+
                     break;
             }
 
-            if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .3))){
-                robot.leftFeeder.setPosition(leftFeederDown);
-                robot.rightFeeder.setPosition(rightFeederDown);
-                //robot.deflector.setPosition(deflectorMiddle);
-                robot.intake.setPower(-.35);
-            } else if (((robot.stateTime.seconds()-launchTime) > .3) && (robot.stateTime.seconds()-launchTime) < 1){
-                robot.intake.setPower(.5);
-                robot.deflector.setPosition(deflectorRightIn);
-            }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
-                robot.intake.setPower(0);
-                return (purple1 && purple2 && green);
-            }
+
 
         return false;
     }

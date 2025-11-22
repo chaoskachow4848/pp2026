@@ -40,6 +40,7 @@ public class Test1 extends LinearOpMode {
     public boolean manual = false;
 
     public int testNumber = 1;
+    int f = 0;
 
 
 
@@ -61,7 +62,7 @@ public class Test1 extends LinearOpMode {
         telemetry.update();
         robot.pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
         waitForStart();
-        robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
+        robot.spinnerLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
         runtime.reset();
         Vector2d target = new Vector2d(0,144);
         robot.aimer.setPosition(.75);
@@ -81,8 +82,8 @@ public class Test1 extends LinearOpMode {
             if (testNumber < 1){
                 testNumber = 1;
             }
-            if (testNumber > 6){
-                testNumber = 6;
+            if (testNumber > 7){
+                testNumber = 7;
             }
             update();
             switch (testNumber){
@@ -98,22 +99,41 @@ public class Test1 extends LinearOpMode {
                     break;
 
                 case 2:
-
+                    f = (int) (f+(gamepad2.right_stick_y));
+                    robot.spinnerLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, f));
                     if (gamePad2.triangle.wasJustPressed()){
-                        robot.spinner.setVelocity(1900);
+                        robot.spinnerLeft.setVelocity(1900);
                     }
                     if (gamePad2.Right_Trigger.wasJustPressed()){
-                        robot.spinner.setVelocity(robot.spinner.getVelocity()+20);
+                        robot.spinnerLeft.setVelocity(robot.spinnerLeft.getVelocity()+20);
                     }
                     if (gamePad2.Left_Trigger.wasJustPressed()){
-                        robot.spinner.setVelocity(robot.spinner.getVelocity()-20);
+                        robot.spinnerLeft.setVelocity(robot.spinnerLeft.getVelocity()-20);
                     }
-                    telemetry.addData("Spinner: ", robot.spinner.getVelocity());
-                    telemetry.addLine("shooter Velocity: " + shooterVelocity);
+                    telemetry.addData("SpinnerLeftPower: ", robot.spinnerLeft.getPower());
+                    telemetry.addData("SpinnerLeft: ", robot.spinnerLeft.getVelocity());
+                    telemetry.addLine("shooter f: " + f);
+                    telemetry.update();
+                    break;
+                case 3:
+                    f = (int) (f+(gamepad2.right_stick_y));
+                    robot.spinnerRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, f));
+                    if (gamePad2.triangle.wasJustPressed()){
+                        robot.spinnerRight.setVelocity(1900);
+                    }
+                    if (gamePad2.Right_Trigger.wasJustPressed()){
+                        robot.spinnerRight.setVelocity(robot.spinnerRight.getVelocity()+20);
+                    }
+                    if (gamePad2.Right_Trigger.wasJustPressed()){
+                        robot.spinnerRight.setVelocity(robot.spinnerRight.getVelocity()-20);
+                    }
+                    telemetry.addData("SpinnerRightPower: ", robot.spinnerRight.getPower());
+                    telemetry.addData("SpinnerRight: ", robot.spinnerRight.getVelocity());
+                    telemetry.addLine("shooter f: " + f);
                     telemetry.update();
                     break;
 
-                case 3:
+                case 4:
 
                     if (gamePad2.Dpad_Up.wasJustPressed()){
                         robot.aimer.setPosition(robot.aimer.getPosition()+.01);
@@ -126,7 +146,7 @@ public class Test1 extends LinearOpMode {
                     telemetry.update();
                     break;
 
-                case 4:
+                case 5:
 
                     if (gamePad2.Dpad_Up.wasJustPressed()){
                         robot.deflector.setPosition(robot.deflector.getPosition()+.01);
@@ -139,7 +159,7 @@ public class Test1 extends LinearOpMode {
                     break;
 
 
-                case 5:
+                case 6:
 
                     if (gamePad2.Dpad_Up.wasJustPressed()){
                         robot.leftFeeder.setPosition(robot.leftFeeder.getPosition()+.01);
@@ -152,7 +172,7 @@ public class Test1 extends LinearOpMode {
                     break;
 
 
-                case 6:
+                case 7:
 
                     if (gamePad2.Dpad_Up.wasJustPressed()){
                         robot.rightFeeder.setPosition(robot.rightFeeder.getPosition()+.01);

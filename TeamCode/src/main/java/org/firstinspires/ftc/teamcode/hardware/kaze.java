@@ -10,7 +10,7 @@ public class kaze {
     public volatile static Vector2d target;
     //public volatile static double headingOffset;
     public volatile static boolean IsBlue = false;
-    public volatile static String pattern;
+    public volatile static String pattern = "PPG";
 
     public static void init(Pose startPose){
         robotPose = startPose;

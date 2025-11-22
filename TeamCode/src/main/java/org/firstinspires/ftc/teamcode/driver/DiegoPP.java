@@ -10,11 +10,8 @@ import static org.firstinspires.ftc.teamcode.driver.PPDrive.P;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerMax;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerMid;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerMin;
-import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorLeftIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
-import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorRightIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.intakeFast;
-import static org.firstinspires.ftc.teamcode.driver.PPDrive.launchTime;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederDown;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederUp;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederDown;
@@ -35,7 +32,6 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
 import org.firstinspires.ftc.teamcode.hardware.Vector2d;
@@ -91,7 +87,6 @@ public class DiegoPP extends LinearOpMode {
         }
         waitForStart();
         robot.runtime.reset();
-        robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300,0, 0, 10));
         runtime.reset();
         if(kaze.target != null){
             target = kaze.target;
@@ -125,7 +120,7 @@ public class DiegoPP extends LinearOpMode {
             }else if (aimerPose<aimerMin){
                 aimerPose = aimerMin;
             }
-            shooterVelocity = 1600*((robot.kachow.bot_to_target)/120);
+            shooterVelocity = 1380;//1600*((robot.kachow.bot_to_target)/100);
             if (shooterVelocity>shooterMid){
                 shooterVelocity = shooterMid;
             }else if (shooterVelocity<shooterMin){
@@ -134,7 +129,7 @@ public class DiegoPP extends LinearOpMode {
             if(botPoint.y <= 60){
                 aimerPose = aimerMax;
             } else {
-                aimerPose = .5;
+                aimerPose = .46;
             }
             if(botPoint.y <= 60){
                 shooterVelocity = shooterMax;
@@ -144,19 +139,41 @@ public class DiegoPP extends LinearOpMode {
 
             switch (State){
                 case driving:
-                    robot.spinner.setVelocity(0);
-                    robot.intake.setPower(0);
+                    if (gamePad2.Dpad_Left.isDown()){
+                        robot.leftFeeder.setPosition(leftFeederUp);
+                    } else if (gamePad2.Dpad_Right.isDown()){
+                        robot.rightFeeder.setPosition(rightFeederUp);
+                    } else {
+                        //robot.deflector.setPosition(1);
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        robot.rightFeeder.setPosition(rightFeederDown);
+                    }
+                    robot.spinnerLeft.setVelocity(0);
+                    robot.spinnerRight.setVelocity(0);
+                    if (gamePad1.Right_Trigger.isDown() || gamePad2.Right_Trigger.isDown()){
+                        robot.intake.setPower(intakeFast);
+                    } else {
+                        robot.intake.setPower(0);
+                    }
 
+                    if (gamePad1.Left_Trigger.isDown() || gamePad2.Left_Trigger.isDown()){
+                        robot.intake.setPower(-intakeFast);
+                    }
                     robot.kachow.robotCentric(opModeIsActive(), gamepad1, gamepad2, robot);
-                    robot.aimer.setPosition(aimerPose);
+                    if(!manual){
+                        robot.aimer.setPosition(aimerPose);
+                    }
 
                     if(gamePad1.Right_Bumper.wasJustPressed()){
-                        robot.deflector.setPosition(deflectorRightIn);
+                        //robot.deflector.setPosition(1);
                         changeStateTo(state.aimbot);
                         break;
                     }
-                    if(gamePad1.Right_Trigger.wasJustPressed()){
-                        robot.deflector.setPosition(deflectorLeftIn);
+                    if(gamePad1.Right_Trigger.isDown()){
+                        changeStateTo(state.intaking);
+                        break;
+                    }
+                    if(gamePad1.Left_Trigger.isDown()){
                         changeStateTo(state.intaking);
                         break;
                     }
@@ -180,38 +197,51 @@ public class DiegoPP extends LinearOpMode {
                     break;
 
                 case intaking:
+                    if (gamePad2.Dpad_Left.isDown()){
+                        robot.leftFeeder.setPosition(leftFeederUp);
+                    } else if (gamePad2.Dpad_Right.isDown()){
+                        robot.rightFeeder.setPosition(rightFeederUp);
+                    } else {
+                        //robot.deflector.setPosition(1);
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        robot.rightFeeder.setPosition(rightFeederDown);
+                    }
                     if(robot.stateChanged){
 
-                        robot.deflector.setPosition(deflectorRightIn);
-                        robot.spinner.setPower(.5);
+                        //robot.deflector.setPosition(1);
+                        robot.spinnerLeft.setPower(.6);
+                        robot.spinnerRight.setPower(.6);
                     }
                     robot.kachow.robotCentric(1 ,opModeIsActive(), gamepad1, gamepad2, robot, false);
-                    robot.aimer.setPosition(aimerPose);
-                    if (gamePad1.Right_Trigger.isDown()){
+                    if(!manual){
+                        robot.aimer.setPosition(aimerPose);
+                    }                    if (gamePad1.Right_Trigger.isDown() || gamePad2.Right_Trigger.isDown()){
                         robot.intake.setPower(intakeFast);
                     } else {
                         robot.intake.setPower(0);
                     }
 
-                    if (gamePad1.Left_Trigger.isDown()){
+                    if (gamePad1.Left_Trigger.isDown() || gamePad2.Left_Trigger.isDown()){
                         robot.intake.setPower(-intakeFast);
                     }
 
 
                     if(gamePad1.Left_Bumper.isDown()){
-                        robot.spinner.setVelocity(shooterVelocity);
+                        robot.spinnerLeft.setVelocity(shooterVelocity);
+                        robot.spinnerRight.setVelocity(shooterVelocity);
                     } else {
-                        robot.spinner.setPower(.5);
+                        robot.spinnerLeft.setPower(.6);
+                        robot.spinnerRight.setPower(.6);
                     }
 
 
                     telemetry.addData("Intake: ", robot.intake.getVelocity());
                     telemetry.addData("IntakePower: ", robot.intake.getPower());
-                    robot.deflector.setPosition(deflectorRightIn);
+                    //robot.deflector.setPosition(1);
                     if(gamePad1.Right_Bumper.wasJustPressed()){
                         robot.intake.setPower(0);
-                        //robot.deflector.setPosition(deflectorRightIn);
-                        robot.deflector.setPosition(deflectorRightIn);
+                        ////robot.deflector.setPosition(1);
+                        //robot.deflector.setPosition(1);
                         changeStateTo(state.aimbot);
                         break;
                     }
@@ -234,7 +264,17 @@ public class DiegoPP extends LinearOpMode {
                     break;
 
                 case aimbot:
+                    if(robot.stateChanged){
+                        launchTime = -5;
+                    }
+                    //robot.deflector.setPosition(1);
                     robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .18);
+                    if(gamepad1.right_stick_x != 0){
+                        target = new Vector2d(target.x+gamepad1.right_stick_x, target.y);
+                    }
+                    if(gamepad2.right_stick_x != 0){
+                        target = new Vector2d(target.x+gamepad2.right_stick_x, target.y);
+                    }
                    /* if (gamePad2.triangle.wasJustPressed()){
                         shooterVelocity = shooterVelocity+100;
                         robot.spinner.setVelocity(shooterVelocity);
@@ -248,16 +288,19 @@ public class DiegoPP extends LinearOpMode {
                     if(!doubleLaunch) {
                         //robot.spinner.setPower(robot.spinner.getPower() + (shooterVelocity-robot.spinner.getVelocity()) * .00001);
                         //powerMode = true;
-                        robot.deflector.setPosition(deflectorRightIn);
-                        robot.spinner.setVelocity(shooterVelocity);//+140
+                        //robot.deflector.setPosition(1);
+                        robot.spinnerLeft.setVelocity(shooterVelocity);//+140
+                        robot.spinnerRight.setVelocity(shooterVelocity);//+140
                     } else {
-                        robot.spinner.setVelocity(shooterVelocity);
+                        robot.spinnerLeft.setVelocity(shooterVelocity);
+                        robot.spinnerRight.setVelocity(shooterVelocity);
                         //robot.intake.setPower(.5);
                         if (((robot.stateTime.seconds()-launchTime) >= .8) && ((robot.stateTime.seconds()-launchTime) <= 1)){
                             //robot.deflector.setPosition(deflectorMiddle);
                         }
                     }
-                    robot.spinner.setVelocity(shooterVelocity);//+140
+                    robot.spinnerLeft.setVelocity(shooterVelocity);//+140
+                    robot.spinnerRight.setVelocity(shooterVelocity);//+140
 /*
 
                     if(shooterVelocity<0){
@@ -286,24 +329,31 @@ public class DiegoPP extends LinearOpMode {
                     if(robot.spinner.getPower() < 0){
                         robot.spinner.setPower(0);
                     }*/
-                    if((robot.spinner.getVelocity() >= (shooterVelocity-40)) && (robot.spinner.getVelocity() <= (shooterVelocity+40))){
-                        gamepad1.rumble(50);
+                    if((robot.spinnerLeft.getVelocity() >= (shooterVelocity-20)) && (robot.spinnerLeft.getVelocity() <= (shooterVelocity+20))){
 
-
-                            if (gamePad1.Dpad_Right.isDown()){
-                                robot.rightFeeder.setPosition(rightFeederUp);
-                                //robot.deflector.setPosition(deflectorLeftIn);
-                                launchTime = robot.stateTime.seconds();
-                            }
-
-                            if (gamePad1.Dpad_Left.isDown()){
+                            if (gamePad1.Dpad_Left.isDown() || gamePad1.Dpad_Up.isDown()){
                                 //robot.deflector.setPosition(deflectorMiddle);
                                 robot.leftFeeder.setPosition(leftFeederUp);
-                                //robot.deflector.setPosition(deflectorRightIn);
+                                ////robot.deflector.setPosition(1);
                                 launchTime = robot.stateTime.seconds();
                             }
 
 
+                    }
+
+
+                    if((robot.spinnerRight.getVelocity() >= (shooterVelocity-20)) && (robot.spinnerRight.getVelocity() <= (shooterVelocity+20))){
+                        if (gamePad1.Dpad_Right.isDown() || gamePad1.Dpad_Up.isDown()){
+                            robot.rightFeeder.setPosition(rightFeederUp);
+                            //robot.deflector.setPosition(deflectorLeftIn);
+                            launchTime = robot.stateTime.seconds();
+                        }
+
+                    }
+                    if((robot.spinnerRight.getVelocity() >= (shooterVelocity-20)) && (robot.spinnerRight.getVelocity() <= (shooterVelocity+20))) {
+                        if ((robot.spinnerLeft.getVelocity() >= (shooterVelocity - 20)) && (robot.spinnerLeft.getVelocity() <= (shooterVelocity + 20))) {
+                            gamepad1.rumble(50);
+                        }
                     }
 
                 /*    if(!doubleLaunch){
@@ -324,7 +374,7 @@ public class DiegoPP extends LinearOpMode {
                                 if (gamePad2.Dpad_Left.isDown() || (gamePad2.Right_Trigger.isDown() || gamePad2.Left_Trigger.isDown())){
                                     //robot.deflector.setPosition(deflectorMiddle);
                                     robot.leftFeeder.setPosition(leftFeederUp);
-                                    //robot.deflector.setPosition(deflectorRightIn);
+                                    ////robot.deflector.setPosition(1);
                                     launchTime = robot.stateTime.seconds();
                                 }
 
@@ -339,11 +389,7 @@ public class DiegoPP extends LinearOpMode {
 
 
 
-                    if(((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .5)) {
-                        if (robot.deflector.getPosition() < deflectorMiddle+.1) {
-                            robot.leftFeeder.setPosition(leftFeederUp);
-                        }
-                    }
+
 
                     if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
                         robot.rightFeeder.setPosition(rightFeederDown);
@@ -351,13 +397,20 @@ public class DiegoPP extends LinearOpMode {
                         robot.leftFeeder.setPosition(leftFeederDown);
                         robot.intake.setPower(-.3);
                     } else if (((robot.stateTime.seconds()-launchTime) > .4) && (robot.stateTime.seconds()-launchTime) < .8){
-                        robot.intake.setPower(1);
+                        robot.intake.setPower(.5);
                         robot.leftFeeder.setPosition(leftFeederDown);
                         robot.rightFeeder.setPosition(rightFeederDown);
-                        // robot.deflector.setPosition(deflectorRightIn);
+                        // //robot.deflector.setPosition(1);
                     }else if (((robot.stateTime.seconds()-launchTime) >= .8) && ((robot.stateTime.seconds()-launchTime) <= 1)){
-                        robot.intake.setPower(0);
-                    }
+                        if (gamePad1.Right_Trigger.isDown() || gamePad2.Right_Trigger.isDown()){
+                            robot.intake.setPower(intakeFast);
+                        } else {
+                            robot.intake.setPower(0);
+                        }
+
+                        if (gamePad1.Left_Trigger.isDown() || gamePad2.Left_Trigger.isDown()){
+                            robot.intake.setPower(-intakeFast);
+                        }                    }
 
                     if(gamePad1.Dpad_Up.wasJustPressed()){
                         robot.aimer.setPosition(robot.aimer.getPosition()+.01);
@@ -372,11 +425,15 @@ public class DiegoPP extends LinearOpMode {
 
 
 
-                    robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
+                    robot.spinnerLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
+                    robot.spinnerRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P,I, D, F));
+
+                    telemetry.addData("spinnerLeft: ", robot.spinnerLeft.getVelocity());
+                    telemetry.addData("spinnerPowerLeft: ", robot.spinnerLeft.getPower());
 
 
-                    telemetry.addData("spinner: ", robot.spinner.getVelocity());
-                    telemetry.addData("spinnerPower: ", robot.spinner.getPower());
+                    telemetry.addData("spinnerRight: ", robot.spinnerRight.getVelocity());
+                    telemetry.addData("spinnerPowerRight: ", robot.spinnerRight.getPower());
                     telemetry.addData("TargetVelocity: ", shooterVelocity);
                     telemetry.addData("P: ", P);
                     telemetry.addData("I: ", I);
@@ -403,7 +460,14 @@ public class DiegoPP extends LinearOpMode {
                     break;
 
                 case launching:
-                    robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .2);
+                    if(robot.stateChanged){
+                        launchTime = -5;
+                    }
+                    //robot.deflector.setPosition(1);
+                    robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .18);
+                if(gamepad1.right_stick_x != 0){
+                        target = new Vector2d(target.x+gamepad1.right_stick_x, target.y);
+                }
                   if(launch(kaze.pattern, (int) shooterVelocity)){
                       changeStateTo(state.driving);
                       green = false;
@@ -414,10 +478,12 @@ public class DiegoPP extends LinearOpMode {
                       if (!doubleLaunch) {
                           //robot.spinner.setPower(robot.spinner.getPower() + (shooterVelocity-robot.spinner.getVelocity()) * .00001);
                           //powerMode = true;
-                          robot.deflector.setPosition(deflectorRightIn);
-                          robot.spinner.setVelocity(shooterVelocity);//+140
+                          //robot.deflector.setPosition(1);
+                          robot.spinnerLeft.setVelocity(shooterVelocity);//+140
+                          robot.spinnerRight.setVelocity(shooterVelocity);//+140
                       } else {
-                          robot.spinner.setVelocity(shooterVelocity);
+                          robot.spinnerLeft.setVelocity(shooterVelocity);
+                          robot.spinnerRight.setVelocity(shooterVelocity);
                           //robot.intake.setPower(.5);
                           if (((robot.stateTime.seconds() - launchTime) >= .8) && ((robot.stateTime.seconds() - launchTime) <= 1)) {
                               //robot.deflector.setPosition(deflectorMiddle);
@@ -437,11 +503,11 @@ public class DiegoPP extends LinearOpMode {
                       }
 
 
-                      robot.spinner.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
+                      robot.spinnerLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
+                      robot.spinnerRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
 
-
-                      telemetry.addData("spinner: ", robot.spinner.getVelocity());
-                      telemetry.addData("spinnerPower: ", robot.spinner.getPower());
+                      telemetry.addData("spinner: ", robot.spinnerLeft.getVelocity());
+                      telemetry.addData("spinnerPower: ", robot.spinnerLeft.getPower());
                       telemetry.addData("TargetVelocity: ", shooterVelocity);
                       telemetry.addData("P: ", P);
                       telemetry.addData("I: ", I);
@@ -449,6 +515,8 @@ public class DiegoPP extends LinearOpMode {
                       telemetry.addData("F: ", F);
 
                   }
+
+
                     break;
 
 
@@ -456,12 +524,14 @@ public class DiegoPP extends LinearOpMode {
                     if(robot.stateChanged){
                         robot.rightFeeder.setPosition(rightFeederDown);
                         robot.leftFeeder.setPosition(leftFeederDown);
-                        robot.spinner.setPower(0);
+                        robot.spinnerLeft.setPower(0);
+                        robot.spinnerRight.setPower(0);
                         robot.intake.setPower(0);
                     }else {
                         robot.rightFeeder.setPosition(rightFeederDown);
                         robot.leftFeeder.setPosition(leftFeederDown);
-                        robot.spinner.setPower(0);
+                        robot.spinnerLeft.setPower(0);
+                        robot.spinnerRight.setPower(0);
                         robot.intake.setPower(0);
                     }
 
@@ -480,6 +550,32 @@ public class DiegoPP extends LinearOpMode {
 
             telemetry.addData("Aimer: ", robot.aimer.getPosition());
 
+
+
+            if (gamePad2.Dpad_Left.isDown()){
+                robot.leftFeeder.setPosition(leftFeederUp);
+            }
+            if (gamePad2.Dpad_Right.isDown()){
+                robot.rightFeeder.setPosition(rightFeederUp);
+            }
+
+
+            if(gamePad2.Left_Bumper.isDown() || gamePad2.Right_Bumper.isDown()){
+                robot.deflector.setPosition(deflectorMiddle);
+            } else {
+                robot.deflector.setPosition(1);
+            }
+
+            if(gamePad2.Dpad_Up.wasJustPressed()){
+                robot.aimer.setPosition(robot.aimer.getPosition()+.01);
+                manual = true;
+            }
+            if(gamePad2.Dpad_Down.wasJustPressed()){
+                robot.aimer.setPosition(robot.aimer.getPosition()-.01);
+                manual = true;
+            } if (!manual){
+                robot.aimer.setPosition(aimerPose);
+            }
 
 
 
@@ -538,7 +634,6 @@ public class DiegoPP extends LinearOpMode {
     }
     public void update(){ //place once on start of loop
         robot.drive.update();
-        robot.spinner2.setPower(robot.spinner.getPower());
         gamePad2.update(gamepad2, robot);
         robot.stateUpdate(State);
         gamePad1.update(gamepad1, robot);
@@ -568,35 +663,36 @@ public class DiegoPP extends LinearOpMode {
         if(green){
             telemetry.addLine("green");
         }
-        robot.spinner.setVelocity(velocity);
-        robot.spinner2.setVelocity(velocity);
+        robot.spinnerLeft.setVelocity(velocity);
+        robot.spinnerRight.setVelocity(velocity);
         switch (pattern) {
             case "PPG":
-                if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
-                    //if ready to shoot
-                    if (robot.stateTime.seconds() - launchTime >= 1.4) {
+                    if (robot.stateTime.seconds() - launchTime >= 1) {
                         //if not shooting
-                        if (purple1 && purple2 && !green) {
+                        if ((purple1 && purple2 && !green) && ((robot.spinnerLeft.getVelocity() >= (velocity - 20)) && (robot.spinnerLeft.getVelocity() <= (velocity + 20)))) {
+                            //if ready to shoot
                             //shoot third
                             robot.leftFeeder.setPosition(leftFeederUp);
-                            robot.deflector.setPosition(deflectorMiddle);
+                            robot.rightFeeder.setPosition(rightFeederUp);
+                            //robot.deflector.setPosition(deflectorMiddle);
                             launchTime = robot.stateTime.seconds();
                             green = true;
-                        } else if (purple1 && !purple2 && !green) {
+                        } else if ((purple1 && !purple2 && !green) && ((robot.spinnerRight.getVelocity() >= (velocity - 20)) && (robot.spinnerRight.getVelocity() <= (velocity + 20)))) {
+                            //if ready to shoot
                             //shoot second
                             robot.rightFeeder.setPosition(rightFeederUp);
-                            robot.deflector.setPosition(deflectorRightIn);
+                            //robot.deflector.setPosition(1);
                             launchTime = robot.stateTime.seconds();
                             purple2 = true;
-                        } else if (!purple1 && !purple2 && !green) {
+                        } else if ((!purple1 && !purple2 && !green) && ((robot.spinnerRight.getVelocity() >= (velocity - 20)) && (robot.spinnerRight.getVelocity() <= (velocity + 20)))) {
+                            //if ready to shoot
                             //shoot first
                             robot.rightFeeder.setPosition(rightFeederUp);
-                            robot.deflector.setPosition(deflectorRightIn);
+                            //robot.deflector.setPosition(1);
                             launchTime = robot.stateTime.seconds();
                             purple1 = true;
                         }
                     }
-                }
 
                 if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
                     robot.leftFeeder.setPosition(leftFeederDown);
@@ -605,39 +701,49 @@ public class DiegoPP extends LinearOpMode {
                     robot.intake.setPower(-.45);
                 } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
                     robot.intake.setPower(1);
-                    robot.deflector.setPosition(deflectorRightIn);
+                    //robot.deflector.setPosition(1);
                 }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
-                    robot.intake.setPower(0);
+                    if (gamePad1.Right_Trigger.isDown() || gamePad2.Right_Trigger.isDown()){
+                        robot.intake.setPower(intakeFast);
+                    } else {
+                        robot.intake.setPower(0);
+                    }
+
+                    if (gamePad1.Left_Trigger.isDown() || gamePad2.Left_Trigger.isDown()){
+                        robot.intake.setPower(-intakeFast);
+                    }
                     return (purple1 && purple2 && green);
                 }
 
                 break;
             case "PGP":
-                if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
-                    //if ready to shoot
-                    if (robot.stateTime.seconds() - launchTime >= 1.4) {
+                    if (robot.stateTime.seconds() - launchTime >= 1) {
                         //if not shooting
-                        if (purple1 && green && !purple2) {
+                        if ((purple1 && green && !purple2) && ((robot.spinnerRight.getVelocity() >= (velocity - 20)) && (robot.spinnerRight.getVelocity() <= (velocity + 20)))) {
                             //shoot third
+                            //if ready to shoot
                             robot.rightFeeder.setPosition(rightFeederUp);
-                            robot.deflector.setPosition(deflectorRightIn);
+                            robot.leftFeeder.setPosition(leftFeederUp);
+                            //robot.deflector.setPosition(1);
                             launchTime = robot.stateTime.seconds();
                             purple2 = true;
-                        } else if (purple1 && !green && !purple2) {
+                        } else if ((purple1 && !green && !purple2) && ((robot.spinnerLeft.getVelocity() >= (velocity - 20)) && (robot.spinnerLeft.getVelocity() <= (velocity + 20)))) {
                             //shoot second
+                            //if ready to shoot
                             robot.leftFeeder.setPosition(leftFeederUp);
-                            robot.deflector.setPosition(deflectorMiddle);
+                            //robot.deflector.setPosition(deflectorMiddle);
                             launchTime = robot.stateTime.seconds();
                             green = true;
-                        } else if (!purple1 && !green && !purple2) {
+                        } else if ((!purple1 && !green && !purple2) && ((robot.spinnerRight.getVelocity() >= (velocity - 20)) && (robot.spinnerRight.getVelocity() <= (velocity + 20)))) {
                             //shoot first
+                            //if ready to shoot
                             robot.rightFeeder.setPosition(rightFeederUp);
-                            robot.deflector.setPosition(deflectorMiddle);
+                            //robot.deflector.setPosition(deflectorMiddle);
                             launchTime = robot.stateTime.seconds();
                             purple1 = true;
                         }
                     }
-                }
+
 
                 if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
                     robot.leftFeeder.setPosition(leftFeederDown);
@@ -654,39 +760,49 @@ public class DiegoPP extends LinearOpMode {
                     } else{
                         robot.intake.setPower(0);
                     }
-                    robot.deflector.setPosition(deflectorRightIn);
+                    //robot.deflector.setPosition(1);
                 }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
-                    robot.intake.setPower(0);
+                    if (gamePad1.Right_Trigger.isDown() || gamePad2.Right_Trigger.isDown()){
+                        robot.intake.setPower(intakeFast);
+                    } else {
+                        robot.intake.setPower(0);
+                    }
+
+                    if (gamePad1.Left_Trigger.isDown() || gamePad2.Left_Trigger.isDown()){
+                        robot.intake.setPower(-intakeFast);
+                    }
                     return (purple1 && purple2 && green);
                 }
 
                 break;
             case "GPP":
-                if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
-                    //if ready to shoot
-                    if (robot.stateTime.seconds() - launchTime >= 1.4) {
+                    if (robot.stateTime.seconds() - launchTime >= 1) {
                         //if not shooting
-                        if (green && purple1 && !purple2) {
+                        if ((green && purple1 && !purple2) && ((robot.spinnerRight.getVelocity() >= (velocity - 20)) && (robot.spinnerRight.getVelocity() <= (velocity + 20)))) {
                             //shoot third
+                            //if ready to shoot
                             robot.rightFeeder.setPosition(rightFeederUp);
+                            robot.leftFeeder.setPosition(leftFeederUp);
                             robot.deflector.setPosition(deflectorMiddle);
                             launchTime = robot.stateTime.seconds();
                             purple2 = true;
-                        } else if (green && !purple1 && !purple2) {
+                        } else if ((green && !purple1 && !purple2) && ((robot.spinnerRight.getVelocity() >= (velocity - 20)) && (robot.spinnerRight.getVelocity() <= (velocity + 20)))) {
                             //shoot second
+                            //if ready to shoot
                             robot.rightFeeder.setPosition(rightFeederUp);
-                            robot.deflector.setPosition(deflectorRightIn);
+                            //robot.deflector.setPosition(1);
                             launchTime = robot.stateTime.seconds();
                             purple1 = true;
-                        } else if (!green && !purple1 && !purple2) {
+                        } else if ((!green && !purple1 && !purple2) && ((robot.spinnerLeft.getVelocity() >= (velocity - 20)) && (robot.spinnerLeft.getVelocity() <= (velocity + 20)))) {
                             //shoot first
+                            //if ready to shoot
                             robot.leftFeeder.setPosition(leftFeederUp);
-                            robot.deflector.setPosition(deflectorMiddle);
+                            //robot.deflector.setPosition(deflectorMiddle);
                             launchTime = robot.stateTime.seconds();
                             green = true;
                         }
                     }
-                }
+
 
                 if(((robot.leftFeeder.getPosition() > leftFeederUp-.05) || ((robot.rightFeeder.getPosition() > rightFeederUp-.05))) && (((robot.stateTime.seconds()-launchTime) >= .25) && ((robot.stateTime.seconds()-launchTime) <= .4))){
                     robot.leftFeeder.setPosition(leftFeederDown);
@@ -703,9 +819,17 @@ public class DiegoPP extends LinearOpMode {
                     } else{
                         robot.intake.setPower(0);
                     }
-                    robot.deflector.setPosition(deflectorRightIn);
+                    //robot.deflector.setPosition(1);
                 }else if (((robot.stateTime.seconds()-launchTime) >= 1)){
-                    robot.intake.setPower(0);
+                    if (gamePad1.Right_Trigger.isDown() || gamePad2.Right_Trigger.isDown()){
+                        robot.intake.setPower(intakeFast);
+                    } else {
+                        robot.intake.setPower(0);
+                    }
+
+                    if (gamePad1.Left_Trigger.isDown() || gamePad2.Left_Trigger.isDown()){
+                        robot.intake.setPower(-intakeFast);
+                    }
                     return (purple1 && purple2 && green);
                 }
 

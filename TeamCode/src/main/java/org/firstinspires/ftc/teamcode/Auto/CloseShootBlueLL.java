@@ -2,18 +2,13 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.Intake1;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.ShootPPGMid;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.ShootPickup1;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoMidRange;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPPG;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPPGMid;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPreload;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPFirst;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPGreen;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPLast;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.shootPGP;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.shootPGPMid;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.toGPPMid;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.toPGP;
 import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.toPGPMid;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorLeftIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
@@ -145,7 +140,7 @@ public final class CloseShootBlueLL extends LinearOpMode {
                     if(robot.stateChanged){
                         //bucketScore = actions.scoreSampleBlue(drive, robot.drive.pose);
                     }
-                    robot.spinner.setVelocity(1600);//1540
+                    robot.spinnerLeft.setVelocity(1600);//1540
                     robot.aimer.setPosition(.66);//.64
 
                     if(!robot.drive.isBusy()) {
@@ -242,7 +237,7 @@ public final class CloseShootBlueLL extends LinearOpMode {
                     break;
                 case secondIntakeLastPurple:
                     if(robot.stateChanged){
-                        robot.spinner.setVelocity(1600);
+                        robot.spinnerLeft.setVelocity(1600);
                         robot.deflector.setPosition(deflectorRightIn);
                     }
                     robot.intake.setPower(.4);
@@ -264,7 +259,7 @@ public final class CloseShootBlueLL extends LinearOpMode {
                     if(robot.stateChanged){
                         telemetry.addLine("in here");
                         robot.deflector.setPosition(deflectorMiddle);
-                        robot.spinner.setVelocity(1600);
+                        robot.spinnerLeft.setVelocity(1600);
                         launchTime = 0;
                     }
                     //robot.drive.followPath(scorePickup1);
@@ -282,7 +277,7 @@ public final class CloseShootBlueLL extends LinearOpMode {
                             purple1 = false;
                             purple2 = false;
                             green = false;
-                            robot.spinner.setPower(0);
+                            robot.spinnerLeft.setPower(0);
 
                         }
 
@@ -294,7 +289,7 @@ public final class CloseShootBlueLL extends LinearOpMode {
                     if(robot.stateChanged){
                         //firstScore = actions.scoreSampleBlueIntake(drive, robot.drive.pose);
                         robot.deflector.setPosition(deflectorLeftIn);
-                        robot.spinner.setVelocity(1600);
+                        robot.spinnerLeft.setVelocity(1600);
                     }
 
                     telemetry.addData("percentage: ", robot.drive.getPathCompletion());
@@ -317,7 +312,7 @@ public final class CloseShootBlueLL extends LinearOpMode {
                         robot.rightFeeder.setPosition(rightFeederDown);
                         robot.drive.followPath(ShootPPGMid, true);
                         changeStateTo(state.launch2);
-                        robot.spinner.setVelocity(1600);
+                        robot.spinnerLeft.setVelocity(1600);
                         robot.intake.setPower(0);
                     }
                     break;
@@ -336,7 +331,7 @@ public final class CloseShootBlueLL extends LinearOpMode {
                             robot.deflector.setPosition(deflectorMiddle);
                             robot.drive.followPath(drivetoPPGMid);
                             changeStateTo(state.driving);
-                            robot.spinner.setVelocity(1600);
+                            robot.spinnerLeft.setVelocity(1600);
                             thirdScored = true;
                             purple1 = false;
                             purple2 = false;
@@ -371,7 +366,7 @@ public void update(){
     telemetry.addData("State: ", State);
     telemetry.addData("isDon: ", !robot.drive.isBusy());
     telemetry.addData("statechange: ", robot.stateChanged);
-    telemetry.addData("velocity", robot.spinner.getVelocity());
+    telemetry.addData("velocity", robot.spinnerLeft.getVelocity());
     telemetry.update();
 
 }
@@ -394,10 +389,10 @@ public void update(){
         if(green){
             telemetry.addLine("green");
         }
-        robot.spinner.setVelocity(velocity);
+        robot.spinnerLeft.setVelocity(velocity);
             switch (pattern) {
                 case "PPG":
-                    if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
+                    if ((robot.spinnerLeft.getVelocity() >= (velocity - 20)) && (robot.spinnerLeft.getVelocity() <= (velocity + 20))) {
                         //if ready to shoot
                         if (robot.stateTime.seconds() - launchTime >= 1) {
                             //if not shooting
@@ -424,7 +419,7 @@ public void update(){
                     }
                     break;
                 case "PGP":
-                    if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
+                    if ((robot.spinnerLeft.getVelocity() >= (velocity - 20)) && (robot.spinnerLeft.getVelocity() <= (velocity + 20))) {
                         //if ready to shoot
                         if (robot.stateTime.seconds() - launchTime >= 1) {
                             //if not shooting
@@ -451,7 +446,7 @@ public void update(){
                     }
                     break;
                 case "GPP":
-                    if ((robot.spinner.getVelocity() >= (velocity - 20)) && (robot.spinner.getVelocity() <= (velocity + 20))) {
+                    if ((robot.spinnerLeft.getVelocity() >= (velocity - 20)) && (robot.spinnerLeft.getVelocity() <= (velocity + 20))) {
                         //if ready to shoot
                         if (robot.stateTime.seconds() - launchTime >= 1) {
                             //if not shooting
