@@ -33,6 +33,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.bylazar.configurables.PanelsConfigurables;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -150,9 +151,9 @@ public class KachowHardware {
 
         frontleft.setDirection(DcMotor.Direction.REVERSE);
         backleft.setDirection(DcMotor.Direction.REVERSE);
-        rightFeeder.setDirection(Servo.Direction.REVERSE);
-        spinnerLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
-        spinnerRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
+        leftFeeder.setDirection(Servo.Direction.REVERSE);
+        spinnerLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 15));
+        spinnerRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 15));
         spinnerRight.setDirection(DcMotorSimple.Direction.REVERSE);
         //intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -320,7 +321,7 @@ public class KachowHardware {
         }
     }
         public enum state {
-                idle, driving, drivetoPPG, drivetoPGP, drivetoGPP, intaking, intakingGreen, intakingPurple, rotating, launching, humanPlayer, drivingHumanPlayer, Transfer, Transfer1, Transfer2, Transfer3, Transfer4, pathFollowing, retract, extend, turnto, aimbot, detecting, outTaking, firstClip, launch1, launch2, launchPreload, launch3, park, firstIntakeGreen, firstIntakePurples, secondIntakePurple1, secondIntakeGreen, secondIntakeLastPurple; //lineSearch, detectBeacon, distanceSensor, homeMechanisms,
+            pushBot, shootPreload, intakeFirst, openGate, shootFirst, intakeSecond, shootSecond, intakeThird, shootThird, leave, idle, driving, drivetoPPG, drivetoPGP, drivetoGPP, intaking, intakingGreen, intakingPurple, rotating, launching, aimbot, launch1, launch2, launchPreload, launch3, park, firstIntakeGreen, firstIntakePurples, secondIntakePurple1, secondIntakeGreen, secondIntakeLastPurple;
         }
 
     public void drawCurrent(Follower drive) {

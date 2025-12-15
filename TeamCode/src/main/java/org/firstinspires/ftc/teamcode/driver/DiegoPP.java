@@ -24,6 +24,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -32,6 +33,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
 import org.firstinspires.ftc.teamcode.hardware.Vector2d;
@@ -57,6 +59,7 @@ public class DiegoPP extends LinearOpMode {
     boolean purple1 = false;
     boolean purple2 = false;
     public PathChain park;
+    private Limelight3A limelight;
 
 
 
@@ -68,6 +71,9 @@ public class DiegoPP extends LinearOpMode {
     /* Declare OpMode members. */
     KachowHardware robot = new KachowHardware();
     state State = state.driving;
+    double limeX;
+    double limeY;
+    double limeHeading;
 
     ElapsedTime runtime = new ElapsedTime();
     @Override
@@ -85,6 +91,10 @@ public class DiegoPP extends LinearOpMode {
         } else {
             robot.kachow.drive.setPose(kaze.robotPose);
         }
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        telemetry.setMsTransmissionInterval(11);
+        limelight.pipelineSwitch(3);
+        limelight.start();
         waitForStart();
         robot.runtime.reset();
         runtime.reset();
@@ -106,7 +116,9 @@ public class DiegoPP extends LinearOpMode {
 
 
 
-
+            telemetry.addData("Limelight x: ", limeX);
+            telemetry.addData("Limelight y: ", limeY);
+            telemetry.addData("Limelight heading: ", limeHeading);
             robot.kachow.drive.updatePose();
             telemetry.addLine("x: " + robot.kachow.drive.getPose().getX());
             telemetry.addLine("y: " + robot.kachow.drive.getPose().getY());
@@ -135,6 +147,11 @@ public class DiegoPP extends LinearOpMode {
                 shooterVelocity = shooterMax;
             }
 
+
+
+            if(gamePad2.TouchPad.isDown()){
+                robot.kachow.drive.setPose(new Pose(limeX, limeY, Math.toRadians(limeHeading)));
+            }
 
 
             switch (State){
@@ -265,7 +282,7 @@ public class DiegoPP extends LinearOpMode {
 
                 case aimbot:
                     if(robot.stateChanged){
-                        launchTime = -5;
+                        launchTime = -5.00000;
                     }
                     //robot.deflector.setPosition(1);
                     robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .18);
@@ -395,13 +412,13 @@ public class DiegoPP extends LinearOpMode {
                         robot.rightFeeder.setPosition(rightFeederDown);
                         //robot.deflector.setPosition(deflectorMiddle);
                         robot.leftFeeder.setPosition(leftFeederDown);
-                        robot.intake.setPower(-.3);
-                    } else if (((robot.stateTime.seconds()-launchTime) > .4) && (robot.stateTime.seconds()-launchTime) < .8){
+                        //robot.intake.setPower(-.2);
+                    } else if (((robot.stateTime.seconds()-launchTime) > .4) && (robot.stateTime.seconds()-launchTime) < 1){
                         robot.intake.setPower(.5);
                         robot.leftFeeder.setPosition(leftFeederDown);
                         robot.rightFeeder.setPosition(rightFeederDown);
                         // //robot.deflector.setPosition(1);
-                    }else if (((robot.stateTime.seconds()-launchTime) >= .8) && ((robot.stateTime.seconds()-launchTime) <= 1)){
+                    }else if (((robot.stateTime.seconds()-launchTime) >= 1) && ((robot.stateTime.seconds()-launchTime) <= 1.2)){
                         if (gamePad1.Right_Trigger.isDown() || gamePad2.Right_Trigger.isDown()){
                             robot.intake.setPower(intakeFast);
                         } else {
@@ -410,7 +427,8 @@ public class DiegoPP extends LinearOpMode {
 
                         if (gamePad1.Left_Trigger.isDown() || gamePad2.Left_Trigger.isDown()){
                             robot.intake.setPower(-intakeFast);
-                        }                    }
+                        }
+                    }
 
                     if(gamePad1.Dpad_Up.wasJustPressed()){
                         robot.aimer.setPosition(robot.aimer.getPosition()+.01);
@@ -446,7 +464,7 @@ public class DiegoPP extends LinearOpMode {
                         manual = false;
                         powerMode = false;
                         doubleLaunch = false;
-                        launchTime = 0;
+                        launchTime = -5.00000;
                     }
                     if(gamePad1.triangle.isDown()){
                         robot.rightFeeder.setPosition(rightFeederDown);
@@ -461,7 +479,7 @@ public class DiegoPP extends LinearOpMode {
 
                 case launching:
                     if(robot.stateChanged){
-                        launchTime = -5;
+                        launchTime = -5.00000;
                     }
                     //robot.deflector.setPosition(1);
                     robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .18);
@@ -644,6 +662,14 @@ public class DiegoPP extends LinearOpMode {
         telemetry.addData("state: ", State);
         telemetry.update();
         kaze.drawCurrentAndHistory(robot.kachow.drive);
+
+        limeX = ((limelight.getLatestResult().getBotpose().getPosition().toUnit(DistanceUnit.INCH).y)+77);
+        limeY = (70-(limelight.getLatestResult().getBotpose().getPosition().toUnit(DistanceUnit.INCH).x));
+        if(((limelight.getLatestResult().getBotpose().getOrientation().getYaw())-86)<0){
+            limeHeading = ((-limelight.getLatestResult().getBotpose().getOrientation().getYaw()))-86;
+        }else{
+            limeHeading = ((limelight.getLatestResult().getBotpose().getOrientation().getYaw())-86);
+        }
     }
     public void changeStateTo(state tostate){
         State = tostate;
@@ -698,7 +724,7 @@ public class DiegoPP extends LinearOpMode {
                     robot.leftFeeder.setPosition(leftFeederDown);
                     robot.rightFeeder.setPosition(rightFeederDown);
                     //robot.deflector.setPosition(deflectorMiddle);
-                    robot.intake.setPower(-.45);
+                    //robot.intake.setPower(-.2);
                 } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
                     robot.intake.setPower(1);
                     //robot.deflector.setPosition(1);
@@ -750,9 +776,9 @@ public class DiegoPP extends LinearOpMode {
                     robot.rightFeeder.setPosition(rightFeederDown);
                     //robot.deflector.setPosition(deflectorMiddle);
                     if(purple1){
-                        robot.intake.setPower(-.2);
+                        //robot.intake.setPower(-.2);
                     } else {
-                        robot.intake.setPower(-.4);
+                        //robot.intake.setPower(-.2);
                     }
                 } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
                     if(green && purple1){
@@ -811,7 +837,7 @@ public class DiegoPP extends LinearOpMode {
                     if(green){
                         robot.intake.setPower(0);
                     } else {
-                        robot.intake.setPower(-.4);
+                        //robot.intake.setPower(-.2);
                     }
                 } else if (((robot.stateTime.seconds()-launchTime) >= .4) && (robot.stateTime.seconds()-launchTime) < 1){
                     if(green && purple1){

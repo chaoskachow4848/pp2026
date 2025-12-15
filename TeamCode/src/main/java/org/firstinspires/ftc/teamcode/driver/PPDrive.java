@@ -57,12 +57,12 @@ public class PPDrive extends LinearOpMode {
     public static double shooterMid = 1500;
     public static double intakeFast = .5;
     public static double intakeSlow = .25;
-    public static double leftFeederDown = .2183;
-    public static double leftFeederMid = .3183;
-    public static double leftFeederUp = .36;
+    public static double leftFeederDown = .0;
+    public static double leftFeederMid = .06;
+    public static double leftFeederUp = .12;
     public static double rightFeederDown = 0;
-    public static double rightFeederMid = .1;
-    public static double rightFeederUp = .15;
+    public static double rightFeederMid = .06;
+    public static double rightFeederUp = .12;
     public static double aimerPose;
     public static double launchTime;
     public boolean manual = false;
