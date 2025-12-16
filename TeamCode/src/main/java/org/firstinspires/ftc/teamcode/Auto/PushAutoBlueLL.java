@@ -1,25 +1,24 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDintakeFirst;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDintakeSecond;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDintakeThird;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDleave;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDopenGate;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDpushBot;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDshootFirst;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDshootPreload;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDshootSecond;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDshootThird;
-import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorLeftIn;
-import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
-import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorRightIn;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.intakeFirst;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.intakeSecond;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.intakeThird;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.leave;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.openGate;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.pushBot;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.shootFirst;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.shootPreload;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.shootSecond;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.shootThird;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.leave;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.shootThird;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.launchTime;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederDown;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederUp;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederDown;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederUp;
-import static org.firstinspires.ftc.teamcode.hardware.KachowHardware.state.pushBot;
+import static org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
 
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.geometry.Pose;
@@ -32,8 +31,8 @@ import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
 import org.firstinspires.ftc.teamcode.hardware.kaze;
 
-@Autonomous(name = "PushAutoRedLL", group = "4848")
-public final class PushAutoRedLL extends LinearOpMode {
+@Autonomous(name = "PushAutoBlueLL", group = "4848")
+public final class PushAutoBlueLL extends LinearOpMode {
 
     boolean wasMade = false;
     boolean isFirst = true;
@@ -60,9 +59,9 @@ public final class PushAutoRedLL extends LinearOpMode {
         limelight.pipelineSwitch(3);
         double x;
         double y;
-        final Pose startPose = new Pose(144-64.000, 8.500, Math.toRadians(90)); // Start Pose of our robot.
+        final Pose startPose = new Pose(64, 8.5, Math.toRadians(90)); // Start Pose of our robot.//x:64    y:8.5
         //launchTime = 0;
-        kaze.init(startPose, false);
+        kaze.init(startPose, true);
         pushPaths actions = new pushPaths(robot);
         robot.init(hardwareMap);
 
@@ -151,8 +150,8 @@ public final class PushAutoRedLL extends LinearOpMode {
                     robot.aimer.setPosition(.58);//.64
 
                     if(!robot.drive.isBusy()) {
-                        robot.drive.followPath(REDpushBot, true);
-                        changeStateTo(pushBot);
+                        robot.drive.followPath(pushBot, true);
+                        changeStateTo(state.pushBot);
                         fast = true;
                     }
                     break;
@@ -167,7 +166,7 @@ public final class PushAutoRedLL extends LinearOpMode {
 
 
                     if(!robot.drive.isBusy()){
-                            robot.drive.followPath(REDshootPreload);
+                            robot.drive.followPath(shootPreload);
                             changeStateTo(state.shootPreload);
                             robot.spinnerLeft.setVelocity(1640);
                             robot.spinnerRight.setVelocity(1640);
@@ -190,7 +189,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                         if(!robot.drive.isBusy()){
                             if(doubleLaunch(pattern, 1640)){
                                 robot.deflector.setPosition(1);
-                                robot.drive.followPath(REDintakeFirst);
+                                robot.drive.followPath(intakeFirst);
                                 changeStateTo(state.intakeFirst);
                                 robot.spinnerLeft.setVelocity(1380);
                                 robot.spinnerRight.setVelocity(1380);
@@ -209,7 +208,7 @@ public final class PushAutoRedLL extends LinearOpMode {
 
                     if(!robot.drive.isBusy()) {
                         robot.rightFeeder.setPosition(rightFeederDown);
-                        robot.drive.followPath(REDopenGate, true);
+                        robot.drive.followPath(openGate, true);
                         changeStateTo(state.openGate);
                         robot.spinnerLeft.setVelocity(1380);
                         robot.spinnerRight.setVelocity(1380);
@@ -231,7 +230,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                     if(!robot.drive.isBusy()){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
                             changeStateTo(state.shootFirst);
-                            robot.drive.followPath(REDshootFirst);
+                            robot.drive.followPath(shootFirst);
                             singleShoot = false;
                             doubleShoot = false;
                             fast = true;
@@ -252,7 +251,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                         if(doubleLaunch(pattern, 1380)){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
                             changeStateTo(state.intakeSecond);
-                            robot.drive.followPath(REDintakeSecond);
+                            robot.drive.followPath(intakeSecond);
                             singleShoot = false;
                             doubleShoot = false;
                             fast = false;
@@ -274,7 +273,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                         robot.leftFeeder.setPosition(leftFeederDown);
                         robot.rightFeeder.setPosition(rightFeederDown);
                         //robot.rightFeeder.setPosition(rightFeederMid);
-                        robot.drive.followPath(REDshootSecond);
+                        robot.drive.followPath(shootSecond);
                         robot.deflector.setPosition(1);
                         changeStateTo(state.shootSecond);
                         robot.intake.setPower(.2);
@@ -295,7 +294,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                         if(doubleLaunch(pattern, 1380)){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
                             changeStateTo(state.intakeThird);
-                            robot.drive.followPath(REDintakeThird);
+                            robot.drive.followPath(intakeThird);
                             singleShoot = false;
                             doubleShoot = false;
                             fast = false;
@@ -322,7 +321,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                         robot.rightFeeder.setPosition(rightFeederDown);
 
                         //robot.rightFeeder.setPosition(rightFeederMid);
-                            robot.drive.followPath(REDshootThird);
+                            robot.drive.followPath(shootThird);
                             robot.deflector.setPosition(1);
                             changeStateTo(state.shootThird);
                             fast = false;
@@ -344,7 +343,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                         if(doubleLaunch(pattern, 1640)){
                             robot.deflector.setPosition(1);
                             changeStateTo(state.leave);
-                            robot.drive.followPath(REDleave);
+                            robot.drive.followPath(leave);
                             singleShoot = false;
                             doubleShoot = false;
                             robot.spinnerLeft.setVelocity(0);
