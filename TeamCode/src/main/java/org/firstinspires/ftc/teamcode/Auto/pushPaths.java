@@ -78,7 +78,7 @@ public class pushPaths {
                         new BezierCurve(
                                 new Pose(130.000, 83.000),
                                 new Pose(112, 76),
-                                new Pose(128, 74)
+                                new Pose(127, 74)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))

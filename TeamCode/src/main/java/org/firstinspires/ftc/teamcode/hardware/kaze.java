@@ -20,9 +20,9 @@ public class kaze {
         robotPose = startPose;
         IsBlue = isblue;
         if(IsBlue){
-            target = new Vector2d(0,144);
+            target = new Vector2d(3,144);
         } else {
-            target = new Vector2d(144,144);
+            target = new Vector2d(141,144);
         }
         //headingOffset = Math.toDegrees(startPose.getHeading());
     }

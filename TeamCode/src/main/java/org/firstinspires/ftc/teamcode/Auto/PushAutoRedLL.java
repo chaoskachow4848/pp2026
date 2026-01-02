@@ -259,6 +259,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                             //robot.spinner.setPower(0);
                             robot.leftFeeder.setPosition(leftFeederDown);
                             robot.rightFeeder.setPosition(rightFeederDown);
+                            robot.aimer.setPosition(.5);
 
                         }
                     }

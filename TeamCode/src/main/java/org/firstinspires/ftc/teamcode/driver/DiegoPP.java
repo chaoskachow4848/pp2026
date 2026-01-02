@@ -101,7 +101,7 @@ public class DiegoPP extends LinearOpMode {
         if(kaze.target != null){
             target = kaze.target;
         } else {
-            target = new Vector2d(0,144);
+            target = new Vector2d(3,144);
         }
         robot.aimer.setPosition(.63);
 
@@ -145,6 +145,19 @@ public class DiegoPP extends LinearOpMode {
             }
             if(botPoint.y <= 60){
                 shooterVelocity = shooterMax;
+            }
+            if(kaze.IsBlue){
+                if(botPoint.y <= 60){
+                    target = new Vector2d(3,144);
+                } else {
+                    target = new Vector2d(0,141);
+                }
+            } else {
+                if(botPoint.y <= 60){
+                    target = new Vector2d(141,144);
+                } else {
+                    target = new Vector2d(144,141);
+                }
             }
 
 
@@ -482,7 +495,7 @@ public class DiegoPP extends LinearOpMode {
                         launchTime = -5.00000;
                     }
                     //robot.deflector.setPosition(1);
-                    robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .18);
+                    robot.kachow.aimbot(target, gamepad1, gamepad2, robot, .2);
                 if(gamepad1.right_stick_x != 0){
                         target = new Vector2d(target.x+gamepad1.right_stick_x, target.y);
                 }

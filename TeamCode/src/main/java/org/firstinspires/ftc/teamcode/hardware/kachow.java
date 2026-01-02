@@ -927,7 +927,7 @@ public class kachow extends SampleHardware {
 
         error = angleDifference(heading, bot_angle);
 
-        errorPower = error / 90;
+        errorPower = error / 70;
         if(Math.abs(errorPower)>1){
             errorPower = Math.abs(errorPower)/errorPower;
         }
