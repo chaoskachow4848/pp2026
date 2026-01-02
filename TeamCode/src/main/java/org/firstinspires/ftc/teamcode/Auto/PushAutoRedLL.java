@@ -213,7 +213,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                         changeStateTo(state.openGate);
                         robot.spinnerLeft.setVelocity(1380);
                         robot.spinnerRight.setVelocity(1380);
-                        robot.intake.setPower(.2);
+                        robot.intake.setPower(.5);
                         fast = true;
                     }
                     break;
@@ -292,7 +292,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                     telemetry.addData("percentage: ", robot.drive.getPathCompletion());
                     if(!robot.drive.isBusy()) {
 
-                        if(doubleLaunch(pattern, 1380)){
+                        if(doubleLaunch(pattern, 1400)){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
                             changeStateTo(state.intakeThird);
                             robot.drive.followPath(REDintakeThird);

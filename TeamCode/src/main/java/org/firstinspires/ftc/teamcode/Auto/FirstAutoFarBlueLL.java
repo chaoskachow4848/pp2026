@@ -349,20 +349,11 @@ public final class FirstAutoFarBlueLL extends LinearOpMode {
                         robot.spinnerRight.setVelocity(1640);
                         launchTime = 0;
                     }
-                    //robot.drive.followPath(scorePickup1);
-                    //check for sensor intake
-                    if((robot.stateTime.seconds() > 1) && (robot.stateTime.seconds() < 1.2)){
-                        robot.deflector.setPosition(deflectorMiddle);
-                        robot.intake.setPower(-.3);
-                    } else if ((robot.stateTime.seconds() > 1.25)){
-                        robot.intake.setPower(0);
-                        robot.deflector.setPosition(deflectorRightIn);
-                    }
+
                     if(!robot.drive.isBusy()){
                         if(launch(pattern, 1640)){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
                             //robot.leftFeeder.setPosition(leftFeederMid);
-                            robot.deflector.setPosition(1);
                             thirdScored = true;
                             changeStateTo(state.driving);
                             robot.drive.followPath(toPPG);
@@ -376,6 +367,21 @@ public final class FirstAutoFarBlueLL extends LinearOpMode {
 
                         }
 
+                    } else{
+                        if((robot.stateTime.seconds() > 1) && (robot.stateTime.seconds() < 1.2)){
+                            robot.deflector.setPosition(deflectorMiddle);
+                            robot.intake.setPower(-.3);
+                        } else if ((robot.stateTime.seconds() > 1.25)){
+                            robot.intake.setPower(0);
+                            robot.deflector.setPosition(deflectorRightIn);
+                        }
+                    }
+                    break;
+                case driving:
+                    robot.leftFeeder.setPosition(leftFeederDown);
+                    robot.rightFeeder.setPosition(rightFeederDown);
+                    if(robot.stateTime.seconds()>=1){
+                        robot.deflector.setPosition(1);
                     }
                     break;
 

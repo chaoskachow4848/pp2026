@@ -77,8 +77,8 @@ public class pushPaths {
                 .addPath(
                         new BezierCurve(
                                 new Pose(130.000, 83.000),
-                                new Pose(112.150, 76.037),
-                                new Pose(129.196, 74)
+                                new Pose(112, 76),
+                                new Pose(128, 74)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
@@ -179,14 +179,14 @@ public class pushPaths {
                         new BezierCurve(
                                 new Pose(19, 81.5),
                                 new Pose(34, 74.5),
-                                new Pose(18, 72.5)
+                                new Pose(18.25, 72.5)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                 .build();
         shootFirst = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(17.6, 72.5), new Pose(60, 78.5))
+                        new BezierLine(new Pose(17, 72.5), new Pose(60, 78.5))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(133))
                 .build();
@@ -194,11 +194,30 @@ public class pushPaths {
                 .addPath(
                         new BezierCurve(
                                 new Pose(60, 78.5),
+                                new Pose(65, 50), //83//52
+                                new Pose(14, 57.5)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(133), Math.toRadians(180))
+                .build();
+
+        shootSecond = robot.drive.pathBuilder()
+                .addPath(
+                        new BezierLine(new Pose(14, 57.5), new Pose(60, 78.5))
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(133))
+                .build();
+
+        /*
+                intakeSecond = robot.drive.pathBuilder()
+                .addPath(
+                        new BezierCurve(
+                                new Pose(60, 78.5),
                                 new Pose(41, 39), //83//52
                                 new Pose(17.5, 60)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(133), Math.toRadians(158))
+                .setLinearHeadingInterpolation(Math.toRadians(133), Math.toRadians(161))
                 .build();
 
         shootSecond = robot.drive.pathBuilder()
@@ -207,16 +226,17 @@ public class pushPaths {
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(152), Math.toRadians(133))
                 .build();
-                 */
+                 //
                 .addPath(
-                        new BezierCurve(
-                                new Pose(17.5, 60),
-                                new Pose(24, 53), //83//52
-                                new Pose(60, 78.5)
-                        )
+                new BezierCurve(
+                        new Pose(17.5, 60),
+                        new Pose(24, 53), //83//52
+                        new Pose(60, 78.5)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(158), Math.toRadians(133))
+        )
+                .setLinearHeadingInterpolation(Math.toRadians(161), Math.toRadians(133))
                 .build();
+                 */
 
 
         intakeThird = robot.drive.pathBuilder()

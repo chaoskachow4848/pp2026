@@ -175,13 +175,14 @@ public class pathsANDactions {
         REDtoPPG = robot.drive.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Pose(144-57.500, 17.500),
-                                new Pose(144-54.729, 90.168),
-                                new Pose(144-25, 82)
+                                new Pose(86.500, 17.500),
+                                new Pose(87.925, 91.8),
+                                new Pose(127, 83.000)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(68), Math.toRadians(0))
                 .build();
+
         REDintakePGPFirst = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(144-37.5, 61), new Pose(144-35, 62)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
