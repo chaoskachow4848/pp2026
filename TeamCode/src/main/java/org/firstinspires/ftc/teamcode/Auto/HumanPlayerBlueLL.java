@@ -1,24 +1,20 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.intakeFirst;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.intakeSecond;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.intakeThird;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.leave;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.openGate;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.pushBot;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.shootFirst;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.shootPreload;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.shootSecond;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.shootThird;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.leave;
-import static org.firstinspires.ftc.teamcode.Auto.pushPaths.shootThird;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeClosest;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeClustered;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.leave;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.shootClustered;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.shootFirst;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.shootPreload;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.shootSecond;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.launchTime;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederDown;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederUp;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederDown;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederUp;
-import static org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
+import static org.firstinspires.ftc.teamcode.hardware.KachowHardware.state.pushBot;
 
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.geometry.Pose;
@@ -31,8 +27,8 @@ import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
 import org.firstinspires.ftc.teamcode.hardware.kaze;
 
-@Autonomous(name = "PushAutoBlueLL", group = "4848")
-public final class PushAutoBlueLL extends LinearOpMode {
+@Autonomous(name = "HumanPlayerBlueLL", group = "4848")
+public final class HumanPlayerBlueLL extends LinearOpMode {
 
     boolean wasMade = false;
     boolean isFirst = true;
@@ -62,7 +58,8 @@ public final class PushAutoBlueLL extends LinearOpMode {
         final Pose startPose = new Pose(64, 8.5, Math.toRadians(90)); // Start Pose of our robot.//x:64    y:8.5
         //launchTime = 0;
         kaze.init(startPose, true);
-        pushPaths actions = new pushPaths(robot);
+
+        RiskyPaths actions = new RiskyPaths(robot);
         robot.init(hardwareMap);
 
         robot.imu.resetYaw();
@@ -150,32 +147,9 @@ public final class PushAutoBlueLL extends LinearOpMode {
                     robot.aimer.setPosition(.58);//.64
 
                     if(!robot.drive.isBusy()) {
-                        robot.drive.followPath(pushBot, true);
-
-                        changeStateTo(state.pushBot);
+                        robot.drive.followPath(shootPreload, true);
+                        changeStateTo(state.shootPreload);
                         fast = true;
-                    }
-                    break;
-                case pushBot:
-                    if(robot.stateChanged){
-                        //firstSample = new MecanumDrive.FailoverAction(actions.intakeFirst(drive, robot.drive.pose, 45.5, 54, -90), actions.isDone());
-                        telemetry.addLine("in here");
-                        telemetry.update();
-                    }
-                    telemetry.addData("statetime: ", robot.stateTime);
-
-
-
-                    if(!robot.drive.isBusy()){
-                            robot.drive.followPath(shootPreload);
-                            changeStateTo(state.shootPreload);
-                            robot.spinnerLeft.setVelocity(1640);
-                            robot.spinnerRight.setVelocity(1640);
-                            singleShoot = false;
-                            doubleShoot = false;
-                            fast = true;
-                            //robot.leftFeeder.setPosition(leftFeederMid);
-                            //robot.rightFeeder.setPosition(rightFeederMid/2);
                     }
                     break;
 
@@ -190,7 +164,7 @@ public final class PushAutoBlueLL extends LinearOpMode {
                         if(!robot.drive.isBusy()){
                             if(doubleLaunch(pattern, 1640)){
                                 robot.deflector.setPosition(1);
-                                robot.drive.followPath(intakeFirst);
+                                robot.drive.followPath(intakeClosest);
                                 changeStateTo(state.intakeFirst);
                                 robot.spinnerLeft.setVelocity(1380);
                                 robot.spinnerRight.setVelocity(1380);
@@ -209,35 +183,12 @@ public final class PushAutoBlueLL extends LinearOpMode {
 
                     if(!robot.drive.isBusy()) {
                         robot.rightFeeder.setPosition(rightFeederDown);
-                        robot.drive.followPath(openGate, true);
+                        robot.drive.followPath(shootFirst, true);
                         changeStateTo(state.openGate);
                         robot.spinnerLeft.setVelocity(1380);
                         robot.spinnerRight.setVelocity(1380);
-                        robot.intake.setPower(.5);
+                        robot.intake.setPower(.2);
                         fast = true;
-                    }
-                    break;
-
-                case openGate:
-                    if(robot.stateChanged){
-                        //secondSample = actions.intakeFirst(drive, robot.drive.pose, 58.5, 54, -90);
-                        telemetry.addLine("in here");
-                        //robot.deflector.setPosition(deflectorMiddle);
-                        launchTime = 0;
-
-                    }
-
-
-                    if(!robot.drive.isBusy()){
-                            //robot.rightFeeder.setPosition(rightFeederMid/2);
-                            changeStateTo(state.shootFirst);
-                            robot.drive.followPath(shootFirst);
-                            singleShoot = false;
-                            doubleShoot = false;
-                            fast = true;
-                        robot.intake.setPower(0);
-                        //robot.spinner.setPower(0);
-
                     }
                     break;
 
@@ -252,14 +203,13 @@ public final class PushAutoBlueLL extends LinearOpMode {
                         if(doubleLaunch(pattern, 1380)){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
                             changeStateTo(state.intakeSecond);
-                            robot.drive.followPath(intakeSecond);
+                            robot.drive.followPath(intakeHP);
                             singleShoot = false;
                             doubleShoot = false;
                             fast = false;
                             //robot.spinner.setPower(0);
                             robot.leftFeeder.setPosition(leftFeederDown);
                             robot.rightFeeder.setPosition(rightFeederDown);
-                            robot.aimer.setPosition(.5);
 
                         }
                     }
@@ -293,10 +243,10 @@ public final class PushAutoBlueLL extends LinearOpMode {
                     telemetry.addData("percentage: ", robot.drive.getPathCompletion());
                     if(!robot.drive.isBusy()) {
 
-                        if(doubleLaunch(pattern, 1400)){//1380
+                        if(doubleLaunch(pattern, 1400)){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
                             changeStateTo(state.intakeThird);
-                            robot.drive.followPath(intakeThird);
+                            robot.drive.followPath(intakeClustered);
                             singleShoot = false;
                             doubleShoot = false;
                             fast = false;
@@ -323,7 +273,7 @@ public final class PushAutoBlueLL extends LinearOpMode {
                         robot.rightFeeder.setPosition(rightFeederDown);
 
                         //robot.rightFeeder.setPosition(rightFeederMid);
-                            robot.drive.followPath(shootThird);
+                            robot.drive.followPath(shootClustered);
                             robot.deflector.setPosition(1);
                             changeStateTo(state.shootThird);
                             fast = false;
@@ -333,6 +283,7 @@ public final class PushAutoBlueLL extends LinearOpMode {
                     break;
 
                 case shootThird:
+                    robot.intake.setPower(-.5);
                     if(robot.stateChanged){
                         telemetry.addLine("in here");
                         robot.deflector.setPosition(1);

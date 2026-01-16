@@ -169,6 +169,32 @@ public class DiegoPP extends LinearOpMode {
 
             switch (State){
                 case driving:
+
+                    if (gamePad1.Dpad_Down.isDown() || gamePad2.Dpad_Down.isDown()){
+                        robot.rightStilt.setPower(-1);
+                        robot.leftStilt.setPower(-1);
+                    } else if (gamePad1.Dpad_Up.isDown() || gamePad2.Dpad_Up.isDown()){
+                        robot.rightStilt.setPower(1);
+                        robot.leftStilt.setPower(1);
+                    }else if (gamepad2.left_stick_y >.2){
+                        robot.leftStilt.setPower(1);
+                        robot.rightStilt.setPower(0);
+                    }else if (gamepad2.left_stick_y <-.2){
+                        robot.leftStilt.setPower(-1);
+                        robot.rightStilt.setPower(0);
+                    }else if (gamepad2.right_stick_y >.2){
+                        robot.rightStilt.setPower(1);
+                        robot.leftStilt.setPower(0);
+                    }else if (gamepad2.right_stick_y <-.2){
+                        robot.rightStilt.setPower(-1);
+                        robot.leftStilt.setPower(0);
+                    } else {
+                        robot.rightStilt.setPower(0);
+                        robot.leftStilt.setPower(0);
+                    }
+
+
+
                     if (gamePad2.Dpad_Left.isDown()){
                         robot.leftFeeder.setPosition(leftFeederUp);
                     } else if (gamePad2.Dpad_Right.isDown()){
@@ -207,7 +233,7 @@ public class DiegoPP extends LinearOpMode {
                         changeStateTo(state.intaking);
                         break;
                     }
-                    if(gamepad1.options && gamepad1.share){
+                    if((gamepad1.options && gamepad1.share) || (gamepad2.options && gamepad2.share)){
                         robot.drive.activateAllPIDFs();
                         if(!kaze.IsBlue){
                             park = robot.drive.pathBuilder()
@@ -222,11 +248,38 @@ public class DiegoPP extends LinearOpMode {
                         }
 
                         changeStateTo(state.park);
-                        robot.drive.followPath(park);
+                        //robot.drive.followPath(park);
                     }
                     break;
 
                 case intaking:
+
+
+                    if (gamePad1.Dpad_Down.isDown() || gamePad2.Dpad_Down.isDown()){
+                        robot.rightStilt.setPower(-1);
+                        robot.leftStilt.setPower(-1);
+                    } else if (gamePad1.Dpad_Up.isDown() || gamePad2.Dpad_Up.isDown()){
+                        robot.rightStilt.setPower(1);
+                        robot.leftStilt.setPower(1);
+                    }else if (gamepad2.left_stick_y >.2){
+                        robot.leftStilt.setPower(1);
+                        robot.rightStilt.setPower(0);
+                    }else if (gamepad2.left_stick_y <-.2){
+                        robot.leftStilt.setPower(-1);
+                        robot.rightStilt.setPower(0);
+                    }else if (gamepad2.right_stick_y >.2){
+                        robot.rightStilt.setPower(1);
+                        robot.leftStilt.setPower(0);
+                    }else if (gamepad2.right_stick_y <-.2){
+                        robot.rightStilt.setPower(-1);
+                        robot.leftStilt.setPower(0);
+                    } else {
+                        robot.rightStilt.setPower(0);
+                        robot.leftStilt.setPower(0);
+                    }
+
+
+
                     if (gamePad2.Dpad_Left.isDown()){
                         robot.leftFeeder.setPosition(leftFeederUp);
                     } else if (gamePad2.Dpad_Right.isDown()){
@@ -275,7 +328,7 @@ public class DiegoPP extends LinearOpMode {
                         changeStateTo(state.aimbot);
                         break;
                     }
-                    if(gamepad1.options && gamepad1.share){
+                    if((gamepad1.options && gamepad1.share) || (gamepad2.options && gamepad2.share)){
                         robot.drive.activateAllPIDFs();
                         if(!kaze.IsBlue){
                             park = robot.drive.pathBuilder()
@@ -289,11 +342,37 @@ public class DiegoPP extends LinearOpMode {
                                     .build();
                         }
                         changeStateTo(state.park);
-                        robot.drive.followPath(park);
+                        //robot.drive.followPath(park);
                     }
                     break;
 
                 case aimbot:
+
+
+                    if (gamePad2.Dpad_Down.isDown()){
+                        robot.rightStilt.setPower(-1);
+                        robot.leftStilt.setPower(-1);
+                    } else if (gamePad2.Dpad_Up.isDown()){
+                        robot.rightStilt.setPower(1);
+                        robot.leftStilt.setPower(1);
+                    }else if (gamepad2.left_stick_y >.2){
+                        robot.leftStilt.setPower(1);
+                        robot.rightStilt.setPower(0);
+                    }else if (gamepad2.left_stick_y <-.2){
+                        robot.leftStilt.setPower(-1);
+                        robot.rightStilt.setPower(0);
+                    }else if (gamepad2.right_stick_y >.2){
+                        robot.rightStilt.setPower(1);
+                        robot.leftStilt.setPower(0);
+                    }else if (gamepad2.right_stick_y <-.2){
+                        robot.rightStilt.setPower(-1);
+                        robot.leftStilt.setPower(0);
+                    } else {
+                        robot.rightStilt.setPower(0);
+                        robot.leftStilt.setPower(0);
+                    }
+
+
                     if(robot.stateChanged){
                         launchTime = -5.00000;
                     }
@@ -491,6 +570,32 @@ public class DiegoPP extends LinearOpMode {
                     break;
 
                 case launching:
+
+
+                    if (gamePad2.Dpad_Down.isDown()){
+                        robot.rightStilt.setPower(-1);
+                        robot.leftStilt.setPower(-1);
+                    } else if (gamePad2.Dpad_Up.isDown()){
+                        robot.rightStilt.setPower(1);
+                        robot.leftStilt.setPower(1);
+                    }else if (gamepad2.left_stick_y >.2){
+                        robot.leftStilt.setPower(1);
+                        robot.rightStilt.setPower(0);
+                    }else if (gamepad2.left_stick_y <-.2){
+                        robot.leftStilt.setPower(-1);
+                        robot.rightStilt.setPower(0);
+                    }else if (gamepad2.right_stick_y >.2){
+                        robot.rightStilt.setPower(1);
+                        robot.leftStilt.setPower(0);
+                    }else if (gamepad2.right_stick_y <-.2){
+                        robot.rightStilt.setPower(-1);
+                        robot.leftStilt.setPower(0);
+                    } else {
+                        robot.rightStilt.setPower(0);
+                        robot.leftStilt.setPower(0);
+                    }
+
+
                     if(robot.stateChanged){
                         launchTime = -5.00000;
                     }
@@ -552,6 +657,10 @@ public class DiegoPP extends LinearOpMode {
 
 
                 case park:
+
+                    robot.kachow.robotCentric(.24 ,opModeIsActive(), gamepad1, gamepad2, robot, false);
+
+
                     if(robot.stateChanged){
                         robot.rightFeeder.setPosition(rightFeederDown);
                         robot.leftFeeder.setPosition(leftFeederDown);
@@ -568,7 +677,7 @@ public class DiegoPP extends LinearOpMode {
 
 
 
-                    if(gamepad1.touchpad || gamepad2.touchpad){
+                    if((gamepad1.options && gamepad1.share) || (gamepad2.options && gamepad2.share)){
                         robot.drive.deactivateAllPIDFs();
                         robot.drive.pausePathFollowing();
                         robot.drive.breakFollowing();
@@ -589,6 +698,10 @@ public class DiegoPP extends LinearOpMode {
             if (gamePad2.Dpad_Right.isDown()){
                 robot.rightFeeder.setPosition(rightFeederUp);
             }
+
+
+
+
 
 
             if(gamePad2.Left_Bumper.isDown() || gamePad2.Right_Bumper.isDown()){

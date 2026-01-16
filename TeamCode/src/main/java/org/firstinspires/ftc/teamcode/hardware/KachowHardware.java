@@ -35,6 +35,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -103,6 +104,9 @@ public class KachowHardware {
     public Servo leftFeeder;
     public Servo rightFeeder;
     public Servo deflector;
+    public CRServo leftStilt;
+    public CRServo rightStilt;
+
 
     public boolean isinit = false;
 
@@ -147,7 +151,11 @@ public class KachowHardware {
         deflector = hardwareMap.get(Servo.class, "Deflector");// servo hub 1
         leftFeeder = hardwareMap.get(Servo.class, "Leftfeeder");// servo hub 4
         rightFeeder = hardwareMap.get(Servo.class, "Rightfeeder");// servo hub 5
+        leftStilt = hardwareMap.get(CRServo.class, "leftStilt");// servo hub 2
+        rightStilt = hardwareMap.get(CRServo.class, "rightStilt");// servo hub 3
 
+        leftStilt.setDirection(CRServo.Direction.FORWARD);
+        rightStilt.setDirection(CRServo.Direction.FORWARD);
 
         frontleft.setDirection(DcMotor.Direction.REVERSE);
         backleft.setDirection(DcMotor.Direction.REVERSE);

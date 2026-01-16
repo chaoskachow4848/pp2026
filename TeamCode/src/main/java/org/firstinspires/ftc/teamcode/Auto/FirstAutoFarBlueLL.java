@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.Intake1;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.ShootPickup1;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPPG;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPreload;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPFirst;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPGreen;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPLast;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.shootPGP;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.toPGP;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.toPPG;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.Intake1;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.ShootPickup1;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.drivetoPPG;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.drivetoPreload;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPFirst;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPGreen;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPLast;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.shootPGP;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.toPGP;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.toPPG;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorLeftIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorRightIn;
@@ -30,7 +30,7 @@ import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
 import org.firstinspires.ftc.teamcode.hardware.kaze;
 
-@Autonomous(name = "AutoFarBlueLL", group = "4848")
+@Autonomous(name = "MotifFarBlueLL", group = "4848")
 public final class FirstAutoFarBlueLL extends LinearOpMode {
 
     boolean wasMade = false;
@@ -65,7 +65,7 @@ public final class FirstAutoFarBlueLL extends LinearOpMode {
         final Pose startPose = new Pose(64.000, 8.500, Math.toRadians(90)); // Start Pose of our robot.
         //launchTime = 0;
         kaze.init(startPose, true);
-        pathsANDactions actions = new pathsANDactions(robot);
+        Motifpaths actions = new Motifpaths(robot);
         robot.init(hardwareMap);
 
         robot.imu.resetYaw();

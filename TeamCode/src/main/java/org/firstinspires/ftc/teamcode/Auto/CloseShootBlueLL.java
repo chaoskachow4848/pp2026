@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.Intake1;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.ShootPPGMid;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoMidRange;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPPGMid;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPFirst;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPGreen;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPLast;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.shootPGPMid;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.toGPPMid;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.toPGPMid;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.Intake1;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.ShootPPGMid;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.drivetoMidRange;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.drivetoPPGMid;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPFirst;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPGreen;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPLast;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.shootPGPMid;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.toGPPMid;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.toPGPMid;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorLeftIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorRightIn;
@@ -66,7 +66,7 @@ public final class CloseShootBlueLL extends LinearOpMode {
         final Pose startPose = new Pose(64.000, 8.500, Math.toRadians(90)); // Start Pose of our robot.
         //launchTime = 0;
         kaze.init(startPose, true);
-        pathsANDactions actions = new pathsANDactions(robot);
+        Motifpaths actions = new Motifpaths(robot);
         robot.init(hardwareMap);
 
         robot.imu.resetYaw();

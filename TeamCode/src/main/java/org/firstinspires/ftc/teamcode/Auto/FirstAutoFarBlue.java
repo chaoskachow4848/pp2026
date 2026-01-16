@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.Intake1;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.ShootPickup1;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPPG;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.drivetoPreload;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPFirst;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPGreen;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.intakePGPLast;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.shootPGP;
-import static org.firstinspires.ftc.teamcode.Auto.pathsANDactions.toPGP;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.Intake1;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.ShootPickup1;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.drivetoPPG;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.drivetoPreload;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPFirst;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPGreen;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPLast;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.shootPGP;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.toPGP;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.aimerFar;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorLeftIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
@@ -64,7 +64,7 @@ public final class FirstAutoFarBlue extends LinearOpMode {
         final Pose startPose = new Pose(64.000, 8.500, Math.toRadians(90)); // Start Pose of our robot.
         //launchTime = 0;
         kaze.init(startPose);
-        pathsANDactions actions = new pathsANDactions(robot);
+        Motifpaths actions = new Motifpaths(robot);
         robot.init(hardwareMap);
 
         robot.imu.resetYaw();

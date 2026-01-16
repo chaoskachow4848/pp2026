@@ -9,7 +9,7 @@ import com.pedropathing.paths.PathChain;
 
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 
-public class pathsANDactions {
+public class Motifpaths {
 
     KachowHardware robot;
     public static final Pose startPoseBlue = new Pose(64, 8.5);
@@ -22,7 +22,7 @@ public class pathsANDactions {
     public static Path scorePreload;
     public static PathChain REDtoPPG, toPPG, drivetoPPG, drivetoPPGMid, scorePickup1, shootPGPMid, ShootPPGMid, drivetoPreload, toIntake, Intake1, ShootPickup1, toPGP, toGPPMid, toPGPMid, intakePGPGreen, intakePGPLast, shootPGP, intakePGPFirst, REDdrivetoPPG, REDscorePickup1, REDdrivetoPreload, REDtoIntake, REDIntake1, REDShootPickup1, REDtoPGP, REDintakePGPGreen, REDintakePGPLast, REDshootPGP, REDintakePGPFirst, drivetoMidRange, drivetoMidRangeRed, intakePGPGreenMid, intakePGPLastMid, intakePGPFirstMid;
 
-    public pathsANDactions (KachowHardware robot){
+    public Motifpaths(KachowHardware robot){
         this.robot = robot;
     }
     public void buildPaths() {

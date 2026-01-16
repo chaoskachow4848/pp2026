@@ -152,6 +152,7 @@ public final class PushAutoRedLL extends LinearOpMode {
 
                     if(!robot.drive.isBusy()) {
                         robot.drive.followPath(REDpushBot, true);
+
                         changeStateTo(pushBot);
                         fast = true;
                     }
