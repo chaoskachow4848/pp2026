@@ -2,8 +2,13 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 
 import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeClosest;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeClustered;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeClustered1;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeClustered2;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP1;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP2;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP3;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP4;
+import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP5;
 import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.leave;
 import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.shootClustered;
 import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.shootFirst;
@@ -166,9 +171,9 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                                 robot.deflector.setPosition(1);
                                 robot.drive.followPath(intakeClosest);
                                 changeStateTo(state.intakeFirst);
-                                robot.spinnerLeft.setVelocity(1380);
-                                robot.spinnerRight.setVelocity(1380);
-                                robot.aimer.setPosition(.52);
+                                robot.spinnerLeft.setPower(1640);
+                                robot.spinnerRight.setPower(1640);
+                                robot.aimer.setPosition(.58);
                                 singleShoot = false;
                                 doubleShoot = false;
                                 fast = false;
@@ -184,9 +189,9 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                     if(!robot.drive.isBusy()) {
                         robot.rightFeeder.setPosition(rightFeederDown);
                         robot.drive.followPath(shootFirst, true);
-                        changeStateTo(state.openGate);
-                        robot.spinnerLeft.setVelocity(1380);
-                        robot.spinnerRight.setVelocity(1380);
+                        changeStateTo(state.shootFirst);
+                        robot.spinnerLeft.setVelocity(1640);
+                        robot.spinnerRight.setVelocity(1640);
                         robot.intake.setPower(.2);
                         fast = true;
                     }
@@ -196,14 +201,15 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                     if(robot.stateChanged){
                         robot.intake.setPower(0);
                         robot.deflector.setPosition(1);
+                        launchTime = 0;
 
                     }
                     telemetry.addData("percentage: ", robot.drive.getPathCompletion());
                     if(!robot.drive.isBusy()) {
-                        if(doubleLaunch(pattern, 1380)){
+                        if(doubleLaunch(pattern, 1640)){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
-                            changeStateTo(state.intakeSecond);
-                            robot.drive.followPath(intakeHP);
+                            changeStateTo(state.intakehp1);
+                            robot.drive.followPath(intakeHP1);
                             singleShoot = false;
                             doubleShoot = false;
                             fast = false;
@@ -214,7 +220,27 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                         }
                     }
                     break;
-                case intakeSecond:
+                case intakehp1:
+                    if(robot.stateChanged){
+                        //robot.spinner.setPower(0);
+                        robot.deflector.setPosition(1);
+                    }
+                    robot.intake.setPower(.5);
+                    telemetry.addData("percentage: ", robot.drive.getPathCompletion());
+                    if(!robot.drive.isBusy()) {
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        robot.rightFeeder.setPosition(rightFeederDown);
+                        //robot.rightFeeder.setPosition(rightFeederMid);
+                        robot.drive.followPath(intakeHP2);
+                        robot.deflector.setPosition(1);
+                        changeStateTo(state.intakehp2);
+                        robot.intake.setPower(.2);
+
+                        fast = true;
+
+                    }
+                    break;
+                case intakehp2:
                     if(robot.stateChanged){
                         //robot.spinner.setPower(0);
                         robot.deflector.setPosition(1);
@@ -243,10 +269,10 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                     telemetry.addData("percentage: ", robot.drive.getPathCompletion());
                     if(!robot.drive.isBusy()) {
 
-                        if(doubleLaunch(pattern, 1400)){
+                        if(doubleLaunch(pattern, 1640)){
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
-                            changeStateTo(state.intakeThird);
-                            robot.drive.followPath(intakeClustered);
+                            changeStateTo(state.intakecluster1);
+                            robot.drive.followPath(intakeClustered1);
                             singleShoot = false;
                             doubleShoot = false;
                             fast = false;
@@ -259,7 +285,7 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
 
                     }
                     break;
-                case intakeThird:
+                case intakecluster1:
                     if(robot.stateChanged){
                         robot.spinnerLeft.setVelocity(1640);//1640
                         robot.spinnerRight.setVelocity(1640);//1640
@@ -273,23 +299,48 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                         robot.rightFeeder.setPosition(rightFeederDown);
 
                         //robot.rightFeeder.setPosition(rightFeederMid);
-                            robot.drive.followPath(shootClustered);
+                            robot.drive.followPath(intakeClustered2);
                             robot.deflector.setPosition(1);
-                            changeStateTo(state.shootThird);
+                            changeStateTo(state.intakecluster2);
                             fast = false;
                         robot.intake.setPower(0);
 
                     }
                     break;
+                case intakecluster2:
+                    if(robot.stateChanged){
+                        robot.spinnerLeft.setVelocity(1640);//1640
+                        robot.spinnerRight.setVelocity(1640);//1640
+                        robot.aimer.setPosition(.58);
+                        robot.deflector.setPosition(1);
+                    }
+                    robot.intake.setPower(.5);
+                    telemetry.addData("percentage: ", robot.drive.getPathCompletion());
+                    if(!robot.drive.isBusy()) {
+                        robot.leftFeeder.setPosition(leftFeederDown);
+                        robot.rightFeeder.setPosition(rightFeederDown);
+
+                        //robot.rightFeeder.setPosition(rightFeederMid);
+                        robot.drive.followPath(shootClustered);
+                        robot.deflector.setPosition(1);
+                        changeStateTo(state.shootThird);
+                        fast = false;
+                        robot.intake.setPower(.5);
+
+                    }
+                    break;
 
                 case shootThird:
-                    robot.intake.setPower(-.5);
                     if(robot.stateChanged){
                         telemetry.addLine("in here");
                         robot.deflector.setPosition(1);
                         robot.spinnerLeft.setVelocity(1640);
                         robot.spinnerRight.setVelocity(1640);
                         launchTime = 0;
+                    }
+                    if(robot.stateTime.seconds() > 1.5){
+                        robot.intake.setPower(-.5);
+
                     }
 
                     if(!robot.drive.isBusy()){

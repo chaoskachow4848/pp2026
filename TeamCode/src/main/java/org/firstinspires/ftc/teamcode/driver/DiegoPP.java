@@ -661,6 +661,31 @@ public class DiegoPP extends LinearOpMode {
                     robot.kachow.robotCentric(.24 ,opModeIsActive(), gamepad1, gamepad2, robot, false);
 
 
+                    if (gamePad1.Dpad_Down.isDown() || gamePad2.Dpad_Down.isDown()){
+                        robot.rightStilt.setPower(-1);
+                        robot.leftStilt.setPower(-1);
+                    } else if (gamePad1.Dpad_Up.isDown() || gamePad2.Dpad_Up.isDown()){
+                        robot.rightStilt.setPower(1);
+                        robot.leftStilt.setPower(1);
+                    }else if (gamepad2.left_stick_y >.2){
+                        robot.leftStilt.setPower(1);
+                        robot.rightStilt.setPower(0);
+                    }else if (gamepad2.left_stick_y <-.2){
+                        robot.leftStilt.setPower(-1);
+                        robot.rightStilt.setPower(0);
+                    }else if (gamepad2.right_stick_y >.2){
+                        robot.rightStilt.setPower(1);
+                        robot.leftStilt.setPower(0);
+                    }else if (gamepad2.right_stick_y <-.2){
+                        robot.rightStilt.setPower(-1);
+                        robot.leftStilt.setPower(0);
+                    } else {
+                        robot.rightStilt.setPower(0);
+                        robot.leftStilt.setPower(0);
+                    }
+
+
+
                     if(robot.stateChanged){
                         robot.rightFeeder.setPosition(rightFeederDown);
                         robot.leftFeeder.setPosition(leftFeederDown);

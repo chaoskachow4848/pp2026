@@ -329,7 +329,7 @@ public class KachowHardware {
         }
     }
         public enum state {
-            pushBot, shootPreload, intakeFirst, openGate, shootFirst, intakeSecond, shootSecond, intakeThird, shootThird, leave, idle, driving, drivetoPPG, drivetoPGP, drivetoGPP, intaking, intakingGreen, intakingPurple, rotating, launching, aimbot, launch1, launch2, launchPreload, launch3, park, firstIntakeGreen, firstIntakePurples, secondIntakePurple1, secondIntakeGreen, secondIntakeLastPurple;
+            intakehp1, intakehp2, intakehp3, intakehp4, intakehp5, intakecluster1, intakecluster2, pushBot, shootPreload, intakeFirst, openGate, shootFirst, intakeSecond, shootSecond, intakeThird, shootThird, leave, idle, driving, drivetoPPG, drivetoPGP, drivetoGPP, intaking, intakingGreen, intakingPurple, rotating, launching, aimbot, launch1, launch2, launchPreload, launch3, park, firstIntakeGreen, firstIntakePurples, secondIntakePurple1, secondIntakeGreen, secondIntakeLastPurple;
         }
 
     public void drawCurrent(Follower drive) {

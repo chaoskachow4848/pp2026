@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
 import org.firstinspires.ftc.teamcode.hardware.kaze;
 
-@Autonomous(name = "PushAutoRedLL", group = "4848")
+@Autonomous(name = "HumanPlayerRedLL", group = "4848")
 public final class HumanPlayerRedLL extends LinearOpMode {
 
     boolean wasMade = false;

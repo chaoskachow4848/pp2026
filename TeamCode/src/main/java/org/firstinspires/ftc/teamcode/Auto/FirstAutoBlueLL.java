@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDIntake1;
-import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDShootPickup1;
-import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDdrivetoPPG;
-import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDdrivetoPreload;
-import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDintakePGPFirst;
-import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDintakePGPGreen;
-import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDintakePGPLast;
-import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDshootPGP;
-import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDtoPGP;
-import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDtoPPG;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.Intake1;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.ShootPickup1;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.drivetoPPG;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.drivetoPreload;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPFirst;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPGreen;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPLast;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.shootPGP;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.toPGP;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.toPPG;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorLeftIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorRightIn;
@@ -30,8 +30,8 @@ import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware.state;
 import org.firstinspires.ftc.teamcode.hardware.kaze;
 
-@Autonomous(name = "MotifFarRedLL", group = "4848")
-public final class FirstAutoFarRedLL extends LinearOpMode {
+@Autonomous(name = "MotifBlueLL", group = "4848")
+public final class FirstAutoBlueLL extends LinearOpMode {
 
     boolean wasMade = false;
     boolean isFirst = true;
@@ -62,9 +62,9 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
         limelight.pipelineSwitch(3);
         double x;
         double y;
-        final Pose startPose = new Pose(144-64.000, 8.500, Math.toRadians(90)); // Start Pose of our robot.
+        final Pose startPose = new Pose(64.000, 8.500, Math.toRadians(90)); // Start Pose of our robot.
         //launchTime = 0;
-        kaze.init(startPose, false);
+        kaze.init(startPose, true);
         Motifpaths actions = new Motifpaths(robot);
         robot.init(hardwareMap);
 
@@ -147,12 +147,12 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                     if(robot.stateChanged){
                         //bucketScore = actions.scoreSampleBlue(drive, robot.drive.pose);
                     }
-                    robot.spinnerLeft.setVelocity(1640);//1640
-                    robot.spinnerRight.setVelocity(1640);//1640
-                    robot.aimer.setPosition(.55);//.64
+                    robot.spinnerLeft.setVelocity(1600);//1640
+                    robot.spinnerRight.setVelocity(1600);//1640
+                    robot.aimer.setPosition(.59);//.64
 
                     if(!robot.drive.isBusy()) {
-                        robot.drive.followPath(REDdrivetoPreload, true);
+                        robot.drive.followPath(drivetoPreload, true);
                         changeStateTo(state.launchPreload);
                         fast = true;
                     }
@@ -170,7 +170,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                     if(!robot.drive.isBusy()){
                         if(launch(pattern, 1640)){
                             robot.deflector.setPosition(deflectorMiddle);
-                            robot.drive.followPath(REDdrivetoPPG);
+                            robot.drive.followPath(drivetoPPG);
                             changeStateTo(state.drivetoPPG);
                             robot.spinnerLeft.setVelocity(1640);
                             robot.spinnerRight.setVelocity(1640);
@@ -191,6 +191,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                         robot.deflector.setPosition(deflectorLeftIn);
                         robot.spinnerLeft.setVelocity(1640);
                         robot.spinnerRight.setVelocity(1640);
+                        robot.aimer.setPosition(.63);//.64
                     }
                     robot.intake.setPower(.5);
 
@@ -206,7 +207,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                                     changeStateTo(state.launch2);
                                 }
                             } else {
-                                robot.drive.followPath(REDIntake1);
+                                robot.drive.followPath(Intake1);
                                 robot.deflector.setPosition(deflectorRightIn);
                                 changeStateTo(state.firstIntakeGreen);
                             }} else {
@@ -220,7 +221,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
 
                     if(!robot.drive.isBusy()) {
                         robot.rightFeeder.setPosition(rightFeederDown);
-                        robot.drive.followPath(REDShootPickup1, true);
+                        robot.drive.followPath(ShootPickup1, true);
                         changeStateTo(state.launch1);
                         robot.spinnerLeft.setVelocity(1640);
                         robot.spinnerRight.setVelocity(1640);
@@ -237,7 +238,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                         launchTime = 0;
 
                     }
-                    //robot.drive.followPath(REDscorePickup1);
+                    //robot.drive.followPath(scorePickup1);
                     //check for sensor intake
                     if((robot.stateTime.seconds() > 1) && (robot.stateTime.seconds() < 1.2)){
                         robot.deflector.setPosition(deflectorRightIn);
@@ -250,7 +251,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                             //robot.rightFeeder.setPosition(rightFeederMid/2);
                             secondScored = true;
                             changeStateTo(state.drivetoPGP);
-                            robot.drive.followPath(REDtoPGP);
+                            robot.drive.followPath(toPGP);
                             purple1 = false;
                             purple2 = false;
                             green = false;
@@ -276,7 +277,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
 
                         //robot.rightFeeder.setPosition(rightFeederMid);
                             if (secondScored) {
-                                robot.drive.followPath(REDintakePGPFirst);
+                                robot.drive.followPath(intakePGPFirst);
                                 changeStateTo(state.secondIntakePurple1);
                             }
                     }
@@ -294,7 +295,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
 
                         //robot.rightFeeder.setPosition(rightFeederMid);
                         if (secondScored) {
-                            robot.drive.followPath(REDintakePGPGreen);
+                            robot.drive.followPath(intakePGPGreen);
                             robot.deflector.setPosition(deflectorLeftIn);
                             changeStateTo(state.secondIntakeGreen);
                         }
@@ -313,7 +314,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
 
                         //robot.rightFeeder.setPosition(rightFeederMid);
                         if (secondScored) {
-                            robot.drive.followPath(REDintakePGPLast);
+                            robot.drive.followPath(intakePGPLast);
                             robot.deflector.setPosition(deflectorRightIn);
                             changeStateTo(state.secondIntakeLastPurple);
                         }
@@ -333,7 +334,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
 
                         //robot.rightFeeder.setPosition(rightFeederMid);
                         if (secondScored) {
-                            robot.drive.followPath(REDshootPGP);
+                            robot.drive.followPath(shootPGP);
                             robot.deflector.setPosition(deflectorLeftIn);
                             changeStateTo(state.launch2);
                             fast = true;
@@ -356,7 +357,7 @@ public final class FirstAutoFarRedLL extends LinearOpMode {
                             //robot.leftFeeder.setPosition(leftFeederMid);
                             thirdScored = true;
                             changeStateTo(state.driving);
-                            robot.drive.followPath(REDtoPPG);
+                            robot.drive.followPath(toPPG);
                             purple1 = false;
                             purple2 = false;
                             green = false;

@@ -60,7 +60,7 @@ public final class PushAutoRedLL extends LinearOpMode {
         limelight.pipelineSwitch(3);
         double x;
         double y;
-        final Pose startPose = new Pose(144-64.000, 8.500, Math.toRadians(90)); // Start Pose of our robot.
+        final Pose startPose = new Pose(144-64.000, 9, Math.toRadians(90)); // Start Pose of our robot.
         //launchTime = 0;
         kaze.init(startPose, false);
         pushPaths actions = new pushPaths(robot);

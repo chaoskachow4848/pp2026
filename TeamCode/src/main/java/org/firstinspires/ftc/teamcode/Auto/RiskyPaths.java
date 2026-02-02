@@ -13,7 +13,7 @@ public class RiskyPaths {
     KachowHardware robot;
     public static final Pose startPoseBlue = new Pose(64, 8.5);
     public static final Pose startPoseRed = new Pose(144-64, 8.5);
-    public static final Pose launchFarBlue = new Pose(57.500, 17.700);
+    public static final Pose launchFarBlue = new Pose(57.500, 16.7);
     public static final Pose launchFarRed = new Pose(144-57.500, 17.500);
     public static PathChain REDshootPreload;
     public static PathChain REDintakeClosest;
@@ -27,9 +27,14 @@ public class RiskyPaths {
     public static PathChain shootPreload;
     public static PathChain intakeClosest;
     public static PathChain shootFirst;
-    public static PathChain intakeHP;
+    public static PathChain intakeHP1;
+    public static PathChain intakeHP2;
+    public static PathChain intakeHP3;
+    public static PathChain intakeHP4;
+    public static PathChain intakeHP5;
     public static PathChain shootSecond;
-    public static PathChain intakeClustered;
+    public static PathChain intakeClustered1;
+    public static PathChain intakeClustered2;
     public static PathChain shootClustered;
     public static PathChain leave;
 
@@ -48,14 +53,14 @@ public class RiskyPaths {
         /// RED
         REDshootPreload = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(144-64.000, 8.500), new Pose(144-57.500, 17.700))
+                        new BezierLine(new Pose(144-64.000, 8.500), new Pose(144-57.500, 16.7))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(68))
                 .build();
         REDintakeClosest = robot.drive.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Pose(144-57.500, 17.700),
+                                new Pose(144-57.500, 16.7),
                                 new Pose(144-44.600, 39.300),
                                 new Pose(144-14.000, 32.500)
                         )
@@ -70,30 +75,30 @@ public class RiskyPaths {
                 .build();
         REDintakeHP = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(144-59.500, 16.000), new Pose(144-11.100, 17.700))
+                        new BezierLine(new Pose(144-59.500, 16.000), new Pose(144-15, 16.7))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(68), Math.toRadians(200))
+                .setLinearHeadingInterpolation(Math.toRadians(68), Math.toRadians(205))
                 .addPath(
-                        new BezierLine(new Pose(144-11.100, 17.700), new Pose(144-11.100, 10.600))
+                        new BezierLine(new Pose(144-15, 16.7), new Pose(144-15, 12))
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(200))
+                .setConstantHeadingInterpolation(Math.toRadians(205))
                 .addPath(
-                        new BezierLine(new Pose(144-11.100, 10.600), new Pose(144-11.100, 10.600))
+                        new BezierLine(new Pose(144-15, 12), new Pose(144-15, 12))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(160))
                 .addPath(
-                        new BezierLine(new Pose(144-11.100, 10.600), new Pose(144-18.000, 10.600))
+                        new BezierLine(new Pose(144-15, 12), new Pose(144-18.000, 12))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(160), Math.toRadians(0))
                 .addPath(
-                        new BezierLine(new Pose(144-18.000, 10.600), new Pose(144-11.100, 10.600))
+                        new BezierLine(new Pose(144-18.000, 12), new Pose(144-15, 12))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         REDshootSecond = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(144-11.100, 10.600), new Pose(144-59.500, 16.000))
+                        new BezierLine(new Pose(144-15, 12), new Pose(144-59.500, 16.000))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(68))
                 .build();
@@ -104,14 +109,14 @@ public class RiskyPaths {
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(68), Math.toRadians(150))
                 .addPath(
-                        new BezierLine(new Pose(144-11.500, 11.000), new Pose(144-11.500, 32.200))
+                        new BezierLine(new Pose(144-11.500, 11.000), new Pose(144-11.500, 32.2))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(150))
                 .build();
 
         REDshootClustered = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(144-11.500, 32.200), new Pose(144-59.500, 16.000))
+                        new BezierLine(new Pose(144-11.500, 32.2), new Pose(144-59.500, 16.000))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(150), Math.toRadians(68))
                 .build();
@@ -133,70 +138,84 @@ public class RiskyPaths {
         /// blue7
         shootPreload = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(64.000, 8.500), new Pose(57.500, 17.700))
+                        new BezierLine(new Pose(64.000, 8.500), new Pose(57.500, 16.7))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(113))
                 .build();
         intakeClosest = robot.drive.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Pose(57.500, 17.700),
-                                new Pose(44.600, 39.300),
-                                new Pose(14.000, 32.500)
+                                new Pose(57.500, 16.7),
+                                new Pose(44.600, 37),
+                                new Pose(14.000, 30)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(113), Math.toRadians(180))
                 .build();
         shootFirst = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(14.000, 32.500), new Pose(59.500, 16.000))
+                        new BezierLine(new Pose(14.000, 30), new Pose(59.500, 16.000))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(113))
                 .build();
-        intakeHP = robot.drive.pathBuilder()
+        intakeHP1 = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(59.500, 16.000), new Pose(11.100, 17.700))
+                        new BezierLine(new Pose(59.500, 16.000), new Pose(15, 16.7))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(113), Math.toRadians(200))
+                .setLinearHeadingInterpolation(Math.toRadians(113), Math.toRadians(205))
+                .build();
+
+        intakeHP2 = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(11.100, 17.700), new Pose(11.100, 10.600))
+                        new BezierLine(new Pose(15, 16.7), new Pose(15, 12))
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(200))
+                .setLinearHeadingInterpolation(Math.toRadians(205), Math.toRadians(205))
+                .build();
+
+        intakeHP3 = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(11.100, 10.600), new Pose(11.100, 10.600))
+                        new BezierLine(new Pose(15, 12), new Pose(15.5, 11.5))
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(160))
+                .setLinearHeadingInterpolation(Math.toRadians(205), Math.toRadians(160))
+                .build();
+
+        intakeHP4 = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(11.100, 10.600), new Pose(18.000, 10.600))
+                        new BezierLine(new Pose(15.5, 11.5), new Pose(25, 12))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(160), Math.toRadians(180))
+                .build();
+
+        intakeHP5 = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(18.000, 10.600), new Pose(11.100, 10.600))
+                        new BezierLine(new Pose(25, 12), new Pose(15, 12))
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
         shootSecond = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(11.100, 10.600), new Pose(59.500, 16.000))
+                        new BezierLine(new Pose(15, 12), new Pose(59.500, 16.000))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(113))
                 .build();
 
-        intakeClustered = robot.drive.pathBuilder()
+        intakeClustered1 = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(59.500, 16.000), new Pose(11.500, 11.000))
+                        new BezierLine(new Pose(59.500, 16.000), new Pose(15, 11.000))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(113), Math.toRadians(150))
+                .setLinearHeadingInterpolation(Math.toRadians(113), Math.toRadians(140))
+                .build();
+        intakeClustered2 = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(11.500, 11.000), new Pose(11.500, 32.200))
+                        new BezierLine(new Pose(15, 11.000), new Pose(15, 32.2))
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(150))
+                .setConstantHeadingInterpolation(Math.toRadians(140))
                 .build();
 
         shootClustered = robot.drive.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(11.500, 32.200), new Pose(59.500, 16.000))
+                        new BezierLine(new Pose(11.500, 32.2), new Pose(59.500, 16.000))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(150), Math.toRadians(113))
                 .build();
