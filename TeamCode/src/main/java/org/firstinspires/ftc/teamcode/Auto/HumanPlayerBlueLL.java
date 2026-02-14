@@ -149,7 +149,7 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                     }
                     robot.spinnerLeft.setVelocity(1640);//1640
                     robot.spinnerRight.setVelocity(1640);//1640
-                    robot.aimer.setPosition(.58);//.64
+                    robot.aimer.setPosition(.55);//.64
 
                     if(!robot.drive.isBusy()) {
                         robot.drive.followPath(shootPreload, true);
@@ -173,7 +173,7 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                                 changeStateTo(state.intakeFirst);
                                 robot.spinnerLeft.setPower(1640);
                                 robot.spinnerRight.setPower(1640);
-                                robot.aimer.setPosition(.58);
+                                robot.aimer.setPosition(.55);
                                 singleShoot = false;
                                 doubleShoot = false;
                                 fast = false;
@@ -289,7 +289,7 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                     if(robot.stateChanged){
                         robot.spinnerLeft.setVelocity(1640);//1640
                         robot.spinnerRight.setVelocity(1640);//1640
-                        robot.aimer.setPosition(.58);
+                        robot.aimer.setPosition(.55);
                         robot.deflector.setPosition(1);
                     }
                     robot.intake.setPower(.5);
@@ -311,7 +311,7 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                     if(robot.stateChanged){
                         robot.spinnerLeft.setVelocity(1640);//1640
                         robot.spinnerRight.setVelocity(1640);//1640
-                        robot.aimer.setPosition(.58);
+                        robot.aimer.setPosition(.55);
                         robot.deflector.setPosition(1);
                     }
                     robot.intake.setPower(.5);
