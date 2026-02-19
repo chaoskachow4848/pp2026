@@ -148,7 +148,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                     }
                     robot.spinnerLeft.setVelocity(1640);//1640
                     robot.spinnerRight.setVelocity(1640);//1640
-                    robot.aimer.setPosition(.58);//.64
+                    robot.aimer.setPosition(.56);//.64
 
                     if(!robot.drive.isBusy()) {
                         robot.drive.followPath(REDpushBot, true);
@@ -195,7 +195,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                                 changeStateTo(state.intakeFirst);
                                 robot.spinnerLeft.setVelocity(1380);
                                 robot.spinnerRight.setVelocity(1380);
-                                robot.aimer.setPosition(.52);
+                                robot.aimer.setPosition(.46);
                                 singleShoot = false;
                                 doubleShoot = false;
                                 fast = false;
@@ -260,7 +260,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                             //robot.spinner.setPower(0);
                             robot.leftFeeder.setPosition(leftFeederDown);
                             robot.rightFeeder.setPosition(rightFeederDown);
-                            robot.aimer.setPosition(.5);
+                            robot.aimer.setPosition(.46);
 
                         }
                     }
@@ -314,7 +314,7 @@ public final class PushAutoRedLL extends LinearOpMode {
                     if(robot.stateChanged){
                         robot.spinnerLeft.setVelocity(1640);//1640
                         robot.spinnerRight.setVelocity(1640);//1640
-                        robot.aimer.setPosition(.58);
+                        robot.aimer.setPosition(.56);
                         robot.deflector.setPosition(1);
                     }
                     robot.intake.setPower(.5);

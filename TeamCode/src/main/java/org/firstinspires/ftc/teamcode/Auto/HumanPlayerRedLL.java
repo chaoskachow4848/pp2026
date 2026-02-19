@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.REDintakeClosest;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.REDintakeClustered;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.REDintakeHP;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.REDleave;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.REDshootClustered;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.REDshootFirst;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.REDshootPreload;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.REDshootSecond;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.REDintakeClosest;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.REDintakeClustered;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.REDintakeHP;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.REDleave;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.REDshootClustered;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.REDshootFirst;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.REDshootPreload;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.REDshootSecond;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.launchTime;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederDown;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederUp;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederDown;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederUp;
-import static org.firstinspires.ftc.teamcode.hardware.KachowHardware.state.pushBot;
 
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.geometry.Pose;
@@ -59,7 +58,7 @@ public final class HumanPlayerRedLL extends LinearOpMode {
         //launchTime = 0;
         kaze.init(startPose, false);
 
-        RiskyPaths actions = new RiskyPaths(robot);
+        HPpaths actions = new HPpaths(robot);
         robot.init(hardwareMap);
 
         robot.imu.resetYaw();
@@ -142,8 +141,8 @@ public final class HumanPlayerRedLL extends LinearOpMode {
                     if(robot.stateChanged){
                         //bucketScore = actions.scoreSampleBlue(drive, robot.drive.pose);
                     }
-                    robot.spinnerLeft.setVelocity(1640);//1640
-                    robot.spinnerRight.setVelocity(1640);//1640
+                    robot.spinnerLeft.setVelocity(1660);//1660
+                    robot.spinnerRight.setVelocity(1660);//1660
                     robot.aimer.setPosition(.55);//.64
 
                     if(!robot.drive.isBusy()) {
@@ -156,13 +155,13 @@ public final class HumanPlayerRedLL extends LinearOpMode {
                 case shootPreload:
                     if(robot.stateChanged){
                         //firstScore = actions.scoreSampleBlueIntake(drive, robot.drive.pose);
-                        robot.spinnerLeft.setVelocity(1640);
-                        robot.spinnerRight.setVelocity(1640);
+                        robot.spinnerLeft.setVelocity(1660);
+                        robot.spinnerRight.setVelocity(1660);
                     }
 
                     telemetry.addData("percentage: ", robot.drive.getPathCompletion());
                         if(!robot.drive.isBusy()){
-                            if(doubleLaunch(pattern, 1640)){
+                            if(doubleLaunch(pattern, 1660)){
                                 robot.deflector.setPosition(1);
                                 robot.drive.followPath(REDintakeClosest);
                                 changeStateTo(state.intakeFirst);
@@ -261,8 +260,8 @@ public final class HumanPlayerRedLL extends LinearOpMode {
                     break;
                 case intakeThird:
                     if(robot.stateChanged){
-                        robot.spinnerLeft.setVelocity(1640);//1640
-                        robot.spinnerRight.setVelocity(1640);//1640
+                        robot.spinnerLeft.setVelocity(1660);//1660
+                        robot.spinnerRight.setVelocity(1660);//1660
                         robot.aimer.setPosition(.55);
                         robot.deflector.setPosition(1);
                     }
@@ -287,13 +286,13 @@ public final class HumanPlayerRedLL extends LinearOpMode {
                     if(robot.stateChanged){
                         telemetry.addLine("in here");
                         robot.deflector.setPosition(1);
-                        robot.spinnerLeft.setVelocity(1640);
-                        robot.spinnerRight.setVelocity(1640);
+                        robot.spinnerLeft.setVelocity(1660);
+                        robot.spinnerRight.setVelocity(1660);
                         launchTime = 0;
                     }
 
                     if(!robot.drive.isBusy()){
-                        if(doubleLaunch(pattern, 1640)){
+                        if(doubleLaunch(pattern, 1660)){
                             robot.deflector.setPosition(1);
                             changeStateTo(state.leave);
                             robot.drive.followPath(REDleave);

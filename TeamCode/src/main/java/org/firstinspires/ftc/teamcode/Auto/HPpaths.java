@@ -8,7 +8,7 @@ import com.pedropathing.paths.PathChain;
 
 import org.firstinspires.ftc.teamcode.hardware.KachowHardware;
 
-public class RiskyPaths {
+public class HPpaths {
 
     KachowHardware robot;
     public static final Pose startPoseBlue = new Pose(64, 8.5);
@@ -38,7 +38,7 @@ public class RiskyPaths {
     public static PathChain shootClustered;
     public static PathChain leave;
 
-    public RiskyPaths(KachowHardware robot){
+    public HPpaths(KachowHardware robot){
         this.robot = robot;
     }
     public void buildPaths() {

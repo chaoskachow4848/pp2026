@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.drivetoPreload;
 import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPFirst;
 import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPGreen;
 import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.intakePGPLast;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.pushBot;
 import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.shootPGP;
 import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.toPGP;
 import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.toPPG;
@@ -83,6 +84,7 @@ public final class FirstAutoBlueLL extends LinearOpMode {
             robot.rightFeeder.setPosition(rightFeederDown);
             robot.leftFeeder.setPosition(leftFeederDown);
             robot.deflector.setPosition(deflectorRightIn);
+            telemetry.update();
             //robot.drive.setStartingPose(startPose);
             robot.drive.setPose(startPose);
             launchTime = 0;
@@ -149,12 +151,32 @@ public final class FirstAutoBlueLL extends LinearOpMode {
                     }
                     robot.spinnerLeft.setVelocity(1600);//1640
                     robot.spinnerRight.setVelocity(1600);//1640
-                    robot.aimer.setPosition(.59);//.64
+                    robot.aimer.setPosition(.55);//.64
 
                     if(!robot.drive.isBusy()) {
-                        robot.drive.followPath(drivetoPreload, true);
-                        changeStateTo(state.launchPreload);
+                        robot.drive.followPath(pushBot, true);
+                        changeStateTo(state.pushBot);
                         fast = true;
+                    }
+                    break;
+                case pushBot:
+                    if(robot.stateChanged){
+                        //firstSample = new MecanumDrive.FailoverAction(actions.intakeFirst(drive, robot.drive.pose, 45.5, 54, -90), actions.isDone());
+                        telemetry.addLine("in here");
+                        telemetry.update();
+                    }
+                    telemetry.addData("statetime: ", robot.stateTime);
+
+
+
+                    if(!robot.drive.isBusy()){
+                        robot.drive.followPath(drivetoPreload);
+                        changeStateTo(state.launchPreload);
+                        robot.spinnerLeft.setVelocity(1640);
+                        robot.spinnerRight.setVelocity(1640);
+                        fast = true;
+                        //robot.leftFeeder.setPosition(leftFeederMid);
+                        //robot.rightFeeder.setPosition(rightFeederMid/2);
                     }
                     break;
                 case launchPreload:
@@ -191,7 +213,7 @@ public final class FirstAutoBlueLL extends LinearOpMode {
                         robot.deflector.setPosition(deflectorLeftIn);
                         robot.spinnerLeft.setVelocity(1640);
                         robot.spinnerRight.setVelocity(1640);
-                        robot.aimer.setPosition(.63);//.64
+                        robot.aimer.setPosition(.55);//.64
                     }
                     robot.intake.setPower(.5);
 

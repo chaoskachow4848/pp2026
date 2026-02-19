@@ -10,6 +10,8 @@ import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDintakePGPLast;
 import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDshootPGP;
 import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDtoPGP;
 import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDtoPPG;
+import static org.firstinspires.ftc.teamcode.Auto.Motifpaths.REDpushBot;
+import static org.firstinspires.ftc.teamcode.Auto.pushPaths.REDshootPreload;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorLeftIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorMiddle;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorRightIn;
@@ -62,7 +64,7 @@ public final class FirstAutoRedLL extends LinearOpMode {
         limelight.pipelineSwitch(3);
         double x;
         double y;
-        final Pose startPose = new Pose(144-64.000, 8.500, Math.toRadians(90)); // Start Pose of our robot.
+        final Pose startPose = new Pose(144-63.000, 8.500, Math.toRadians(90)); // Start Pose of our robot.
         //launchTime = 0;
         kaze.init(startPose, false);
         Motifpaths actions = new Motifpaths(robot);
@@ -83,6 +85,7 @@ public final class FirstAutoRedLL extends LinearOpMode {
             robot.rightFeeder.setPosition(rightFeederDown);
             robot.leftFeeder.setPosition(leftFeederDown);
             robot.deflector.setPosition(deflectorRightIn);
+            telemetry.update();
             //robot.drive.setStartingPose(startPose);
             robot.drive.setPose(startPose);
             launchTime = 0;
@@ -149,12 +152,32 @@ public final class FirstAutoRedLL extends LinearOpMode {
                     }
                     robot.spinnerLeft.setVelocity(1600);//1640
                     robot.spinnerRight.setVelocity(1600);//1640
-                    robot.aimer.setPosition(.61);//.64
+                    robot.aimer.setPosition(.56);//.64
 
                     if(!robot.drive.isBusy()) {
-                        robot.drive.followPath(REDdrivetoPreload, true);
-                        changeStateTo(state.launchPreload);
+                        robot.drive.followPath(REDpushBot, true);
+                        changeStateTo(state.pushBot);
                         fast = true;
+                    }
+                    break;
+                case pushBot:
+                    if(robot.stateChanged){
+                        //firstSample = new MecanumDrive.FailoverAction(actions.intakeFirst(drive, robot.drive.pose, 45.5, 54, -90), actions.isDone());
+                        telemetry.addLine("in here");
+                        telemetry.update();
+                    }
+                    telemetry.addData("statetime: ", robot.stateTime);
+
+
+
+                    if(!robot.drive.isBusy()){
+                        robot.drive.followPath(REDdrivetoPreload);
+                        changeStateTo(state.launchPreload);
+                        robot.spinnerLeft.setVelocity(1640);
+                        robot.spinnerRight.setVelocity(1640);
+                        fast = true;
+                        //robot.leftFeeder.setPosition(leftFeederMid);
+                        //robot.rightFeeder.setPosition(rightFeederMid/2);
                     }
                     break;
                 case launchPreload:
@@ -191,7 +214,7 @@ public final class FirstAutoRedLL extends LinearOpMode {
                         robot.deflector.setPosition(deflectorLeftIn);
                         robot.spinnerLeft.setVelocity(1640);
                         robot.spinnerRight.setVelocity(1640);
-                        robot.aimer.setPosition(.63);//.64
+                        robot.aimer.setPosition(.56);//.64
                     }
                     robot.intake.setPower(.5);
 

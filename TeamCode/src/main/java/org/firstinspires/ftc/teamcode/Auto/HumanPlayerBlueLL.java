@@ -1,25 +1,22 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeClosest;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeClustered1;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeClustered2;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP1;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP2;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP3;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP4;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.intakeHP5;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.leave;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.shootClustered;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.shootFirst;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.shootPreload;
-import static org.firstinspires.ftc.teamcode.Auto.RiskyPaths.shootSecond;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.intakeClosest;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.intakeClustered1;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.intakeClustered2;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.intakeHP1;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.intakeHP2;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.leave;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.shootClustered;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.shootFirst;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.shootPreload;
+import static org.firstinspires.ftc.teamcode.Auto.HPpaths.shootSecond;
+import static org.firstinspires.ftc.teamcode.driver.PPDrive.deflectorRightIn;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.launchTime;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederDown;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.leftFeederUp;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederDown;
 import static org.firstinspires.ftc.teamcode.driver.PPDrive.rightFeederUp;
-import static org.firstinspires.ftc.teamcode.hardware.KachowHardware.state.pushBot;
 
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.geometry.Pose;
@@ -64,7 +61,7 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
         //launchTime = 0;
         kaze.init(startPose, true);
 
-        RiskyPaths actions = new RiskyPaths(robot);
+        HPpaths actions = new HPpaths(robot);
         robot.init(hardwareMap);
 
         robot.imu.resetYaw();
@@ -204,6 +201,12 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                         launchTime = 0;
 
                     }
+                    if((robot.stateTime.seconds() > 1) && (robot.stateTime.seconds() < 1.2)){
+                        robot.deflector.setPosition(deflectorRightIn);
+                        robot.intake.setPower(-.2);
+                    } else if ((robot.stateTime.seconds() > 1.25)){
+                        robot.intake.setPower(0);
+                    }
                     telemetry.addData("percentage: ", robot.drive.getPathCompletion());
                     if(!robot.drive.isBusy()) {
                         if(doubleLaunch(pattern, 1640)){
@@ -266,6 +269,14 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                         robot.deflector.setPosition(1);
                         launchTime = 0;
                     }
+
+                    if((robot.stateTime.seconds() > 1) && (robot.stateTime.seconds() < 1.2)){
+                        robot.deflector.setPosition(deflectorRightIn);
+                        robot.intake.setPower(-.2);
+                    } else if ((robot.stateTime.seconds() > 1.25)){
+                        robot.intake.setPower(0);
+                    }
+
                     telemetry.addData("percentage: ", robot.drive.getPathCompletion());
                     if(!robot.drive.isBusy()) {
 
@@ -341,6 +352,13 @@ public final class HumanPlayerBlueLL extends LinearOpMode {
                     if(robot.stateTime.seconds() > 1.5){
                         robot.intake.setPower(-.5);
 
+                    }
+
+                    if((robot.stateTime.seconds() > 1) && (robot.stateTime.seconds() < 1.2)){
+                        robot.deflector.setPosition(deflectorRightIn);
+                        robot.intake.setPower(-.2);
+                    } else if ((robot.stateTime.seconds() > 1.25)){
+                        robot.intake.setPower(0);
                     }
 
                     if(!robot.drive.isBusy()){

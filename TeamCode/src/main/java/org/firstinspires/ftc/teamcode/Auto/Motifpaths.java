@@ -20,7 +20,7 @@ public class Motifpaths {
     public static final Pose launchMidRangeBlue = new Pose(58.2, 74.7, Math.toRadians(130));
     public static final Pose pickup3Pose = new Pose(49, 135, Math.toRadians(0));
     public static Path scorePreload;
-    public static PathChain REDtoPPG, toPPG, drivetoPPG, drivetoPPGMid, scorePickup1, shootPGPMid, ShootPPGMid, drivetoPreload, toIntake, Intake1, ShootPickup1, toPGP, toGPPMid, toPGPMid, intakePGPGreen, intakePGPLast, shootPGP, intakePGPFirst, REDdrivetoPPG, REDscorePickup1, REDdrivetoPreload, REDtoIntake, REDIntake1, REDShootPickup1, REDtoPGP, REDintakePGPGreen, REDintakePGPLast, REDshootPGP, REDintakePGPFirst, drivetoMidRange, drivetoMidRangeRed, intakePGPGreenMid, intakePGPLastMid, intakePGPFirstMid;
+    public static PathChain pushBot, REDpushBot, REDtoPPG, toPPG, drivetoPPG, drivetoPPGMid, scorePickup1, shootPGPMid, ShootPPGMid, drivetoPreload, toIntake, Intake1, ShootPickup1, toPGP, toGPPMid, toPGPMid, intakePGPGreen, intakePGPLast, shootPGP, intakePGPFirst, REDdrivetoPPG, REDscorePickup1, REDdrivetoPreload, REDtoIntake, REDIntake1, REDShootPickup1, REDtoPGP, REDintakePGPGreen, REDintakePGPLast, REDshootPGP, REDintakePGPFirst, drivetoMidRange, drivetoMidRangeRed, intakePGPGreenMid, intakePGPLastMid, intakePGPFirstMid;
 
     public Motifpaths(KachowHardware robot){
         this.robot = robot;
@@ -35,6 +35,18 @@ public class Motifpaths {
 
 
 
+        REDpushBot = robot.drive.pathBuilder()
+                .addPath(
+                        new BezierLine(new Pose(80.000, 8.500), new Pose(90, 9.200))
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(90))
+                .build();
+        pushBot = robot.drive.pathBuilder()
+                .addPath(
+                        new BezierLine(new Pose(64, 8.5), new Pose(54, 9.2))
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(90))
+                .build();
         toPGP = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(57.500, 17.500), new Pose(40, 57)))
                 .setLinearHeadingInterpolation(Math.toRadians(113), Math.toRadians(180))
@@ -43,7 +55,7 @@ public class Motifpaths {
                 .addPath(
                         new BezierCurve(
                                 new Pose(57.500, 17.500),
-                                new Pose(54.729, 90.168),
+                                new Pose(54.729, 90.167),
                                 new Pose(25, 82)
                         )
                 )
@@ -169,8 +181,8 @@ public class Motifpaths {
 
         /// RED
         REDtoPGP = robot.drive.pathBuilder()
-                .addPath(new BezierLine(new Pose(144-57.500, 17.500), new Pose(144-37.5, 61)))
-                .setLinearHeadingInterpolation(Math.toRadians(68), Math.toRadians(0))
+                .addPath(new BezierLine(new Pose(144-57.500, 17.500), new Pose(144-39, 61)))
+                .setLinearHeadingInterpolation(Math.toRadians(66), Math.toRadians(0))
                 .build();
         REDtoPPG = robot.drive.pathBuilder()
                 .addPath(
@@ -180,11 +192,11 @@ public class Motifpaths {
                                 new Pose(127, 83.000)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(68), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(66), Math.toRadians(0))
                 .build();
 
         REDintakePGPFirst = robot.drive.pathBuilder()
-                .addPath(new BezierLine(new Pose(144-37.5, 61), new Pose(144-35, 62)))
+                .addPath(new BezierLine(new Pose(144-39, 61), new Pose(144-35, 62)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         REDintakePGPGreen = robot.drive.pathBuilder()
@@ -197,12 +209,12 @@ public class Motifpaths {
                 .build();
         REDshootPGP = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(144-24, 62), new Pose(144-57.500, 17.500)))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(68))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(66))
                 .build();
 
         REDdrivetoPreload = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(144-64.000, 8.500), new Pose(144-57.500, 17.500)))
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(68))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(66))
                 .build();
 
 
@@ -214,7 +226,7 @@ public class Motifpaths {
                                 new Pose(144-37.00, 35)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(68), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(66), Math.toRadians(0))
                 .build();
 
         REDIntake1 = robot.drive.pathBuilder()
@@ -228,7 +240,7 @@ public class Motifpaths {
 
         REDShootPickup1 = robot.drive.pathBuilder()
                 .addPath(new BezierLine(new Pose(144-24.00, 37.3), new Pose(144-57.500, 17.700)))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(68))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(66))
                 .build();
 
         REDdrivetoPPG = robot.drive.pathBuilder()
@@ -239,7 +251,7 @@ public class Motifpaths {
                                 new Pose(144-37.500, 37.3)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(68), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(66), Math.toRadians(0))
                 .addCallback(new Intaking(robot))
                 .build();
 

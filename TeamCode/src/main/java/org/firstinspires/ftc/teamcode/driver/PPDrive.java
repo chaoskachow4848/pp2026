@@ -48,7 +48,7 @@ public class PPDrive extends LinearOpMode {
     public static double aimerMid = .55;
     public static double aimerFar = .65;
     public static double aimerMin = .25;
-    public static double aimerMax = .55;
+    public static double aimerMax = .54;
     public static double shooterMin = 1200;
     public static double shooterMax = 1660;
 
@@ -213,7 +213,7 @@ public class PPDrive extends LinearOpMode {
             if(botPoint.y <= 60){
                 aimerPose = aimerMax;
             } else {
-                aimerPose = .46;
+                aimerPose = .45;
             }
             if(botPoint.y <= 60){
                 shooterVelocity = shooterMax;
@@ -223,6 +223,7 @@ public class PPDrive extends LinearOpMode {
 
             switch (State){
                 case driving:
+
                     robot.spinnerLeft.setVelocity(0);
                     robot.spinnerRight.setVelocity(0);
                     robot.intake.setPower(0);

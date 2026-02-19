@@ -41,6 +41,7 @@ public class Test1 extends LinearOpMode {
 
     public int testNumber = 1;
     int f = 0;
+    int velocity = 0;
 
 
 
@@ -102,16 +103,18 @@ public class Test1 extends LinearOpMode {
                     f = (int) (f+(gamepad2.right_stick_y));
                     robot.spinnerLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, f));
                     if (gamePad2.triangle.wasJustPressed()){
-                        robot.spinnerLeft.setVelocity(1900);
+                        robot.spinnerLeft.setVelocity(1500);
                     }
                     if (gamePad2.Right_Trigger.wasJustPressed()){
-                        robot.spinnerLeft.setVelocity(robot.spinnerLeft.getVelocity()+20);
+                        velocity = velocity+20;
+                        robot.spinnerLeft.setVelocity(velocity);
                     }
                     if (gamePad2.Left_Trigger.wasJustPressed()){
-                        robot.spinnerLeft.setVelocity(robot.spinnerLeft.getVelocity()-20);
+                        velocity = velocity-20;
+                        robot.spinnerLeft.setVelocity(velocity);
                     }
                     telemetry.addData("SpinnerLeftPower: ", robot.spinnerLeft.getPower());
-                    telemetry.addData("SpinnerLeft: ", robot.spinnerLeft.getVelocity());
+                    telemetry.addData("SpinnerLeft: ", velocity);
                     telemetry.addLine("shooter f: " + f);
                     telemetry.update();
                     break;
@@ -119,16 +122,18 @@ public class Test1 extends LinearOpMode {
                     f = (int) (f+(gamepad2.right_stick_y));
                     robot.spinnerRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, f));
                     if (gamePad2.triangle.wasJustPressed()){
-                        robot.spinnerRight.setVelocity(1900);
+                        robot.spinnerRight.setVelocity(1500);
                     }
                     if (gamePad2.Right_Trigger.wasJustPressed()){
-                        robot.spinnerRight.setVelocity(robot.spinnerRight.getVelocity()+20);
+                        velocity = velocity+20;
+                        robot.spinnerRight.setVelocity(velocity);
                     }
-                    if (gamePad2.Right_Trigger.wasJustPressed()){
-                        robot.spinnerRight.setVelocity(robot.spinnerRight.getVelocity()-20);
+                    if (gamePad2.Left_Trigger.wasJustPressed()){
+                        velocity = velocity-20;
+                        robot.spinnerRight.setVelocity(velocity);
                     }
                     telemetry.addData("SpinnerRightPower: ", robot.spinnerRight.getPower());
-                    telemetry.addData("SpinnerRight: ", robot.spinnerRight.getVelocity());
+                    telemetry.addData("SpinnerRight: ", velocity);
                     telemetry.addLine("shooter f: " + f);
                     telemetry.update();
                     break;
